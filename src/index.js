@@ -18,6 +18,63 @@ const clientId = process.env.DISCORD_CLIENT_ID || '1573271779915337811';
 const guildId = '1573272872737181696';
 const welcomeChannelId = '1573337290502176848';
 const honeypotChannelId = '1573337296042729502';
+const honeypotMessageId = '1573402481214492685';
+const honeypotLogsFile = path.join(__dirname, '..', 'data', 'honeypot_logs.json');
+
+function getHoneypotLogs() {
+  try {
+    if (fs.existsSync(honeypotLogsFile)) {
+      return JSON.parse(fs.readFileSync(honeypotLogsFile, 'utf8'));
+    }
+  } catch (e) {}
+  return [];
+}
+
+function addHoneypotLog(entry) {
+  try {
+    const logs = getHoneypotLogs();
+    logs.push(entry);
+    const dataDir = path.dirname(honeypotLogsFile);
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+    fs.writeFileSync(honeypotLogsFile, JSON.stringify(logs, null, 2), 'utf8');
+  } catch (e) {
+    console.error('[HONEYPOT LOG ERROR]', e);
+  }
+}
+
+async function updateHoneypotButton() {
+  try {
+    const logs = getHoneypotLogs();
+    const kicksCount = logs.filter(l => l.action === 'KICKED').length;
+
+    const fetchRes = await fetch(`https://discord.com/api/v10/channels/${honeypotChannelId}/messages/${honeypotMessageId}`, {
+      headers: { Authorization: `Bot ${token}` }
+    });
+    if (!fetchRes.ok) return;
+    const msg = await fetchRes.json();
+    if (!msg.components) return;
+
+    const components = msg.components;
+    if (components[0]?.components) {
+      const actionRow = components[0].components.find(c => c.type === 1);
+      if (actionRow && actionRow.components?.[0]) {
+        actionRow.components[0].label = `ᴋɪᴄᴋꜱ: ${kicksCount}`;
+        actionRow.components[0].disabled = false;
+
+        await fetch(`https://discord.com/api/v10/channels/${honeypotChannelId}/messages/${honeypotMessageId}`, {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bot ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ components, flags: 32768 })
+        });
+      }
+    }
+  } catch (err) {
+    console.error('[UPDATE HONEYPOT BUTTON ERROR]', err);
+  }
+}
 
 if (!token) {
   console.error("Missing DISCORD_TOKEN in environment");
@@ -208,20 +265,95 @@ client.on('guildMemberAdd', async member => {
 client.on('messageCreate', async message => {
   if (message.channelId === honeypotChannelId) {
     if (message.author.id === client.user.id) return;
+
+    const userTag = message.author.tag || message.author.username;
+    const userId = message.author.id;
+    const contentSnippet = message.content ? message.content.slice(0, 80) : '[Attachment/Embed]';
+    const timestamp = Math.floor(Date.now() / 1000);
+
+    let actionStatus = 'KICKED';
+    let failReason = null;
+
     try {
       await message.delete().catch(() => null);
-      if (message.member && !message.member.permissions.has('Administrator')) {
-        await message.member.kick('Honeypot triggered: Sent message in #𖹭ᐟ・ᴅᴏɴᴛ-ᴍꜱɢ-ʜᴇʀᴇ').catch(() => null);
-        console.log(`[HONEYPOT] Deleted message and kicked ${message.author.tag} (${message.author.id})`);
+
+      if (message.member) {
+        if (message.member.permissions.has('Administrator')) {
+          actionStatus = 'IMMUNE_ADMIN';
+          failReason = 'User is Administrator (cannot kick)';
+          console.log(`[HONEYPOT] User ${userTag} is Administrator - deleted message but spared kick.`);
+        } else if (!message.member.kickable) {
+          actionStatus = 'IMMUNE_HIERARCHY';
+          failReason = 'Higher or equal role hierarchy (cannot kick)';
+          console.log(`[HONEYPOT] User ${userTag} has higher role hierarchy - deleted message.`);
+        } else {
+          await message.member.kick('Honeypot triggered: Sent message in #𖹭ᐟ・ᴅᴏɴᴛ-ᴍꜱɢ-ʜᴇʀᴇ');
+          actionStatus = 'KICKED';
+          console.log(`[HONEYPOT] Deleted message and kicked ${userTag} (${userId})`);
+        }
+      } else {
+        actionStatus = 'KICKED';
       }
     } catch (err) {
+      actionStatus = 'FAILED_ERROR';
+      failReason = err.message || 'Permission error';
       console.error('[HONEYPOT ERROR]', err);
     }
+
+    addHoneypotLog({
+      timestamp,
+      userTag,
+      userId,
+      action: actionStatus,
+      failReason,
+      contentSnippet
+    });
+
+    await updateHoneypotButton();
   }
 });
 
 // Handle Interactions
 client.on('interactionCreate', async interaction => {
+  // Handle Honeypot Kicks Button Click
+  if (interaction.isButton()) {
+    if (interaction.customId === 'honeypot_kicks_display') {
+      const logs = getHoneypotLogs();
+      const totalKicks = logs.filter(l => l.action === 'KICKED').length;
+      const totalAttempts = logs.length;
+      const immuneCount = logs.filter(l => l.action.startsWith('IMMUNE') || l.action.startsWith('FAILED')).length;
+
+      const embed = new EmbedBuilder()
+        .setTitle('✦ 🍯 ・ ʜᴏɴᴇʏᴘᴏᴛ ꜱᴇᴄᴜʀɪᴛʏ & ᴋɪᴄᴋ ʜɪꜱᴛᴏʀʏ')
+        .setColor([55, 55, 61])
+        .setDescription(
+          `📊 **ᴛᴏᴛᴀʟ ᴛʀɪɢɢᴇʀꜱ:** \`${totalAttempts}\` ┃ 🟢 **ꜱᴏꜰᴛʙᴀɴꜱ / ᴋɪᴄᴋꜱ:** \`${totalKicks}\` ┃ 🛡️ **ɪᴍᴍᴜɴᴇ:** \`${immuneCount}\`\n\n` +
+          `### 📜 ʀᴇᴄᴇɴᴛ ɪɴᴄɪᴅᴇɴᴛ ʜɪꜱᴛᴏʀʏ\n` +
+          (logs.length === 0
+            ? '`No honeypot violations recorded yet. Server is clean and secure!`'
+            : logs.slice(-8).reverse().map((entry, idx) => {
+                const time = `<t:${entry.timestamp}:R>`;
+                if (entry.action === 'KICKED') {
+                  return `**${idx + 1}.** 🟢 **ᴋɪᴄᴋᴇᴅ:** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}\n` +
+                         `> 💬 *"${entry.contentSnippet}"*`;
+                } else {
+                  return `**${idx + 1}.** ⚠️ **ꜰᴀɪʟᴇᴅ (ʜɪɢʜᴇʀ ᴘᴇʀᴍꜱ):** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}\n` +
+                         `> 🛡️ *${entry.failReason || 'Administrator / Role Hierarchy'}*\n` +
+                         `> 💬 *"${entry.contentSnippet}"*`;
+                }
+              }).join('\n\n'))
+        )
+        .setFooter({ text: 'Dʀᴇᴀᴍ Nᴏᴅᴇs • Honeypot Sentinel Security' })
+        .setTimestamp();
+
+      await interaction.reply({
+        embeds: [embed],
+        ephemeral: true // Dismissable hidden message
+      });
+    }
+    return;
+  }
+
   if (!interaction.isChatInputCommand()) return;
 
   const { commandName } = interaction;
