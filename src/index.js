@@ -1,5 +1,6 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const path = require('path');
+const http = require('http');
 const { 
   Client, 
   GatewayIntentBits, 
@@ -17,9 +18,26 @@ const guildId = '1573272872737181696';
 const welcomeChannelId = '1573337290502176848';
 
 if (!token) {
-  console.error("Missing DISCORD_TOKEN in .env");
+  console.error("Missing DISCORD_TOKEN in environment");
   process.exit(1);
 }
+
+// ── Vercel HTTP Health-Check Server (Port 80/3000) ──
+const port = process.env.PORT || 3000;
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({
+    status: 'ONLINE',
+    project: 'Dream Nodes Discord Bot',
+    bot: client.user ? client.user.tag : 'connecting',
+    ping: client.ws ? `${client.ws.ping}ms` : 'N/A',
+    uptime: `${(process.uptime() / 3600).toFixed(2)}h`
+  }));
+});
+
+server.listen(port, () => {
+  console.log(`[HTTP SERVER] Health check listening on port ${port}`);
+});
 
 const client = new Client({
   intents: [
