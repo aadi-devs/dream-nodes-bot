@@ -469,140 +469,161 @@ client.on('interactionCreate', async interaction => {
   // Handle Terms of Service / Policy Dropdown Select Menu
   if (interaction.isStringSelectMenu() && interaction.customId === 'tos_select_menu') {
     const selected = interaction.values[0];
-    let embed = new EmbedBuilder().setColor([55, 55, 61]).setTimestamp();
+    let contentBody = '';
+    let footerTag = '';
 
     if (selected === 'tos_refund') {
-      embed
-        .setTitle('Dream Nodes | Refund Policy & Guarantee')
-        .setDescription(
-          `### <a:cash:1573382269735805008> • 24-Hour Money-Back Guarantee\n` +
-          `> <a:hostinger:1573382335355691089> We provide a **24-hour money-back guarantee** for first-time Minecraft and VPS hosting orders if you experience technical issues caused by our nodes that our support team cannot resolve.\n\n` +
-          `**Refund Eligibility & Conditions**\n` +
-          `> <a:Tick5:1573382205395177532> Refund requests must be submitted through a ticket in <#1573281601775870043> within **24 hours** of purchase.\n` +
-          `> \n` +
-          `> <a:Tick5:1573382205395177532> The service must not have violated our Fair-Use Policy or Terms of Service.\n` +
-          `> \n` +
-          `> <a:Tick5:1573382205395177532> Refunds can be credited to your original payment method or as Dream Nodes Account Credit (+10% bonus).\n\n` +
-          `**Non-Refundable Services**\n` +
-          `> <a:Cross:1573382156296917032> Domain registrations and transfers (non-refundable registry fees).\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> Dedicated bare-metal servers and custom enterprise hardware setups.\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> Cryptocurrency payments (credited as account store credit only).\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> Services suspended or terminated due to abuse, DDoS, or malicious activity.\n\n` +
-          `**<a:fsk_warning:1573382318364692703> Chargeback & Dispute Warning**\n` +
-          `> Opening a PayPal or bank dispute without contacting our support team first will result in an immediate **permanent ban**, cancellation of all active servers, and permanent loss of data.`
-        )
-        .setFooter({ text: 'Dream Nodes • Official Service Agreement' });
+      contentBody =
+        '# <a:cash:1573382269735805008> Dream Nodes | Official Refund Policy\n\n' +
+        '## <a:hostinger:1573382335355691089> 24-Hour Money-Back Guarantee\n' +
+        '> <a:sparkles_sparkles:1573382447603785928> We offer a **24-hour refund window** for first-time Minecraft and VPS hosting purchases if you encounter node-side technical problems or network outages that our support team is unable to resolve within a reasonable timeframe.\n\n' +
+        '## <a:Tick5:1573382205395177532> Eligibility & Requirements\n' +
+        '> ✦ **Ticket Requirement:** All refund requests must be initiated via an official support ticket in <#1573281601775870043> within **24 hours** of the initial invoice payment.\n' +
+        '> \n' +
+        '> ✦ **First-Time Orders:** The guarantee applies strictly to your initial service setup to prevent service cycling or abuse.\n' +
+        '> \n' +
+        '> ✦ **Payout Options:** Eligible refunds can be sent back to the original payment method, or credited to your Dream Nodes account balance with an **extra +10% bonus credit**.\n\n' +
+        '## <a:Cross:1573382156296917032> Non-Refundable Products & Exceptions\n' +
+        '> ⊘ **Domain Registrations & Transfers:** Due to upstream registry processing fees, domains cannot be cancelled or refunded once registered.\n' +
+        '> \n' +
+        '> ⊘ **Dedicated Hardware:** Custom bare-metal servers, GPU instances, and custom enterprise deployments.\n' +
+        '> \n' +
+        '> ⊘ **Crypto Payments:** Due to market volatility, payments made in cryptocurrency are non-refundable to wallets (eligible only as account store credit).\n' +
+        '> \n' +
+        '> ⊘ **Abuse & TOS Terminations:** Any service suspended or terminated for violating our Acceptable Use Policy (DDoS, mining, spam, etc.) automatically forfeits all refund rights.\n\n' +
+        '## <a:fsk_warning:1573382318364692703> Disputes & Chargebacks\n' +
+        '> ⚠️ Filing an unauthorized PayPal dispute, credit card chargeback, or bank reversal without contacting support first will result in **immediate permanent server termination**, account blacklisting, and loss of all server files.';
+      footerTag = '-# 💙 Dream Nodes • Official Refund & Billing Agreement';
     } else if (selected === 'tos_vps') {
-      embed
-        .setTitle('Dream Nodes | VPS & RDP Policies')
-        .setDescription(
-          `### <:vps:1573382507863220246> • Resource Allocation & Fair-Use\n` +
-          `> <:cpu:1573382485310709781> Our VPS and RDP services run on high-performance Intel and AMD EPYC processors. To guarantee smooth performance for everyone on the host node, all virtual machines operate under fair-use principles.\n\n` +
-          `**Allowed Use Cases**\n` +
-          `> <a:Tick5:1573382205395177532> Game servers, Discord bots, APIs, development environments, and databases.\n` +
-          `> \n` +
-          `> <a:Tick5:1573382205395177532> Docker containers, CI/CD runners, and personal VPNs (WireGuard / OpenVPN).\n` +
-          `> \n` +
-          `> <a:Tick5:1573382205395177532> Sustained workloads within your purchased CPU and RAM allocations.\n\n` +
-          `**Strictly Prohibited Activities (Zero Tolerance)**\n` +
-          `> <a:Cross:1573382156296917032> **Crypto Mining:** Any cryptocurrency mining (Monero, Bitcoin, etc.) results in immediate termination.\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> **Network Attacks:** Launching or participating in DDoS/DoS attacks, botnets, or IP stressers.\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> **Port Scanning & Probing:** Vulnerability scanning, credential bruteforcing, or IP enumeration.\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> **Tor & Open Proxies:** Public exit nodes or anonymous relay proxies are strictly prohibited.\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> **Mass Emailing:** Outgoing SMTP (port 25) is blocked by default to prevent spam.\n\n` +
-          `**<a:siren:1573382431065509981> Automatic Suspension**\n` +
-          `> Malicious activity triggers automated security freezes without advance notice. Terminated instances due to abuse are ineligible for refunds.`
-        )
-        .setFooter({ text: 'Dream Nodes • VPS & Cloud Policies' });
+      contentBody =
+        '# <:vps:1573382507863220246> Dream Nodes | VPS & Cloud Policies\n\n' +
+        '## <:cpu:1573382485310709781> Fair-Use & Resource Quotas\n' +
+        '> <a:hostinger:1573382335355691089> All Virtual Private Servers and RDPs run on enterprise Intel Xeon / AMD EPYC processors backed by Gen4 NVMe arrays. To ensure uninterrupted performance across all neighbor instances, shared-thread nodes follow fair-use resource allocation.\n\n' +
+        '## <a:Tick5:1573382205395177532> Permitted Use Cases\n' +
+        '> ✦ **Game & Bot Hosting:** Running Discord bots, Minecraft networks, FiveM servers, CS2 servers, and backend APIs.\n' +
+        '> \n' +
+        '> ✦ **Development & CI/CD:** Docker containers, software compilation, web hosting (Nginx/Apache), and personal databases.\n' +
+        '> \n' +
+        '> ✦ **Personal VPNs:** Private WireGuard or OpenVPN tunnels for personal privacy.\n' +
+        '> \n' +
+        '> ✦ **Full Root / Administrator:** Complete SSH / RDP control over your environment and operating system.\n\n' +
+        '## <a:Cross:1573382156296917032> Prohibited Activities (Zero Tolerance)\n' +
+        '> ⊘ **Cryptocurrency Mining:** Any CPU/GPU mining (Monero, Bitcoin, Ravencoin, etc.) results in immediate termination with no refund.\n' +
+        '> \n' +
+        '> ⊘ **Network Attacks & Stressers:** Initiating or participating in DDoS/DoS attacks, botnet controllers, or IP flooders.\n' +
+        '> \n' +
+        '> ⊘ **Port Scanning & Exploitation:** Probing IP ranges, vulnerability scanning, or brute-forcing SSH/RDP/FTP credentials.\n' +
+        '> \n' +
+        '> ⊘ **Tor & Open Relays:** Operating public Tor exit nodes, open proxies, or malicious redirection services.\n' +
+        '> \n' +
+        '> ⊘ **Mass Mailers (Spam):** Outbound SMTP port 25 is blocked by default across all VPS nodes to prevent email spam.\n\n' +
+        '## <a:siren:1573382431065509981> Automated Node Defense\n' +
+        '> 🛡️ Automated network filters monitor for abnormal outgoing traffic spikes. Instances engaging in attacks are frozen instantly by our automated sentinels.';
+      footerTag = '-# 💙 Dream Nodes • Cloud VPS & Compute Standards';
     } else if (selected === 'tos_mc') {
-      embed
-        .setTitle('Dream Nodes | Minecraft Hosting Policies')
-        .setDescription(
-          `### <a:minecraft:1573382379215659081> • Minecraft Server Performance & Features\n` +
-          `> <a:hostinger:1573382335355691089> Dream Nodes Minecraft plans are powered by high-frequency Intel and AMD CPUs with enterprise Gen4 NVMe storage for maximum TPS and zero stutter.\n\n` +
-          `**What Is Included**\n` +
-          `> <a:Tick5:1573382205395177532> **Unmetered NVMe SSD Storage:** Fair-use for game worlds, plugins, mods, and logs.\n` +
-          `> \n` +
-          `> <a:Tick5:1573382205395177532> **Enterprise DDoS Protection:** Filters Layer 4 and Layer 7 volumetric attacks automatically.\n` +
-          `> \n` +
-          `> <a:Tick5:1573382205395177532> **Full SFTP & Panel Access:** Upload custom server JARs (Paper, Purpur, Fabric, Forge).\n` +
-          `> \n` +
-          `> <a:Tick5:1573382205395177532> **Automated Backups:** Daily backup retention for easy server rollbacks.\n\n` +
-          `**Client Responsibilities & Guidelines**\n` +
-          `> <a:fsk_warning:1573382318364692703> **Lag Machines:** Intentionally constructed redstone/entity lag machines affecting the host node are forbidden.\n` +
-          `> \n` +
-          `> <:backup:1573382515341664270> **Data Safety:** While we maintain automated backups, clients are encouraged to download local backups before major updates.\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> **Pirated / Malicious Plugins:** Uploading cracked software, backdoored JARs, or malware leads to instant server suspension.`
-        )
-        .setFooter({ text: 'Dream Nodes • Minecraft Hosting Policies' });
+      contentBody =
+        '# <a:minecraft:1573382379215659081> Dream Nodes | Minecraft Hosting Policies\n\n' +
+        '## <a:hostinger:1573382335355691089> Game Server Architecture\n' +
+        '> <a:Lightning:1573382171257737317> Dream Nodes Minecraft instances are built on high single-core frequency processors and enterprise NVMe storage to guarantee 20 TPS, zero hitching, and rapid chunk loading.\n\n' +
+        '## <a:Tick5:1573382205395177532> Included Features & Benefits\n' +
+        '> ✦ **Unmetered NVMe SSD Storage:** Fair-use storage for world saves, modpacks, plugins, and server logs.\n' +
+        '> \n' +
+        '> ✦ **Automated DDoS Shielding:** Enterprise Layer 4 and Layer 7 filtration engineered specifically for Minecraft packet protocols (preventing ping attacks and null-ping boots).\n' +
+        '> \n' +
+        '> ✦ **SFTP & Custom JARs:** Full access to upload any custom software including Paper, Purpur, Fabric, Forge, NeoForge, Velocity, and BungeeCord.\n' +
+        '> \n' +
+        '> ✦ **Automated Backups:** Daily snapshots stored off-node for easy world recovery.\n\n' +
+        '## <a:fsk_warning:1573382318364692703> Server Guidelines & Prohibitions\n' +
+        '> ⊘ **Intentional Node Lag Machines:** Building deliberate redstone or entity loop lag contraptions intended to degrade node stability is forbidden.\n' +
+        '> \n' +
+        '> ⊘ **Cracked / Backdoored Plugins:** Uploading malware-infected plugins or leaking server credentials puts your service at risk and leads to suspension.\n' +
+        '> \n' +
+        '> ⊘ **Backup Responsibility:** While we maintain automated server snapshots, clients are encouraged to download local copies prior to major modpack migrations.';
+      footerTag = '-# 💙 Dream Nodes • Game Server Policies';
     } else if (selected === 'tos_general') {
-      embed
-        .setTitle('Dream Nodes | General Terms of Service')
-        .setDescription(
-          `### <a:membership:1573382371699458201> • Service Agreement Overview\n` +
-          `> <a:membership:1573382371699458201> By ordering or using any Dream Nodes services, you agree to comply with our Terms of Service. These terms apply to all clients and services.\n\n` +
-          `**Account & Billing Terms**\n` +
-          `> <a:Tick5:1573382205395177532> Clients must be at least 13 years old (or have consent from a parent/guardian).\n` +
-          `> \n` +
-          `> <a:Tick5:1573382205395177532> Invoices are generated 7 days before the due date. Unpaid services are suspended after 48 hours.\n` +
-          `> \n` +
-          `> <a:Tick5:1573382205395177532> Suspended services are terminated and data permanently removed after 7 days of non-payment.\n\n` +
-          `**Uptime Guarantee & SLA**\n` +
-          `> <a:hostinger:1573382335355691089> We guarantee a 99.9% network and node uptime across all hosting locations.\n` +
-          `> \n` +
-          `> <a:announce:1573382228795457687> Scheduled maintenance windows are announced in advance in <#1573281463858630726>.\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> Dream Nodes is not liable for data loss caused by client misconfiguration or expired invoices.`
-        )
-        .setFooter({ text: 'Dream Nodes • General Terms of Service' });
+      contentBody =
+        '# <a:membership:1573382371699458201> Dream Nodes | General Terms of Service\n\n' +
+        '## <a:hostinger:1573382335355691089> Official Service Agreement\n' +
+        '> <a:membership:1573382371699458201> By purchasing, leasing, or using any service provided by Dream Nodes, you contractually agree to comply with all terms laid out in this agreement.\n\n' +
+        '## <a:Tick5:1573382205395177532> Account Ownership & Billing Cycles\n' +
+        '> ✦ **Age Requirement:** Clients must be at least 13 years old or have explicit authorization from a parent or legal guardian.\n' +
+        '> \n' +
+        '> ✦ **Invoicing:** Renewal invoices are issued 7 days before the service due date. Reminders are dispatched via email and Discord.\n' +
+        '> \n' +
+        '> ✦ **Grace Period & Suspension:** Unpaid invoices result in service suspension after **48 hours** past due.\n' +
+        '> \n' +
+        '> ✦ **Data Termination:** Suspended services that remain unpaid for **7 consecutive days** are permanently deleted and cannot be recovered.\n\n' +
+        '## <a:Lightning:1573382171257737317> Uptime SLA & Service Continuity\n' +
+        '> ✦ **99.9% Network Guarantee:** We strive for continuous operational uptime. In the event of unforeseen node hardware failure exceeding SLA terms, service credits may be granted upon request.\n' +
+        '> \n' +
+        '> ✦ **Scheduled Maintenance:** Routine hardware upgrades and kernel updates are announced in advance in <#1573281463858630726>.';
+      footerTag = '-# 💙 Dream Nodes • Master Terms of Service';
     } else if (selected === 'tos_discord') {
-      embed
-        .setTitle('Dream Nodes | Community & Support Rules')
-        .setDescription(
-          `### <a:discord_discord:1573382300283179030> • Support Ticket Etiquette\n` +
-          `> <a:discord_discord:1573382300283179030> Our support team is here to assist you with order inquiries, billing questions, and technical node troubleshooting.\n\n` +
-          `**Ticket Guidelines**\n` +
-          `> <a:Tick5:1573382205395177532> Create tickets only in <#1573281601775870043>. Include your service ID and a clear description of your issue.\n` +
-          `> \n` +
-          `> <a:Tick5:1573382205395177532> Please allow staff reasonable time to respond without unnecessary pings or creating duplicate tickets.\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> Spam tickets, trolling, or disrespect towards staff will result in a ticket blacklist.\n\n` +
-          `**Discord Community Rules**\n` +
-          `> <a:Tick5:1573382205395177532> Maintain respectful conduct across all text and voice channels.\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> No self-promotion, advertising, or unsolicited direct messages to community members.\n` +
-          `> \n` +
-          `> <a:Cross:1573382156296917032> No posting sensitive credentials, passwords, or token keys in public channels.`
-        )
-        .setFooter({ text: 'Dream Nodes • Community & Support Guidelines' });
+      contentBody =
+        '# <a:discord_discord:1573382300283179030> Dream Nodes | Community & Support Rules\n\n' +
+        '## <a:chat:1573382277164040214> Support Ticket Conduct\n' +
+        '> <a:hostinger:1573382335355691089> Our staff and technical support team work around the clock to provide swift assistance for sales, billing, and technical queries.\n\n' +
+        '## <a:Tick5:1573382205395177532> How to Open a Ticket\n' +
+        '> ✦ **Official Channel:** Open tickets solely through <#1573281601775870043>. Never DM staff members for official technical support.\n' +
+        '> \n' +
+        '> ✦ **Include Details:** State your service ID, node location, and a detailed description of the error to speed up resolution.\n' +
+        '> \n' +
+        '> ✦ **No Staff Pings:** Pinging staff members inside or outside tickets will not accelerate your ticket and may result in a warning.\n' +
+        '> \n' +
+        '> ✦ **Duplicate Tickets:** Opening multiple tickets for the same inquiry is prohibited and leads to a ticket blacklist.\n\n' +
+        '## <a:Cross:1573382156296917032> Server Community Standards\n' +
+        '> ⊘ **No Toxicity or Harassment:** Respect every member in public channels and voice lounges.\n' +
+        '> \n' +
+        '> ⊘ **No Unsolicited Advertising:** Direct messaging members to sell hosting, services, or bot invites is strictly prohibited.\n' +
+        '> \n' +
+        '> ⊘ **No Credential Sharing:** Never share server passwords, SSH keys, or panel tokens in public chat channels.';
+      footerTag = '-# 💙 Dream Nodes • Community & Ticket Guidelines';
     }
 
-    const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setLabel('Open Support Ticket')
-        .setStyle(ButtonStyle.Link)
-        .setURL('https://discord.com/channels/1573272872737181696/1573281601775870043')
-        .setEmoji('🎫'),
-      new ButtonBuilder()
-        .setLabel('Permanent Invite')
-        .setStyle(ButtonStyle.Link)
-        .setURL(permanentInviteUrl)
-        .setEmoji('🕊')
-    );
+    const v2Container = {
+      flags: 32832, // IS_COMPONENTS_V2 (32768) | EPHEMERAL (64)
+      components: [
+        {
+          type: 17, // Borderless Container
+          components: [
+            {
+              type: 10,
+              content: contentBody
+            },
+            {
+              type: 14,
+              divider: true,
+              spacing: 1
+            },
+            {
+              type: 1,
+              components: [
+                {
+                  type: 2,
+                  style: 5,
+                  label: 'Open Support Ticket',
+                  url: 'https://discord.com/channels/1573272872737181696/1573281601775870043',
+                  emoji: { name: '🎫' }
+                },
+                {
+                  type: 2,
+                  style: 5,
+                  label: 'Permanent Invite',
+                  url: permanentInviteUrl,
+                  emoji: { name: '🕊' }
+                }
+              ]
+            },
+            {
+              type: 10,
+              content: footerTag
+            }
+          ]
+        }
+      ]
+    };
 
-    await interaction.reply({
-      embeds: [embed],
-      components: [row],
-      ephemeral: true
-    });
+    await interaction.reply(v2Container);
     return;
   }
 
