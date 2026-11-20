@@ -96,7 +96,7 @@ function buildWelcomeMessage(member) {
       iconURL: member.user?.displayAvatarURL({ dynamic: true }) || client.user.displayAvatarURL()
     })
     .setTitle('✦ ‹ 🛸 ・ welcome to dream nodes !')
-    .setColor(0x00f0ff)
+    .setColor([55, 55, 61])
     .setDescription(
       `💬 ・ say hi in <#1573281610210611266> !\n` +
       `→ ✦ ・ read the <#1573337303538208778> !\n` +
