@@ -79,38 +79,86 @@ async function registerCommands() {
   }
 }
 
-// Function to generate the welcome message payload
-function buildWelcomeMessage(member) {
+// Function to send modern Components V2 welcome container
+async function sendWelcomeV2(targetChannelId, member) {
   const logoPath = path.join(__dirname, '..', 'assets', 'logo.jpg');
   const bannerPath = path.join(__dirname, '..', 'assets', 'welcome_banner_animated.gif');
 
-  const logoAttachment = new AttachmentBuilder(logoPath, { name: 'logo.jpg' });
-  const bannerAttachment = new AttachmentBuilder(bannerPath, { name: 'welcome_banner.gif' });
+  const logoBuffer = fs.readFileSync(logoPath);
+  const bannerBuffer = fs.readFileSync(bannerPath);
 
-  const count = member.guild?.memberCount || 2;
-  const username = member.user?.tag || member.user?.username || 'member';
+  const count = member?.guild?.memberCount || 2;
+  const username = member?.user?.tag || member?.user?.username || 'member';
+  const memberId = member?.id || member?.user?.id;
 
-  const embed = new EmbedBuilder()
-    .setAuthor({
-      name: `${username}`,
-      iconURL: member.user?.displayAvatarURL({ dynamic: true }) || client.user.displayAvatarURL()
-    })
-    .setTitle('✦ ε 🕊 ・ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ !')
-    .setDescription(
-      `🧦 ・ ꜱᴀʏ ʜɪ ɪɴ <#1573281610210611266> ˚ ˖ ! ୨୧\n` +
-      `→ ・ ✩ ・ ʀᴇᴀᴅ ᴛʜᴇ <#1573337303538208778> !\n` +
-      `: 🧷 ‹3 ・ ꜱᴇʀᴠᴇʀ ᴜᴘᴅᴀᴛᴇꜱ ɪɴ <#1573337308529434756> ୨୧ ! ˚\n` +
-      `・ ✧ ・ ᴇxᴘʟᴏʀᴇ ʜᴏꜱᴛɪɴɢ ɪɴ <#1573281486822445128> ୨୧ !`
-    )
-    .setThumbnail('attachment://logo.jpg')
-    .setImage('attachment://welcome_banner.gif')
-    .setFooter({ text: `ᴡᴇ ɴᴏᴡ ʜᴀᴠᴇ ${count} ᴍᴇᴍʙᴇʀꜱ! <3` });
-
-  return {
-    content: `<@${member.id}>`,
-    embeds: [embed],
-    files: [logoAttachment, bannerAttachment]
+  const payload = {
+    flags: 32768, // IS_COMPONENTS_V2
+    attachments: [
+      { id: 0, filename: 'logo.jpg' },
+      { id: 1, filename: 'welcome_banner.gif' }
+    ],
+    components: [
+      ...(memberId ? [{ type: 10, content: `<@${memberId}>` }] : []),
+      {
+        type: 17, // Container without accent_color (seamless borderless)
+        components: [
+          {
+            type: 9, // Section
+            components: [
+              {
+                type: 10,
+                content:
+                  `${username}\n` +
+                  `### ✦ ε 🕊 ・ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ !\n` +
+                  `🧦 ・ ꜱᴀʏ ʜɪ ɪɴ <#1573281610210611266> ˚ ˖ ! ୨୧\n` +
+                  `→ ・ ✩ ・ ʀᴇᴀᴅ ᴛʜᴇ <#1573337303538208778> !\n` +
+                  `: 🧷 ‹3 ・ ꜱᴇʀᴠᴇʀ ᴜᴘᴅᴀᴛᴇꜱ ɪɴ <#1573337308529434756> ୨୧ ! ˚\n` +
+                  `・ ✧ ・ ᴇxᴘʟᴏʀᴇ ʜᴏꜱᴛɪɴɢ ɪɴ <#1573281486822445128> ୨୧ !`
+              }
+            ],
+            accessory: {
+              type: 11, // Thumbnail
+              media: {
+                url: 'attachment://logo.jpg'
+              }
+            }
+          },
+          {
+            type: 14, // Separator
+            divider: true,
+            spacing: 1
+          },
+          {
+            type: 12, // MediaGallery
+            items: [
+              {
+                media: {
+                  url: 'attachment://welcome_banner.gif'
+                }
+              }
+            ]
+          },
+          {
+            type: 10, // Footer
+            content: `-# ᴡᴇ ɴᴏᴡ ʜᴀᴠᴇ ${count} ᴍᴇᴍʙᴇʀꜱ! <3`
+          }
+        ]
+      }
+    ]
   };
+
+  const formData = new FormData();
+  formData.append('payload_json', JSON.stringify(payload));
+  formData.append('files[0]', new File([logoBuffer], 'logo.jpg', { type: 'image/jpeg' }));
+  formData.append('files[1]', new File([bannerBuffer], 'welcome_banner.gif', { type: 'image/gif' }));
+
+  const res = await fetch(`https://discord.com/api/v10/channels/${targetChannelId}/messages`, {
+    method: 'POST',
+    headers: { Authorization: `Bot ${token}` },
+    body: formData
+  });
+
+  return await res.json();
 }
 
 client.once('clientReady', async () => {
@@ -140,9 +188,8 @@ client.on('guildMemberAdd', async member => {
                     member.guild.channels.cache.find(c => c.name.includes('welcome'));
 
     if (channel) {
-      const payload = buildWelcomeMessage(member);
-      await channel.send(payload);
-      console.log(`[WELCOME SENT] Sent welcome embed for ${member.user.tag} in #${channel.name}`);
+      await sendWelcomeV2(channel.id, member);
+      console.log(`[WELCOME SENT] Sent Components V2 welcome container for ${member.user.tag} in #${channel.name}`);
     } else {
       console.warn(`[WELCOME WARN] Welcome channel (${welcomeChannelId}) not found.`);
     }
@@ -204,10 +251,9 @@ client.on('interactionCreate', async interaction => {
 
   else if (commandName === 'testwelcome') {
     const targetChannel = interaction.guild.channels.cache.get(welcomeChannelId) || interaction.channel;
-    const payload = buildWelcomeMessage(interaction.member);
-    await targetChannel.send(payload);
+    await sendWelcomeV2(targetChannel.id, interaction.member);
     await interaction.reply({
-      content: `✓ Sent preview welcome message to <#${targetChannel.id}>!`,
+      content: `✓ Sent preview Components V2 welcome message to <#${targetChannel.id}>!`,
       ephemeral: true
     });
   }
