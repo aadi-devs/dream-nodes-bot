@@ -468,9 +468,10 @@ client.on('interactionCreate', async interaction => {
 
   // Handle Terms of Service / Policy Dropdown Select Menu
   if (interaction.isStringSelectMenu() && interaction.customId === 'tos_select_menu') {
-    const selected = interaction.values[0];
-    let contentBody = '';
-    let footerTag = '';
+    try {
+      const selected = interaction.values[0];
+      let contentBody = '';
+      let footerTag = '';
 
     if (selected === 'tos_refund') {
       contentBody =
@@ -624,6 +625,15 @@ client.on('interactionCreate', async interaction => {
     };
 
     await interaction.reply(v2Container);
+    } catch (err) {
+      console.error('[TOS SELECT ERROR]', err);
+      if (!interaction.replied && !interaction.deferred) {
+        await interaction.reply({
+          content: '⚠️ An error occurred while retrieving this policy. Please try again or create a ticket in <#1573281601775870043>.',
+          ephemeral: true
+        }).catch(() => null);
+      }
+    }
     return;
   }
 
