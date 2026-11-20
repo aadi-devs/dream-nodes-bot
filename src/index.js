@@ -95,17 +95,17 @@ function buildWelcomeMessage(member) {
       name: `${username}`,
       iconURL: member.user?.displayAvatarURL({ dynamic: true }) || client.user.displayAvatarURL()
     })
-    .setTitle('✦ ‹ 🛸 ・ welcome to dream nodes !')
+    .setTitle('✦ ε 🕊 ・ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ !')
     .setColor([55, 55, 61])
     .setDescription(
-      `💬 ・ say hi in <#1573281610210611266> !\n` +
-      `→ ✦ ・ read the <#1573337303538208778> !\n` +
-      `: 🛸 ‹3 ・ server updates in <#1573337308529434756> !\n` +
-      `・ ⚜ ・ explore hosting in <#1573281486822445128> or ticket in <#1573281601775870043> !`
+      `🧦 ・ ꜱᴀʏ ʜɪ ɪɴ <#1573281610210611266> ˚ ˖ ! ୨୧\n` +
+      `→ ・ ✩ ・ ʀᴇᴀᴅ ᴛʜᴇ <#1573337303538208778> !\n` +
+      `: 🧷 ‹3 ・ ꜱᴇʀᴠᴇʀ ᴜᴘᴅᴀᴛᴇꜱ ɪɴ <#1573337308529434756> ୨୧ ! ˚\n` +
+      `・ ✧ ・ ᴇxᴘʟᴏʀᴇ ʜᴏꜱᴛɪɴɢ ɪɴ <#1573281486822445128> ୨୧ !`
     )
     .setThumbnail('attachment://logo.jpg')
     .setImage('attachment://welcome_banner.gif')
-    .setFooter({ text: `we now have ${count} members! <3` });
+    .setFooter({ text: `ᴡᴇ ɴᴏᴡ ʜᴀᴠᴇ ${count} ᴍᴇᴍʙᴇʀꜱ! <3` });
 
   return {
     content: `<@${member.id}>`,
