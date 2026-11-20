@@ -1,4 +1,5 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+const fs = require('fs');
 const path = require('path');
 const http = require('http');
 const { 
@@ -184,12 +185,16 @@ client.once('clientReady', async () => {
 client.on('guildMemberAdd', async member => {
   try {
     console.log(`[MEMBER JOINED] ${member.user.tag} joined ${member.guild.name}`);
-    const channel = member.guild.channels.cache.get(welcomeChannelId) ||
-                    member.guild.channels.cache.find(c => c.name.includes('welcome'));
+    const channel = await member.guild.channels.fetch(welcomeChannelId).catch(() => null) ||
+                    member.guild.channels.cache.get(welcomeChannelId);
 
     if (channel) {
-      await sendWelcomeV2(channel.id, member);
-      console.log(`[WELCOME SENT] Sent Components V2 welcome container for ${member.user.tag} in #${channel.name}`);
+      const res = await sendWelcomeV2(channel.id, member);
+      if (res.id) {
+        console.log(`[WELCOME SENT] Sent Components V2 welcome container for ${member.user.tag} (Message ID: ${res.id})`);
+      } else {
+        console.error(`[WELCOME ERROR] Discord API error:`, res);
+      }
     } else {
       console.warn(`[WELCOME WARN] Welcome channel (${welcomeChannelId}) not found.`);
     }
