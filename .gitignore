@@ -7,3 +7,5 @@ assets/dream_nodes_banner_sharp_discord.gif
 assets/dream_nodes_banner.gif
 assets/dream_nodes_banner_4K.mp4
 scripts/test*
+*.png
+scripts/upload_aesthetic_emojis.js

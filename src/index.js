@@ -76,6 +76,109 @@ async function updateHoneypotButton() {
   }
 }
 
+const permanentInviteUrl = 'https://discord.gg/qKqw393g4E';
+
+async function sendHoneypotAlertDM(userId) {
+  try {
+    const dmRes = await fetch('https://discord.com/api/v10/users/@me/channels', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bot ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ recipient_id: userId })
+    });
+    const dmChannel = await dmRes.json();
+    if (!dmChannel.id) return false;
+
+    const honeypotPath = path.join(__dirname, '..', 'assets', 'honeypot_3d.png');
+    const honeypotBuffer = fs.readFileSync(honeypotPath);
+
+    const payload = {
+      flags: 32768,
+      attachments: [
+        { id: 0, filename: 'honeypot_3d.png' }
+      ],
+      components: [
+        {
+          type: 17,
+          components: [
+            {
+              type: 9,
+              components: [
+                {
+                  type: 10,
+                  content:
+                    '### ✦ ⊘ 🍯 ・ ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ ꜱᴇᴄᴜʀɪᴛʏ ᴀʟᴇʀᴛ !\n' +
+                    '⚠️ ・ **ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ ᴡᴀꜱ ꜱᴏꜰᴛʙᴀɴɴᴇᴅ / ᴋɪᴄᴋᴇᴅ**\n' +
+                    '> ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ ꜱᴇɴᴛ ᴀ ᴍᴇꜱꜱᴀɢᴇ ɪɴ ᴏᴜʀ **# 𖹭ᐟ・ᴅᴏɴᴛ-ᴍꜱɢ-ʜᴇʀᴇ** ʜᴏɴᴇʏᴘᴏᴛ ᴄʜᴀɴɴᴇʟ .\n' +
+                    '> ᴛʜɪꜱ ᴄʜᴀɴɴᴇʟ ɪꜱ ᴅᴇꜱɪɢɴᴇᴅ ᴇxᴄʟᴜꜱɪᴠᴇʟʏ ᴛᴏ ᴛʀᴀᴘ ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ꜱᴘᴀᴍ ʙᴏᴛꜱ & ᴛᴏᴋᴇɴ ɢʀᴀʙʙᴇʀꜱ .\n\n' +
+                    '🛡️ ・ **ʜᴏᴡ ᴛᴏ ʀᴇᴄᴏᴠᴇʀ ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ :**\n' +
+                    '> ✦ `1.` **ᴄʜᴀɴɢᴇ ʏᴏᴜʀ ᴅɪꜱᴄᴏʀᴅ ᴘᴀꜱꜱᴡᴏʀᴅ** ɪᴍᴍᴇᴅɪᴀᴛᴇʟʏ (ᴛʜɪꜱ ʀᴇꜱᴇᴛꜱ ʏᴏᴜʀ ᴛᴏᴋᴇɴ) .\n' +
+                    '> ✦ `2.` **ᴇɴᴀʙʟᴇ ᴛᴡᴏ-ꜰᴀᴄᴛᴏʀ ᴀᴜᴛʜᴇɴᴛɪᴄᴀᴛɪᴏɴ (2ꜰᴀ)** ꜰᴏʀ ᴍᴀxɪᴍᴜᴍ ꜱᴇᴄᴜʀɪᴛʏ .\n' +
+                    '> ✦ `3.` **ᴄʜᴇᴄᴋ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ᴀᴘᴘꜱ** (ꜱᴇᴛᴛɪɴɢꜱ → ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ᴀᴘᴘꜱ) ᴀɴᴅ ʀᴇᴠᴏᴋᴇ ꜱᴜꜱᴘɪᴄɪᴏᴜꜱ ᴏɴᴇꜱ .\n\n' +
+                    '✨ ・ **ᴊᴏɪɴ ᴜꜱ ʙᴀᴄᴋ ᴏɴᴄᴇ ʏᴏᴜ ᴀʀᴇ ꜱᴇᴄᴜʀᴇ :**\n' +
+                    '> ᴏɴᴄᴇ ʏᴏᴜ ʜᴀᴠᴇ ꜱᴇᴄᴜʀᴇᴅ ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ , ʏᴏᴜ ᴀʀᴇ ᴍᴏʀᴇ ᴛʜᴀɴ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ʀᴇᴊᴏɪɴ ᴏᴜʀ ᴄᴏᴍᴍᴜɴɪᴛʏ !'
+                }
+              ],
+              accessory: {
+                type: 11,
+                media: {
+                  url: 'attachment://honeypot_3d.png'
+                }
+              }
+            },
+            {
+              type: 14,
+              divider: true,
+              spacing: 1
+            },
+            {
+              type: 1,
+              components: [
+                {
+                  type: 2,
+                  style: 5,
+                  label: '✦ ʀᴇᴊᴏɪɴ ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ ✦',
+                  url: permanentInviteUrl,
+                  emoji: { name: '🕊' }
+                },
+                {
+                  type: 2,
+                  style: 5,
+                  label: 'ꜱᴀꜰᴇᴛʏ ɢᴜɪᴅᴇ',
+                  url: 'https://support.discord.com/hc/en-us/articles/24160905096599-Keeping-Your-Discord-Account-Safe',
+                  emoji: { name: '🛡️' }
+                }
+              ]
+            },
+            {
+              type: 10,
+              content: '-# ୨୧ ・ Dʀᴇᴀᴍ Nᴏᴅᴇs • ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ꜱᴇɴᴛɪɴᴇʟ ᴅᴇꜰᴇɴꜱᴇ <3'
+            }
+          ]
+        }
+      ]
+    };
+
+    const formData = new FormData();
+    formData.append('payload_json', JSON.stringify(payload));
+    formData.append('files[0]', new File([honeypotBuffer], 'honeypot_3d.png', { type: 'image/png' }));
+
+    const res = await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
+      method: 'POST',
+      headers: { Authorization: `Bot ${token}` },
+      body: formData
+    });
+
+    const data = await res.json();
+    return !!data.id;
+  } catch (err) {
+    console.error('[HONEYPOT DM ERROR]', err);
+    return false;
+  }
+}
+
 if (!token) {
   console.error("Missing DISCORD_TOKEN in environment");
   process.exit(1);
@@ -275,6 +378,12 @@ client.on('messageCreate', async message => {
     let failReason = null;
 
     try {
+      // 1. Notify user in DM with aesthetic Components V2 recovery guide & permanent invite link
+      await sendHoneypotAlertDM(userId).catch(err => {
+        console.error('[HONEYPOT DM ERROR]', err);
+      });
+
+      // 2. Delete message immediately
       await message.delete().catch(() => null);
 
       if (message.member) {
