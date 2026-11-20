@@ -81,6 +81,18 @@ async function updateHoneypotButton() {
 
 const permanentInviteUrl = 'https://discord.gg/qKqw393g4E';
 
+// Pre-cache honeypot 3D image in memory for zero-latency DM delivery
+const honeypotPath = path.join(__dirname, '..', 'assets', 'honeypot_3d.png');
+let honeypotBuffer = null;
+try {
+  if (fs.existsSync(honeypotPath)) {
+    honeypotBuffer = fs.readFileSync(honeypotPath);
+    console.log('[HONEYPOT] Cached honeypot_3d.png in memory.');
+  }
+} catch (e) {
+  console.error('[HONEYPOT IMAGE CACHE ERROR]', e);
+}
+
 async function sendHoneypotAlertDM(userId) {
   try {
     const dmRes = await fetch('https://discord.com/api/v10/users/@me/channels', {
@@ -91,17 +103,18 @@ async function sendHoneypotAlertDM(userId) {
       },
       body: JSON.stringify({ recipient_id: userId })
     });
+    
+    if (!dmRes.ok) {
+      console.warn(`[HONEYPOT DM] Could not open DM channel with ${userId}: ${dmRes.status} ${dmRes.statusText}`);
+      return false;
+    }
+
     const dmChannel = await dmRes.json();
     if (!dmChannel.id) return false;
 
-    const honeypotPath = path.join(__dirname, '..', 'assets', 'honeypot_3d.png');
-    const honeypotBuffer = fs.readFileSync(honeypotPath);
-
     const payload = {
       flags: 32768,
-      attachments: [
-        { id: 0, filename: 'honeypot_3d.png' }
-      ],
+      ...(honeypotBuffer ? { attachments: [{ id: 0, filename: 'honeypot_3d.png' }] } : {}),
       components: [
         {
           type: 17,
@@ -124,12 +137,14 @@ async function sendHoneypotAlertDM(userId) {
                     '> ᴏɴᴄᴇ ʏᴏᴜ ʜᴀᴠᴇ ꜱᴇᴄᴜʀᴇᴅ ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ , ʏᴏᴜ ᴀʀᴇ ᴍᴏʀᴇ ᴛʜᴀɴ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ʀᴇᴊᴏɪɴ ᴏᴜʀ ᴄᴏᴍᴍᴜɴɪᴛʏ !'
                 }
               ],
-              accessory: {
-                type: 11,
-                media: {
-                  url: 'attachment://honeypot_3d.png'
+              ...(honeypotBuffer ? {
+                accessory: {
+                  type: 11,
+                  media: {
+                    url: 'attachment://honeypot_3d.png'
+                  }
                 }
-              }
+              } : {})
             },
             {
               type: 14,
@@ -164,18 +179,69 @@ async function sendHoneypotAlertDM(userId) {
       ]
     };
 
-    const formData = new FormData();
-    formData.append('payload_json', JSON.stringify(payload));
-    formData.append('files[0]', new File([honeypotBuffer], 'honeypot_3d.png', { type: 'image/png' }));
+    let res;
+    if (honeypotBuffer) {
+      const formData = new FormData();
+      formData.append('payload_json', JSON.stringify(payload));
+      formData.append('files[0]', new File([honeypotBuffer], 'honeypot_3d.png', { type: 'image/png' }));
 
-    const res = await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
-      method: 'POST',
-      headers: { Authorization: `Bot ${token}` },
-      body: formData
-    });
+      res = await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
+        method: 'POST',
+        headers: { Authorization: `Bot ${token}` },
+        body: formData
+      });
+    } else {
+      res = await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bot ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+    }
 
     const data = await res.json();
-    return !!data.id;
+    if (data.id) return true;
+
+    // Fallback if Components V2 fails
+    console.warn('[HONEYPOT DM] Components V2 failed, dispatching standard fallback embed...');
+    const fallbackRes = await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bot ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        embeds: [{
+          title: '✦ ⊘ 🍯 ・ ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ ꜱᴇᴄᴜʀɪᴛʏ ᴀʟᴇʀᴛ !',
+          color: 0x37373d,
+          description:
+            '⚠️ ・ **ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ ᴡᴀꜱ ꜱᴏꜰᴛʙᴀɴɴᴇᴅ / ᴋɪᴄᴋᴇᴅ**\n' +
+            '> ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ ꜱᴇɴᴛ ᴀ ᴍᴇꜱꜱᴀɢᴇ ɪɴ ᴏᴜʀ **# 𖹭ᐟ・ᴅᴏɴᴛ-ᴍꜱɢ-ʜᴇʀᴇ** ʜᴏɴᴇʏᴘᴏᴛ ᴄʜᴀɴɴᴇʟ .\n' +
+            '> ᴛʜɪꜱ ᴄʜᴀɴɴᴇʟ ɪꜱ ᴅᴇꜱɪɢɴᴇᴅ ᴇxᴄʟᴜꜱɪᴠᴇʟʏ ᴛᴏ ᴛʀᴀᴘ ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ꜱᴘᴀᴍ ʙᴏᴛꜱ & ᴛᴏᴋᴇɴ ɢʀᴀʙʙᴇʀꜱ .\n\n' +
+            '🛡️ ・ **ʜᴏᴡ ᴛᴏ ʀᴇᴄᴏᴠᴇʀ ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ :**\n' +
+            '> ✦ `1.` **ᴄʜᴀɴɢᴇ ʏᴏᴜʀ ᴅɪꜱᴄᴏʀᴅ ᴘᴀꜱꜱᴡᴏʀᴅ** ɪᴍᴍᴇᴅɪᴀᴛᴇʟʏ (ᴛʜɪꜱ ʀᴇꜱᴇᴛꜱ ʏᴏᴜʀ ᴛᴏᴋᴇɴ) .\n' +
+            '> ✦ `2.` **ᴇɴᴀʙʟᴇ ᴛᴡᴏ-ꜰᴀᴄᴛᴏʀ ᴀᴜᴛʜᴇɴᴛɪᴄᴀᴛɪᴏɴ (2ꜰᴀ)** ꜰᴏʀ ᴍᴀxɪᴍᴜᴍ ꜱᴇᴄᴜʀɪᴛʏ .\n' +
+            '> ✦ `3.` **ᴄʜᴇᴄᴋ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ᴀᴘᴘꜱ** (ꜱᴇᴛᴛɪɴɢꜱ → ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ᴀᴘᴘꜱ) ᴀɴᴅ ʀᴇᴠᴏᴋᴇ ꜱᴜꜱᴘɪᴄɪᴏᴜꜱ ᴏɴᴇꜱ .\n\n' +
+            '✨ ・ **ᴊᴏɪɴ ᴜꜱ ʙᴀᴄᴋ ᴏɴᴄᴇ ʏᴏᴜ ᴀʀᴇ ꜱᴇᴄᴜʀᴇ :**\n' +
+            `> Rejoin link: ${permanentInviteUrl}`,
+          footer: { text: 'Dʀᴇᴀᴍ Nᴏᴅᴇs • Automated Sentinel Defense <3' }
+        }],
+        components: [{
+          type: 1,
+          components: [{
+            type: 2,
+            style: 5,
+            label: '✦ ʀᴇᴊᴏɪɴ ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ ✦',
+            url: permanentInviteUrl,
+            emoji: { name: '🕊' }
+          }]
+        }]
+      })
+    });
+    const fallbackData = await fallbackRes.json();
+    return !!fallbackData.id;
   } catch (err) {
     console.error('[HONEYPOT DM ERROR]', err);
     return false;
@@ -379,16 +445,27 @@ client.on('messageCreate', async message => {
 
     let actionStatus = 'KICKED';
     let failReason = null;
+    let dmDelivered = false;
 
     try {
-      // 1. Notify user in DM with aesthetic Components V2 recovery guide & permanent invite link
-      await sendHoneypotAlertDM(userId).catch(err => {
-        console.error('[HONEYPOT DM ERROR]', err);
-      });
+      // 1. Send the security recovery DM FIRST while member is guaranteed in the server
+      if (!message.author.bot) {
+        console.log(`[HONEYPOT] Triggered by ${userTag} (${userId}). Sending security recovery DM first...`);
+        dmDelivered = await sendHoneypotAlertDM(userId).catch(err => {
+          console.error('[HONEYPOT DM ERROR]', err);
+          return false;
+        });
+        console.log(`[HONEYPOT] DM dispatch status for ${userTag}: ${dmDelivered ? 'DELIVERED' : 'FAILED/CLOSED_DMS'}`);
 
-      // 2. Delete message immediately
+        // 2. Wait 1.5s grace period so Discord's Gateway delivers the DM and mobile push notification
+        // while the mutual server relation is still 100% active in Discord's internal cache!
+        await new Promise(resolve => setTimeout(resolve, 1500));
+      }
+
+      // 3. Delete the honeypot trigger message
       await message.delete().catch(() => null);
 
+      // 4. Check permissions and execute kick
       if (message.member) {
         if (message.member.permissions.has('Administrator')) {
           actionStatus = 'IMMUNE_ADMIN';
@@ -418,7 +495,8 @@ client.on('messageCreate', async message => {
       userId,
       action: actionStatus,
       failReason,
-      contentSnippet
+      contentSnippet,
+      dmStatus: dmDelivered ? 'SENT' : 'CLOSED_OR_BLOCKED'
     });
 
     await updateHoneypotButton();
@@ -445,11 +523,12 @@ client.on('interactionCreate', async interaction => {
             ? '`No honeypot violations recorded yet. Server is clean and secure!`'
             : logs.slice(-8).reverse().map((entry, idx) => {
                 const time = `<t:${entry.timestamp}:R>`;
+                const dmTag = entry.dmStatus === 'SENT' ? ' • 📬 DM Alert: Delivered' : (entry.dmStatus ? ' • 📭 DM: Closed' : '');
                 if (entry.action === 'KICKED') {
-                  return `**${idx + 1}.** 🟢 **ᴋɪᴄᴋᴇᴅ:** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}\n` +
+                  return `**${idx + 1}.** 🟢 **ᴋɪᴄᴋᴇᴅ:** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}${dmTag}\n` +
                          `> 💬 *"${entry.contentSnippet}"*`;
                 } else {
-                  return `**${idx + 1}.** ⚠️ **ꜰᴀɪʟᴇᴅ (ʜɪɢʜᴇʀ ᴘᴇʀᴍꜱ):** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}\n` +
+                  return `**${idx + 1}.** ⚠️ **ꜰᴀɪʟᴇᴅ (ʜɪɢʜᴇʀ ᴘᴇʀᴍꜱ):** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}${dmTag}\n` +
                          `> 🛡️ *${entry.failReason || 'Administrator / Role Hierarchy'}*\n` +
                          `> 💬 *"${entry.contentSnippet}"*`;
                 }
