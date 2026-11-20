@@ -17,6 +17,7 @@ const token = process.env.DISCORD_TOKEN;
 const clientId = process.env.DISCORD_CLIENT_ID || '1573271779915337811';
 const guildId = '1573272872737181696';
 const welcomeChannelId = '1573337290502176848';
+const honeypotChannelId = '1573337296042729502';
 
 if (!token) {
   console.error("Missing DISCORD_TOKEN in environment");
@@ -200,6 +201,22 @@ client.on('guildMemberAdd', async member => {
     }
   } catch (err) {
     console.error(`[WELCOME ERROR] Failed to send welcome message:`, err);
+  }
+});
+
+// Honeypot Protection: Auto-kick & delete anyone messaging in dont-msg-here
+client.on('messageCreate', async message => {
+  if (message.channelId === honeypotChannelId) {
+    if (message.author.id === client.user.id) return;
+    try {
+      await message.delete().catch(() => null);
+      if (message.member && !message.member.permissions.has('Administrator')) {
+        await message.member.kick('Honeypot triggered: Sent message in #𖹭ᐟ・ᴅᴏɴᴛ-ᴍꜱɢ-ʜᴇʀᴇ').catch(() => null);
+        console.log(`[HONEYPOT] Deleted message and kicked ${message.author.tag} (${message.author.id})`);
+      }
+    } catch (err) {
+      console.error('[HONEYPOT ERROR]', err);
+    }
   }
 });
 
