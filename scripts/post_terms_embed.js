@@ -10,21 +10,26 @@ const payload = {
   flags: 32768,
   components: [
     {
-      type: 17, // Container with accent_color: null (borderless)
+      type: 17, // Borderless Container
       components: [
         {
           type: 10,
           content:
-            '### <a:b_fire:1573381944702533732> • DREAM NODES [TOS & POLICIES]\n\n' +
-            '**Server Information**\n' +
-            '| <a:hostinger:1573382335355691089> **Welcome to Dream Nodes!**\n' +
-            '| <a:sparkles_sparkles:1573382447603785928> A premium cloud and game server hosting provider built for ultra-fast performance, rock-solid stability, and 24/7 uptime. Whether you are launching a massive Minecraft network or deploying high-speed cloud VPS nodes, we provide enterprise-grade infrastructure.\n\n' +
-            '<a:fsk_warning:1573382318364692703> • **Discover Our Policies**\n' +
-            '| <a:Arrow_White:1573382131026108678> Explore our official terms of service, refund rules, VPS fair-use limits, and Minecraft hosting guidelines.\n' +
-            '| Select a category below to learn more.'
+            '# <a:b_fire:1573381944702533732> Dream Nodes | Official Terms & Policies\n\n' +
+            '> <a:hostinger:1573382335355691089> **Welcome to the official terms and policies hub of Dream Nodes!**\n' +
+            '> \n' +
+            '> <a:sparkles_sparkles:1573382447603785928> A premium cloud and game hosting provider built for ultra-fast performance, rock-solid stability, and 24/7 uptime. Whether you are running a massive Minecraft network or deploying high-speed cloud VPS nodes, our infrastructure is built to scale.\n\n' +
+            '## <a:fsk_warning:1573382318364692703> Explore Our Policies\n' +
+            '> <a:Arrow_White:1573382131026108678> Select a category from the dropdown menu below to access its detailed terms, fair-use policies, and discover more about Dream Nodes.\n\n' +
+            'Choose a policy below to get started. <a:hostinger:1573382335355691089>'
         },
         {
-          type: 1,
+          type: 14, // Separator
+          divider: true,
+          spacing: 1
+        },
+        {
+          type: 1, // ActionRow with Select Menu
           components: [
             {
               type: 3,
@@ -68,11 +73,19 @@ const payload = {
           ]
         },
         {
+          type: 14, // Separator
+          divider: true,
+          spacing: 1
+        },
+        {
           type: 10,
           content:
-            '<a:Lightning:1573382171257737317> • **Grow With Dream Nodes**\n' +
-            '| <a:Tick5:1573382205395177532> Scale your projects with confidence backed by 99.9% uptime SLA and automated 24/7 DDoS mitigation.\n\n' +
-            '💙 **Together, We Grow.**'
+            '## <a:Lightning:1573382171257737317> Official Terms & Security\n' +
+            '> <a:Cross:1573382156296917032> Always ensure your account and services adhere to our fair-use standards. Prohibited activities including DDoS, mining, port scanning, and abuse will result in immediate termination.\n\n' +
+            '---\n\n' +
+            '> <a:hostinger:1573382335355691089> **Stay connected. Stay informed. Grow together.**\n' +
+            '> \n' +
+            '> 💙 Thank you for being part of **Dream Nodes**!'
         }
       ]
     }
