@@ -1,0 +1,9 @@
+.env
+node_modules/
+emojis/
+assets/temp*
+assets/dream_nodes_banner_1080p_sharp.gif
+assets/dream_nodes_banner_sharp_discord.gif
+assets/dream_nodes_banner.gif
+assets/dream_nodes_banner_4K.mp4
+scripts/test*
