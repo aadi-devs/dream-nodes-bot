@@ -96,7 +96,6 @@ function buildWelcomeMessage(member) {
       iconURL: member.user?.displayAvatarURL({ dynamic: true }) || client.user.displayAvatarURL()
     })
     .setTitle('✦ ε 🕊 ・ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ !')
-    .setColor([55, 55, 61])
     .setDescription(
       `🧦 ・ ꜱᴀʏ ʜɪ ɪɴ <#1573281610210611266> ˚ ˖ ! ୨୧\n` +
       `→ ・ ✩ ・ ʀᴇᴀᴅ ᴛʜᴇ <#1573337303538208778> !\n` +
