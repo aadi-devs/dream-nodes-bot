@@ -25,6 +25,15 @@ const honeypotChannelId = '1573337296042729502';
 const honeypotMessageId = '1573402481214492685';
 const honeypotLogsFile = path.join(__dirname, '..', 'data', 'honeypot_logs.json');
 
+// Tickets System Module
+const {
+  handleTicketCreate,
+  handleTicketClaim,
+  handleTicketClosePrompt,
+  handleTicketCloseConfirm,
+  handleTicketCloseCancel
+} = require('./tickets');
+
 function getHoneypotLogs() {
   try {
     if (fs.existsSync(honeypotLogsFile)) {
@@ -553,7 +562,26 @@ client.on('interactionCreate', async interaction => {
         embeds: [embed],
         ephemeral: true // Dismissable hidden message
       });
+      return;
+    } else if (interaction.customId.startsWith('ticket_claim_')) {
+      await handleTicketClaim(interaction);
+      return;
+    } else if (interaction.customId.startsWith('ticket_close_confirm_')) {
+      await handleTicketCloseConfirm(interaction);
+      return;
+    } else if (interaction.customId.startsWith('ticket_close_cancel_')) {
+      await handleTicketCloseCancel(interaction);
+      return;
+    } else if (interaction.customId.startsWith('ticket_close_')) {
+      await handleTicketClosePrompt(interaction);
+      return;
     }
+    return;
+  }
+
+  // Handle Ticket Select Menu
+  if (interaction.isStringSelectMenu() && interaction.customId === 'ticket_create_menu') {
+    await handleTicketCreate(interaction);
     return;
   }
 
