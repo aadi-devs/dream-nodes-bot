@@ -20,6 +20,7 @@ const token = process.env.DISCORD_TOKEN;
 const clientId = process.env.DISCORD_CLIENT_ID || '1573271779915337811';
 const guildId = '1573272872737181696';
 const welcomeChannelId = '1573337290502176848';
+const clientRoleId = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
 const honeypotChannelId = '1573337296042729502';
 const honeypotMessageId = '1573402481214492685';
 const honeypotLogsFile = path.join(__dirname, '..', 'data', 'honeypot_logs.json');
@@ -411,8 +412,19 @@ client.once('clientReady', async () => {
   await registerCommands();
 });
 
-// Automatic Welcome Message on Member Join
+// Automatic Welcome Message and Instant Client Auto-Role on Member Join
 client.on('guildMemberAdd', async member => {
+  // 1. Instantly auto-assign the Client role
+  try {
+    if (!member.roles.cache.has(clientRoleId)) {
+      await member.roles.add(clientRoleId, 'Auto-assigned Client role on member join');
+      console.log(`[AUTOROLE] Instantly assigned Client role (1573412778620747886) to ${member.user.tag} (${member.id})`);
+    }
+  } catch (roleErr) {
+    console.error(`[AUTOROLE ERROR] Failed to assign Client role to ${member.user.tag}:`, roleErr);
+  }
+
+  // 2. Dispatch the aesthetic welcome container
   try {
     console.log(`[MEMBER JOINED] ${member.user.tag} joined ${member.guild.name}`);
     const channel = await member.guild.channels.fetch(welcomeChannelId).catch(() => null) ||
