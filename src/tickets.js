@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { OverwriteType, PermissionFlagsBits } = require('discord.js');
 
 const dataDir = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
@@ -185,12 +186,18 @@ function buildTicketPanelPayload() {
 
 // Handle Ticket Creation from Select Menu
 async function handleTicketCreate(interaction) {
-  const selectedValue = interaction.values[0];
+  // 1. Immediately defer reply so Discord Gateway never times out
+  try {
+    await interaction.deferReply({ ephemeral: true });
+  } catch (deferErr) {
+    console.error('[TICKET DEFER ERROR]', deferErr);
+  }
+
+  const selectedValue = interaction.values?.[0];
   const catConfig = CATEGORIES[selectedValue];
   if (!catConfig) {
-    return interaction.reply({
-      content: '⚠️ Unknown department selected. Please try again.',
-      ephemeral: true
+    return interaction.editReply({
+      content: '⚠️ Unknown department selected. Please try again.'
     });
   }
 
@@ -204,14 +211,11 @@ async function handleTicketCreate(interaction) {
   if (existingTicket) {
     const channelExists = interaction.guild.channels.cache.get(existingTicket.channelId);
     if (channelExists) {
-      return interaction.reply({
-        content: `⚠️ You already have an open ticket in this department: <#${existingTicket.channelId}>. Please use that channel or close it before creating a new one.`,
-        ephemeral: true
+      return interaction.editReply({
+        content: `⚠️ You already have an open ticket in this department: <#${existingTicket.channelId}>. Please use that channel or close it before creating a new one.`
       });
     }
   }
-
-  await interaction.deferReply({ ephemeral: true });
 
   try {
     const ticketNum = String(data.counter).padStart(4, '0');
@@ -224,22 +228,46 @@ async function handleTicketCreate(interaction) {
     // Roles to grant channel view
     const rolesToGrant = catConfig.highStaffOnly ? HIGH_STAFF_ROLES : STAFF_ROLES;
 
+    // Use explicit OverwriteType and PermissionFlagsBits to prevent InvalidType cache errors
     const overwrites = [
       {
         id: interaction.guild.id, // @everyone
-        deny: ['ViewChannel']
+        deny: [PermissionFlagsBits.ViewChannel],
+        type: OverwriteType.Role
       },
       {
         id: interaction.client.user.id, // Bot
-        allow: ['ViewChannel', 'ManageChannels', 'SendMessages', 'EmbedLinks', 'AttachFiles', 'ReadMessageHistory']
+        allow: [
+          PermissionFlagsBits.ViewChannel,
+          PermissionFlagsBits.ManageChannels,
+          PermissionFlagsBits.SendMessages,
+          PermissionFlagsBits.EmbedLinks,
+          PermissionFlagsBits.AttachFiles,
+          PermissionFlagsBits.ReadMessageHistory
+        ],
+        type: OverwriteType.Member
       },
       {
         id: interaction.user.id, // Ticket Creator
-        allow: ['ViewChannel', 'SendMessages', 'EmbedLinks', 'AttachFiles', 'ReadMessageHistory']
+        allow: [
+          PermissionFlagsBits.ViewChannel,
+          PermissionFlagsBits.SendMessages,
+          PermissionFlagsBits.EmbedLinks,
+          PermissionFlagsBits.AttachFiles,
+          PermissionFlagsBits.ReadMessageHistory
+        ],
+        type: OverwriteType.Member
       },
       ...rolesToGrant.map(rId => ({
         id: rId,
-        allow: ['ViewChannel', 'SendMessages', 'EmbedLinks', 'AttachFiles', 'ReadMessageHistory']
+        allow: [
+          PermissionFlagsBits.ViewChannel,
+          PermissionFlagsBits.SendMessages,
+          PermissionFlagsBits.EmbedLinks,
+          PermissionFlagsBits.AttachFiles,
+          PermissionFlagsBits.ReadMessageHistory
+        ],
+        type: OverwriteType.Role
       }))
     ];
 
@@ -255,6 +283,7 @@ async function handleTicketCreate(interaction) {
       ticketNum,
       categoryKey: catConfig.key,
       categoryName: catConfig.name,
+      channelId: ticketChannel.id,
       userId: interaction.user.id,
       userTag: interaction.user.tag,
       claimedBy: null,
@@ -332,11 +361,11 @@ async function handleTicketCreate(interaction) {
       ]
     };
 
-    // Send the welcome message in the newly created channel
+    const botAuthToken = process.env.DISCORD_TOKEN || interaction.client.token;
     await fetch(`https://discord.com/api/v10/channels/${ticketChannel.id}/messages`, {
       method: 'POST',
       headers: {
-        Authorization: `Bot ${interaction.client.token}`,
+        Authorization: `Bot ${botAuthToken}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(ticketMessagePayload)
