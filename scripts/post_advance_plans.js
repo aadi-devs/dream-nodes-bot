@@ -3,17 +3,17 @@ const path = require('path');
 
 const envPath = path.join(__dirname, '..', '.env');
 const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].trim();
-const channelId = '1573281486822445128'; // # ♘・ʙᴜᴅɢᴇᴛ-ᴘʟᴀɴꜱ
+const channelId = '1573281486822445128'; // # ♘・ᴀᴅᴠᴀɴᴄᴇ-ᴘʟᴀɴꜱ
 const messageId = '1573688254908207249';
 const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
 const websiteUrl = 'https://dreamnodes.com';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
 
 const sectionHeader =
-`# <a:minecraft:1573382379215659081> Dream Nodes | Budget Minecraft Hosting
+`# <a:minecraft:1573382379215659081> Dream Nodes | Advance Minecraft Hosting
 ## <a:Attacks:1573382140006244363> 🛡️ Enterprise Game-Shield Protected Nodes
 
-> <a:siren:1573382431065509981> **MILITARY-GRADE DEFENSE INCLUDED WITH EVERY SERVER**
+> <a:siren:1573382431065509981> **MILITARY-GRADE DEFENSE INCLUDED ON ALL ADVANCE PLANS**
 > <a:Lightning:1573382171257737317> Every node is fortified with automated **Layer 4 & Layer 7 Game Mitigation** built specifically for Minecraft protocols. Our edge filters intercept UDP/TCP floods, SYN storms, null-ping exploits, and bot raids in real time with **sub-second reaction**—keeping your server locked at 20 TPS with zero downtime.
 
 ### <a:hostinger:1573382335355691089> Key Defense Capabilities:
@@ -61,7 +61,7 @@ const sectionHeavy =
 > ✦ <:RAM:1573382492973568062> \`64 GB DDR4\` ┃ <:cpu:1573382485310709781> \`16 Cores\` ┃ <:disk:1573382500795818114> \`300 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹6,000 /mo\``;
 
 const sectionFooter =
-`### <a:sparkles_sparkles:1573382447603785928> Node Specifications & Features:
+`### <a:sparkles_sparkles:1573382447603785928> All Advance Plans Include:
 > <:bandwith55:1573382523201912842> **1 Gbps High-Speed Network Uplink** ┃ <:backup:1573382515341664270> **Automated Off-site Daily Snapshots**
 > <a:Tick5:1573382205395177532> **Custom Pterodactyl Panel** (SFTP, Full Root File Access, Split Ports)
 > <a:hostinger:1573382335355691089> **Instant Provisioning Upon Ticket Confirmation**
@@ -149,15 +149,15 @@ const v2Payload = {
         },
         {
           type: 10,
-          content: '-# 🛡️ Dream Nodes • Enterprise Protected Minecraft Hosting Solutions'
+          content: '-# 🛡️ Dream Nodes • Enterprise Protected Advance Minecraft Hosting Solutions'
         }
       ]
     }
   ]
 };
 
-async function updateBudgetPlans() {
-  console.log('Updating Budget Plans V2 Container...');
+async function updateAdvancePlans() {
+  console.log('Updating Advance Plans V2 Container...');
   const res = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages/${messageId}`, {
     method: 'PATCH',
     headers: {
@@ -169,10 +169,10 @@ async function updateBudgetPlans() {
 
   const data = await res.json();
   if (data.id) {
-    console.log('✓ Successfully updated Budget Plans embed! Message ID:', data.id);
+    console.log('✓ Successfully updated Advance Plans embed! Message ID:', data.id);
   } else {
     console.error('✗ Failed to update:', JSON.stringify(data, null, 2));
   }
 }
 
-updateBudgetPlans();
+updateAdvancePlans();
