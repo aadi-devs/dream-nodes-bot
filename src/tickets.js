@@ -1,6 +1,12 @@
 const fs = require('fs');
 const path = require('path');
-const { OverwriteType, PermissionFlagsBits } = require('discord.js');
+const { 
+  OverwriteType, 
+  PermissionFlagsBits, 
+  EmbedBuilder, 
+  AttachmentBuilder 
+} = require('discord.js');
+const { generateHtmlTranscript, formatDuration } = require('./transcript');
 
 const dataDir = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
@@ -25,6 +31,8 @@ function saveTicketData(data) {
   }
 }
 
+const TICKET_LOGS_CHANNEL_ID = '1573780018834710548'; // ⊘・ᴛɪᴄᴋᴇᴛ-ʟᴏɢꜱ
+
 const CATEGORIES = {
   ticket_buy: {
     key: 'buy',
@@ -32,7 +40,43 @@ const CATEGORIES = {
     categoryId: '1573281628438921246', // ✦----- BUY TICKETS -----✦
     emoji: '<a:cash:1573382269735805008>',
     emojiObj: { id: '1573382269735805008', name: 'cash', animated: true },
-    desc: 'Order Minecraft nodes, VPS, RDP, Web or Bot hosting'
+    desc: 'Order Minecraft nodes, VPS, RDP, Web or Bot hosting',
+    staffPingRoleId: '1573412759532732567', // ⋆｡°✩ ʂυρρσɾƚ ✩°｡⋆
+    modalTitle: '🛒 Order Hosting Services',
+    modalInputs: [
+      {
+        customId: 'buy_plan',
+        label: 'Desired Service / Plan',
+        placeholder: 'e.g. Budget MC 4GB, Intel VPS 8GB, Bot Hosting 2GB, Web L',
+        style: 1, // Short
+        required: true,
+        max_length: 100
+      },
+      {
+        customId: 'buy_location',
+        label: 'Server Location',
+        placeholder: 'e.g. India (Noida) or Singapore',
+        style: 1, // Short
+        required: true,
+        max_length: 100
+      },
+      {
+        customId: 'buy_payment',
+        label: 'Preferred Payment Method',
+        placeholder: 'e.g. UPI / PhonePe / GPay, Crypto, Debit/Credit Card',
+        style: 1, // Short
+        required: true,
+        max_length: 100
+      },
+      {
+        customId: 'buy_notes',
+        label: 'Additional Requirements / Custom Specs',
+        placeholder: 'e.g. OS choice (Ubuntu/Debian), custom subdomain, billing cycle',
+        style: 2, // Paragraph
+        required: false,
+        max_length: 1000
+      }
+    ]
   },
   ticket_queries: {
     key: 'queries',
@@ -40,7 +84,35 @@ const CATEGORIES = {
     categoryId: '1573773163605659768', // ✦----- QUERY TICKETS -----✦
     emoji: '<a:chat:1573382277164040214>',
     emojiObj: { id: '1573382277164040214', name: 'chat', animated: true },
-    desc: 'Ask about server specs, custom builds, locations or billing'
+    desc: 'Ask about server specs, custom builds, locations or billing',
+    staffPingRoleId: '1573412759532732567', // ⋆｡°✩ ʂυρρσɾƚ ✩°｡⋆
+    modalTitle: '❓ General Inquiry & Pre-Sales',
+    modalInputs: [
+      {
+        customId: 'query_topic',
+        label: 'Inquiry Topic / Subject',
+        placeholder: 'e.g. Server specs, Custom configuration, Billing question',
+        style: 1, // Short
+        required: true,
+        max_length: 100
+      },
+      {
+        customId: 'query_details',
+        label: 'How can our staff team assist you?',
+        placeholder: 'Please describe your inquiry or questions in detail...',
+        style: 2, // Paragraph
+        required: true,
+        max_length: 1000
+      },
+      {
+        customId: 'query_client',
+        label: 'Are you an existing client?',
+        placeholder: 'Yes (mention service IP / ID if applicable) or No',
+        style: 1, // Short
+        required: false,
+        max_length: 100
+      }
+    ]
   },
   ticket_staff_report: {
     key: 'report',
@@ -49,7 +121,35 @@ const CATEGORIES = {
     emoji: '<a:siren:1573382431065509981>',
     emojiObj: { id: '1573382431065509981', name: 'siren', animated: true },
     desc: 'Confidential report sent directly to executive management',
-    highStaffOnly: true
+    highStaffOnly: true,
+    staffPingRoleId: '1573412749986365500', // ⋆｡°✩ αԃɱιɳ ✩°｡⋆
+    modalTitle: '🚨 Confidential Staff Report',
+    modalInputs: [
+      {
+        customId: 'report_staff',
+        label: 'Staff Member Name / Discord ID',
+        placeholder: 'e.g. @staffmember or 18-digit Discord ID',
+        style: 1, // Short
+        required: true,
+        max_length: 100
+      },
+      {
+        customId: 'report_reason',
+        label: 'Incident Details & Rules Violated',
+        placeholder: 'Explain what happened, date/time, and misconduct observed...',
+        style: 2, // Paragraph
+        required: true,
+        max_length: 1000
+      },
+      {
+        customId: 'report_evidence',
+        label: 'Proof / Evidence Links',
+        placeholder: 'Links to screenshots, recordings, or message links',
+        style: 2, // Paragraph
+        required: true,
+        max_length: 1000
+      }
+    ]
   },
   ticket_problems: {
     key: 'problems',
@@ -57,7 +157,35 @@ const CATEGORIES = {
     categoryId: '1573773168177582142', // ✦----- PROBLEM TICKETS -----✦
     emoji: '<a:settings:1573382421611806763>',
     emojiObj: { id: '1573382421611806763', name: 'settings', animated: true },
-    desc: 'Report server offline, node downtime, bugs or control panel help'
+    desc: 'Report server offline, node downtime, bugs or control panel help',
+    staffPingRoleId: '1573412759532732567', // ⋆｡°✩ ʂυρρσɾƚ ✩°｡⋆
+    modalTitle: '🛠️ Technical Problems & Support',
+    modalInputs: [
+      {
+        customId: 'problem_service',
+        label: 'Affected Service IP or Server / Node ID',
+        placeholder: 'e.g. 194.xxx.xxx.xxx or Pterodactyl Server ID / Name',
+        style: 1, // Short
+        required: true,
+        max_length: 100
+      },
+      {
+        customId: 'problem_desc',
+        label: 'Describe the issue you are experiencing',
+        placeholder: 'e.g. Server won\'t start, high latency, panel connection timeout',
+        style: 2, // Paragraph
+        required: true,
+        max_length: 1000
+      },
+      {
+        customId: 'problem_logs',
+        label: 'Error logs / Steps tried',
+        placeholder: 'Paste console error, crash stacktrace, or troubleshooting tried',
+        style: 2, // Paragraph
+        required: false,
+        max_length: 1000
+      }
+    ]
   }
 };
 
@@ -90,6 +218,80 @@ function isStaff(member, highOnly = false) {
   return rolesToCheck.some(roleId => member.roles?.cache?.has(roleId));
 }
 
+/**
+ * Log Ticket Events to the dedicated logs channel (# ⊘・ᴛɪᴄᴋᴇᴛ-ʟᴏɢꜱ)
+ */
+async function logTicketEvent(client, eventType, data, attachment = null) {
+  try {
+    const logsChannel = client.channels.cache.get(TICKET_LOGS_CHANNEL_ID) ||
+      await client.channels.fetch(TICKET_LOGS_CHANNEL_ID).catch(() => null);
+    if (!logsChannel) {
+      console.warn('[TICKET LOGS] Logs channel not found:', TICKET_LOGS_CHANNEL_ID);
+      return;
+    }
+
+    if (eventType === 'OPEN') {
+      const intakeSummary = (data.intakeAnswers || [])
+        .map(a => `> **${a.label}:** \`${a.value}\``)
+        .join('\n');
+
+      const embed = new EmbedBuilder()
+        .setTitle(`🟢 Ticket Opened: #${data.ticketNum}`)
+        .setColor([67, 181, 129]) // Discord Green
+        .setDescription(
+          `📂 **Category:** \`${data.categoryName}\`\n` +
+          `👤 **Opened By:** <@${data.userId}> (\`${data.userTag}\` ┃ \`${data.userId}\`)\n` +
+          `📍 **Channel:** <#${data.channelId}>\n` +
+          `⏰ **Opened At:** <t:${Math.floor(Date.now() / 1000)}:F> (<t:${Math.floor(Date.now() / 1000)}:R>)\n\n` +
+          `### 📋 Submitted Intake Details:\n` +
+          (intakeSummary || '> *None provided*')
+        )
+        .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
+        .setTimestamp();
+
+      await logsChannel.send({ embeds: [embed] });
+    } else if (eventType === 'CLAIM') {
+      const embed = new EmbedBuilder()
+        .setTitle(`✋ Ticket Claimed: #${data.ticketNum}`)
+        .setColor([250, 166, 26]) // Discord Amber
+        .setDescription(
+          `📂 **Category:** \`${data.categoryName}\`\n` +
+          `🛡️ **Claimed By:** <@${data.claimedBy}> (\`${data.claimedTag}\`)\n` +
+          `👤 **Ticket Creator:** <@${data.userId}> (\`${data.userTag}\`)\n` +
+          `📍 **Channel:** <#${data.channelId}>\n` +
+          `⏰ **Claimed At:** <t:${Math.floor(Date.now() / 1000)}:R>`
+        )
+        .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
+        .setTimestamp();
+
+      await logsChannel.send({ embeds: [embed] });
+    } else if (eventType === 'CLOSE') {
+      const embed = new EmbedBuilder()
+        .setTitle(`🔒 Ticket Closed: #${data.ticketNum}`)
+        .setColor([240, 71, 71]) // Discord Red
+        .setDescription(
+          `📂 **Category:** \`${data.categoryName}\`\n` +
+          `👤 **Opened By:** <@${data.userId}> (\`${data.userTag}\`)\n` +
+          `🛡️ **Claimed By:** ${data.claimedBy ? `<@${data.claimedBy}> (\`${data.claimedTag}\`)` : '`Unclaimed`'}\n` +
+          `🔒 **Closed By:** <@${data.closedBy}> (\`${data.closedTag}\`)\n` +
+          `⏱️ **Total Duration:** \`${data.duration}\`\n` +
+          `💬 **Total Messages:** \`${data.messageCount}\`\n\n` +
+          `📄 **Transcript:** The full conversation history has been archived and uploaded below as an HTML transcript.`
+        )
+        .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
+        .setTimestamp();
+
+      const options = { embeds: [embed] };
+      if (attachment) {
+        options.files = [attachment];
+      }
+      await logsChannel.send(options);
+    }
+  } catch (err) {
+    console.error('[TICKET LOG EVENT ERROR]', err);
+  }
+}
+
 // Build the Main Ticket Panel Components V2 Payload
 function buildTicketPanelPayload() {
   const panelHeader =
@@ -109,7 +311,7 @@ function buildTicketPanelPayload() {
 
 ### <a:info:1573382351214354483> Support Guidelines:
 > ✦ **One Ticket Per Topic:** Please avoid creating multiple tickets for the same inquiry.
-> ✦ **Provide Full Details:** State your plan, node location, or invoice ID immediately upon opening.
+> ✦ **Fill Required Questions:** State your plan, node location, or issue details in the popup form.
 > ✦ **Patient Response:** Our staff team is alerted automatically. Unnecessary pings are not required.`;
 
   return {
@@ -184,30 +386,81 @@ function buildTicketPanelPayload() {
   };
 }
 
-// Handle Ticket Creation from Select Menu
-async function handleTicketCreate(interaction) {
-  // 1. Immediately defer reply so Discord Gateway never times out
-  try {
-    await interaction.deferReply({ ephemeral: true });
-  } catch (deferErr) {
-    console.error('[TICKET DEFER ERROR]', deferErr);
-  }
-
+/**
+ * Handle Department Selection from the Dropdown Select Menu
+ * Shows a tailored Modal with questions the staff member needs to know!
+ */
+async function handleTicketDepartmentSelect(interaction) {
   const selectedValue = interaction.values?.[0];
   const catConfig = CATEGORIES[selectedValue];
   if (!catConfig) {
+    return interaction.reply({
+      content: '⚠️ Unknown department selected. Please try again.',
+      ephemeral: true
+    });
+  }
+
+  // Check if user already has an active ticket in this category
+  const data = getTicketData();
+  const existingTicket = Object.values(data.activeTickets).find(
+    t => t.userId === interaction.user.id && t.categoryKey === catConfig.key
+  );
+
+  if (existingTicket) {
+    const channelExists = interaction.guild.channels.cache.get(existingTicket.channelId);
+    if (channelExists) {
+      return interaction.reply({
+        content: `⚠️ You already have an open ticket in this department: <#${existingTicket.channelId}>. Please use that channel or close it before creating a new one.`,
+        ephemeral: true
+      });
+    }
+  }
+
+  // Construct Discord Modal with department-specific intake questions
+  const modalPayload = {
+    title: catConfig.modalTitle,
+    custom_id: `modal_${selectedValue}`,
+    components: catConfig.modalInputs.map(input => ({
+      type: 1, // Action Row
+      components: [
+        {
+          type: 4, // TextInput
+          custom_id: input.customId,
+          label: input.label,
+          style: input.style,
+          placeholder: input.placeholder,
+          required: input.required,
+          max_length: input.max_length
+        }
+      ]
+    }))
+  };
+
+  // Must call showModal directly to open Discord native popup
+  await interaction.showModal(modalPayload);
+}
+
+/**
+ * Handle Modal Submission when user fills out the intake questions
+ */
+async function handleTicketModalSubmit(interaction) {
+  // Immediately defer reply so Discord Gateway never times out
+  await interaction.deferReply({ ephemeral: true });
+
+  const catKey = interaction.customId.replace('modal_', '');
+  const catConfig = CATEGORIES[catKey];
+  if (!catConfig) {
     return interaction.editReply({
-      content: '⚠️ Unknown department selected. Please try again.'
+      content: '⚠️ Unknown department form submitted. Please try again.'
     });
   }
 
   const data = getTicketData();
 
-  // Prevent multiple active tickets in the same category by the same user
+  // Prevent duplicate tickets in same category
   const existingTicket = Object.values(data.activeTickets).find(
     t => t.userId === interaction.user.id && t.categoryKey === catConfig.key
   );
-
   if (existingTicket) {
     const channelExists = interaction.guild.channels.cache.get(existingTicket.channelId);
     if (channelExists) {
@@ -221,14 +474,26 @@ async function handleTicketCreate(interaction) {
     const ticketNum = String(data.counter).padStart(4, '0');
     data.counter++;
 
+    // Collect answers submitted by the user
+    const intakeAnswers = catConfig.modalInputs.map(input => {
+      let val = '';
+      try {
+        val = interaction.fields.getTextInputValue(input.customId) || '';
+      } catch (e) {
+        val = '';
+      }
+      return {
+        label: input.label,
+        value: val.trim() || 'Not specified'
+      };
+    });
+
     // Format requested by user: [Ticket Number]-Categoryname-claimed byname
-    // (Initial state before claimed: unclaimed)
     const channelName = `〔${ticketNum}〕-${catConfig.key}-unclaimed`;
 
     // Roles to grant channel view
     const rolesToGrant = catConfig.highStaffOnly ? HIGH_STAFF_ROLES : STAFF_ROLES;
 
-    // Use explicit OverwriteType and PermissionFlagsBits to prevent InvalidType cache errors
     const overwrites = [
       {
         id: interaction.guild.id, // @everyone
@@ -288,24 +553,29 @@ async function handleTicketCreate(interaction) {
       userTag: interaction.user.tag,
       claimedBy: null,
       claimedTag: null,
-      createdAt: Math.floor(Date.now() / 1000)
+      createdAt: Math.floor(Date.now() / 1000),
+      intakeAnswers
     };
     saveTicketData(data);
 
-    // Build the cool welcoming message inside the new ticket channel
+    // 1. Ping the staff role in the new ticket channel so staff are alerted immediately!
+    const staffPingRole = catConfig.staffPingRoleId;
+    await ticketChannel.send({
+      content: `🔔 <@&${staffPingRole}> • New **${catConfig.name}** ticket opened by <@${interaction.user.id}>!`
+    });
+
+    // 2. Format the user's intake questions & answers cleanly
+    const intakeFormatted = intakeAnswers.map(ans => `> 🔹 **${ans.label}:** \`${ans.value}\``).join('\n');
+
+    // 3. Build the aesthetic welcoming Components V2 message inside the new ticket channel
     const welcomeHeader =
 `# 🎫 Dʀᴇᴀᴍ Nᴏᴅᴇs ┃ Ticket #${ticketNum}
-### <a:sparkles_sparkles:1573382447603785928> Welcome <@${interaction.user.id}>! Support Initialized
+### <a:sparkles_sparkles:1573382447603785928> Welcome <@${interaction.user.id}>! Support Desk Initialized
 
 > <a:Rotating_Star:1573382194020491317> **Thank you for contacting Dream Nodes Support!**
-> Our support team has been notified and will be with you shortly.
+> Our staff team has been alerted and will assist you shortly.
 > 
-> 📝 **Please describe your request or issue in detail:**
-> ✦ **Department:** \`${catConfig.name}\`
-> ✦ **Product / Service:** (Minecraft, Intel / AMD VPS, RDP, Web Hosting, Bot, Domain)
-> ✦ **Details:** Please write your questions, desired plans, or problem description below. Feel free to provide screenshots, transaction IDs, or error logs!
-> 
-> ⏳ **Please wait patiently:** Our staff will claim this ticket soon. Avoid spamming pings so we can assist everyone swiftly.`;
+> ⏳ **Please wait patiently:** Our staff will claim this ticket soon. Avoid spamming pings so we can assist everyone swiftly. Feel free to send screenshots, error codes, or further details below.`;
 
     const ticketMessagePayload = {
       flags: 32768, // IS_COMPONENTS_V2
@@ -316,6 +586,17 @@ async function handleTicketCreate(interaction) {
             {
               type: 10,
               content: welcomeHeader
+            },
+            {
+              type: 14,
+              divider: true,
+              spacing: 1
+            },
+            {
+              type: 10,
+              content:
+                `### 📋 Intake Information Provided:\n` +
+                intakeFormatted
             },
             {
               type: 14,
@@ -371,13 +652,24 @@ async function handleTicketCreate(interaction) {
       body: JSON.stringify(ticketMessagePayload)
     });
 
-    // Notify user with link to ticket
+    // 4. Log ticket creation in dedicated ticket logs channel (# ⊘・ᴛɪᴄᴋᴇᴛ-ʟᴏɢꜱ)
+    await logTicketEvent(interaction.client, 'OPEN', {
+      ticketNum,
+      categoryName: catConfig.name,
+      categoryKey: catConfig.key,
+      channelId: ticketChannel.id,
+      userId: interaction.user.id,
+      userTag: interaction.user.tag,
+      intakeAnswers
+    });
+
+    // 5. Notify user with direct channel link
     await interaction.editReply({
       content: `✅ Your **${catConfig.name}** ticket has been created! Click here to jump to your ticket: <#${ticketChannel.id}>`
     });
 
   } catch (err) {
-    console.error('[TICKET CREATE ERROR]', err);
+    console.error('[TICKET MODAL SUBMIT ERROR]', err);
     await interaction.editReply({
       content: '⚠️ Failed to create support ticket. Please contact an administrator.'
     });
@@ -437,6 +729,17 @@ async function handleTicketClaim(interaction) {
       content: `✋ **<@${interaction.user.id}> has claimed this ticket!** They are now reviewing your inquiry and will assist you immediately.`
     });
 
+    // Log claim event in ticket logs channel
+    await logTicketEvent(interaction.client, 'CLAIM', {
+      ticketNum: ticket.ticketNum,
+      categoryName: ticket.categoryName,
+      channelId: ticketChannel.id,
+      userId: ticket.userId,
+      userTag: ticket.userTag,
+      claimedBy: interaction.user.id,
+      claimedTag: interaction.user.tag
+    });
+
     await interaction.reply({
       content: `✅ You have successfully claimed ticket **#${ticket.ticketNum}**! Channel updated to \`${newChannelName}\`.`,
       ephemeral: true
@@ -464,7 +767,7 @@ async function handleTicketClosePrompt(interaction) {
 
   // Ask for confirmation before deleting
   const confirmPayload = {
-    content: '⚠️ **Are you sure you want to close and delete this ticket channel?**',
+    content: '⚠️ **Are you sure you want to close and archive this ticket channel?**\nA full transcript will be saved to the ticket logs channel.',
     components: [
       {
         type: 1,
@@ -492,21 +795,81 @@ async function handleTicketClosePrompt(interaction) {
   await interaction.reply(confirmPayload);
 }
 
-// Handle Ticket Close Confirmation
+// Handle Ticket Close Confirmation & Generate HTML Transcript
 async function handleTicketCloseConfirm(interaction) {
   const ticketChannel = interaction.channel;
   const data = getTicketData();
-  const ticket = data.activeTickets[ticketChannel.id];
+  const ticket = data.activeTickets[ticketChannel.id] || {
+    ticketNum: '0000',
+    categoryKey: 'support',
+    categoryName: 'Support Ticket',
+    userId: interaction.user.id,
+    userTag: interaction.user.tag,
+    createdAt: Math.floor(Date.now() / 1000)
+  };
 
   await interaction.reply({
-    content: `🔒 **Ticket closed by <@${interaction.user.id}>.** This channel will automatically delete in **5 seconds**...`
+    content: `🔒 **Ticket closed by <@${interaction.user.id}>.** Saving transcript and deleting channel in **5 seconds**...`
   });
 
-  if (ticket) {
+  try {
+    // 1. Fetch channel messages for transcript
+    let fetchedMessages = new Map();
+    try {
+      fetchedMessages = await ticketChannel.messages.fetch({ limit: 100 });
+    } catch (fetchErr) {
+      console.error('[TICKET FETCH MESSAGES ERROR]', fetchErr);
+    }
+
+    // 2. Generate HTML transcript
+    const htmlTranscript = generateHtmlTranscript(ticket, fetchedMessages, interaction.guild);
+    const transcriptAttachment = new AttachmentBuilder(Buffer.from(htmlTranscript, 'utf8'), {
+      name: `transcript-ticket-${ticket.ticketNum}.html`
+    });
+
+    const durationStr = ticket.createdAt ? formatDuration((Date.now() / 1000) - ticket.createdAt) : 'N/A';
+
+    // 3. Post close log with attached transcript to # ⊘・ᴛɪᴄᴋᴇᴛ-ʟᴏɢꜱ
+    await logTicketEvent(interaction.client, 'CLOSE', {
+      ticketNum: ticket.ticketNum,
+      categoryName: ticket.categoryName,
+      userId: ticket.userId,
+      userTag: ticket.userTag,
+      claimedBy: ticket.claimedBy,
+      claimedTag: ticket.claimedTag,
+      closedBy: interaction.user.id,
+      closedTag: interaction.user.tag,
+      duration: durationStr,
+      messageCount: fetchedMessages.size
+    }, transcriptAttachment);
+
+    // 4. Try to DM the ticket creator a copy of their transcript
+    try {
+      const creatorUser = await interaction.client.users.fetch(ticket.userId).catch(() => null);
+      if (creatorUser) {
+        const dmAttachment = new AttachmentBuilder(Buffer.from(htmlTranscript, 'utf8'), {
+          name: `transcript-ticket-${ticket.ticketNum}.html`
+        });
+        await creatorUser.send({
+          content: `📬 **Your Dream Nodes support ticket #${ticket.ticketNum} (${ticket.categoryName}) has been closed.**\nYour complete conversation transcript is attached below for your records:`,
+          files: [dmAttachment]
+        }).catch(() => null);
+      }
+    } catch (dmErr) {
+      console.warn('[TICKET DM TRANSCRIPT ERROR]', dmErr.message);
+    }
+
+  } catch (err) {
+    console.error('[TICKET CLOSE TRANSCRIPT ERROR]', err);
+  }
+
+  // Remove from active tickets
+  if (data.activeTickets[ticketChannel.id]) {
     delete data.activeTickets[ticketChannel.id];
     saveTicketData(data);
   }
 
+  // Delete channel after 5s countdown
   setTimeout(async () => {
     try {
       await ticketChannel.delete(`Ticket closed by ${interaction.user.tag}`);
@@ -528,12 +891,15 @@ module.exports = {
   CATEGORIES,
   STAFF_ROLES,
   HIGH_STAFF_ROLES,
+  TICKET_LOGS_CHANNEL_ID,
   getTicketData,
   saveTicketData,
   buildTicketPanelPayload,
-  handleTicketCreate,
+  handleTicketDepartmentSelect,
+  handleTicketModalSubmit,
   handleTicketClaim,
   handleTicketClosePrompt,
   handleTicketCloseConfirm,
-  handleTicketCloseCancel
+  handleTicketCloseCancel,
+  logTicketEvent
 };

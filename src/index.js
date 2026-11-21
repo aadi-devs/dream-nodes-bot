@@ -27,7 +27,8 @@ const honeypotLogsFile = path.join(__dirname, '..', 'data', 'honeypot_logs.json'
 
 // Tickets System Module
 const {
-  handleTicketCreate,
+  handleTicketDepartmentSelect,
+  handleTicketModalSubmit,
   handleTicketClaim,
   handleTicketClosePrompt,
   handleTicketCloseConfirm,
@@ -579,9 +580,23 @@ client.on('interactionCreate', async interaction => {
     return;
   }
 
-  // Handle Ticket Select Menu
+  // Handle Ticket Select Menu (Show intake question Modal)
   if (interaction.isStringSelectMenu() && interaction.customId === 'ticket_create_menu') {
-    await handleTicketCreate(interaction);
+    try {
+      await handleTicketDepartmentSelect(interaction);
+    } catch (err) {
+      console.error('[TICKET SELECT ERROR]', err);
+    }
+    return;
+  }
+
+  // Handle Ticket Modal Submission (Create Ticket with Intake answers)
+  if (interaction.isModalSubmit() && interaction.customId.startsWith('modal_ticket_')) {
+    try {
+      await handleTicketModalSubmit(interaction);
+    } catch (err) {
+      console.error('[TICKET MODAL ERROR]', err);
+    }
     return;
   }
 
@@ -813,6 +828,17 @@ client.on('interactionCreate', async interaction => {
       ephemeral: true
     });
   }
+});
+
+// Global Process Error Sentinel
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[UNHANDLED REJECTION]', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT EXCEPTION]', err);
+});
+client.on('error', (err) => {
+  console.error('[CLIENT ERROR]', err);
 });
 
 client.login(token);
