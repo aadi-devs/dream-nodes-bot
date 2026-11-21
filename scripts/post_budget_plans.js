@@ -11,15 +11,15 @@ const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597
 
 const sectionHeader =
 `# <a:minecraft:1573382379215659081> Dream Nodes | Budget Minecraft Hosting
-## <a:Attacks:1573382140006244363> 🛡️ Enterprise Anti-DDoS Protected Nodes
+## <a:Attacks:1573382140006244363> 🛡️ Enterprise Game-Shield Protected Nodes
 
-> <a:siren:1573382431065509981> **ENTERPRISE GAME DDOS DEFENSE INCLUDED ON ALL PLANS**
-> <a:Lightning:1573382171257737317> Every single node is fortified with dedicated **Layer 4 & Layer 7 Game Filters** built specifically for Minecraft. Our automated edge scrubbing stops UDP/TCP floods, SYN storms, null-ping exploits, and bot raids with **sub-second mitigation**—keeping your TPS stable at a smooth 20 with 100% uptime!
+> <a:siren:1573382431065509981> **MILITARY-GRADE DEFENSE INCLUDED WITH EVERY SERVER**
+> <a:Lightning:1573382171257737317> Every node is fortified with automated **Layer 4 & Layer 7 Game Mitigation** built specifically for Minecraft protocols. Our edge filters intercept UDP/TCP floods, SYN storms, null-ping exploits, and bot raids in real time with **sub-second reaction**—keeping your server locked at 20 TPS with zero downtime.
 
-### <a:Attacks:1573382140006244363> 🛡️ Anti-DDoS Shield Highlights:
-> ✦ **1.2+ Tbps Filtering Pipeline:** Effortlessly absorbs volumetric bot attacks.
-> ✦ **Minecraft Protocol Intelligence:** Instantly filters packet spoofing & ping exploits.
-> ✦ **Zero Attack Downtime:** Immediate automated scrubbing with zero player lag.`;
+### <a:hostinger:1573382335355691089> Key Defense Capabilities:
+> ✦ **1.2+ Tbps Traffic Pipeline:** Effortlessly absorbs massive volumetric attacks.
+> ✦ **Minecraft Protocol Scrubbing:** Cleans packet spoofing & ping exploits on the fly.
+> ✦ **Zero Disconnects:** Instant automated mitigation with zero player lag spikes.`;
 
 const sectionStarter =
 `### <a:b_fire:1573381944702533732> Starter Tier Plans
@@ -61,10 +61,14 @@ const sectionHeavy =
 > ✦ <:RAM:1573382492973568062> \`64 GB DDR4\` ┃ <:cpu:1573382485310709781> \`16 Cores\` ┃ <:disk:1573382500795818114> \`300 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹6,000 /mo\``;
 
 const sectionFooter =
-`### <a:sparkles_sparkles:1573382447603785928> All Budget Plans Include:
+`### <a:sparkles_sparkles:1573382447603785928> Node Specifications & Features:
 > <:bandwith55:1573382523201912842> **1 Gbps High-Speed Network Uplink** ┃ <:backup:1573382515341664270> **Automated Off-site Daily Snapshots**
 > <a:Tick5:1573382205395177532> **Custom Pterodactyl Panel** (SFTP, Full Root File Access, Split Ports)
-> <a:Attacks:1573382140006244363> **Always-On Anti-DDoS Mitigation** ┃ <a:hostinger:1573382335355691089> **Instant Node Provisioning**`;
+> <a:hostinger:1573382335355691089> **Instant Provisioning Upon Ticket Confirmation**
+
+### <a:settings:1573382421611806763> Add-ons & Dedicated IP:
+> 🌐 **Dedicated IPv4 + Default Port (25565):** <a:cash:1573382269735805008> \`₹350 /month\`
+> *(Join directly using your domain/IP with no random port numbers needed!)*`;
 
 const v2Payload = {
   flags: 32768, // IS_COMPONENTS_V2
@@ -145,7 +149,7 @@ const v2Payload = {
         },
         {
           type: 10,
-          content: '-# 🛡️ Dream Nodes • Enterprise Anti-DDoS Protected Minecraft Hosting'
+          content: '-# 🛡️ Dream Nodes • Enterprise Protected Minecraft Hosting Solutions'
         }
       ]
     }
