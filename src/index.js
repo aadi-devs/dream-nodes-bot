@@ -668,16 +668,16 @@ client.on('interactionCreate', async interaction => {
 
     if (selected === 'tos_refund') {
       contentBody =
-        `# ${E.cash} Dream Nodes | Official Refund Policy\n\n` +
-        `## ${E.hostinger} 24-Hour Money-Back Guarantee\n` +
+        `# ${E.cash} **DREAM NODES ┃ Official Refund Policy**\n\n` +
+        `### ${E.clock} **24-Hour Money-Back Guarantee**\n` +
         `> ${E.sparkles} We offer a **24-hour refund window** for first-time Minecraft and VPS hosting purchases if you encounter node-side technical problems or network outages that our support team is unable to resolve within a reasonable timeframe.\n\n` +
-        `## ${E.tick5} Eligibility & Requirements\n` +
+        `### ${E.tick5} **Eligibility & Requirements**\n` +
         `> ${E.arrowBlue} **Ticket Requirement:** All refund requests must be initiated via an official support ticket in <#1573281601775870043> within **24 hours** of the initial invoice payment.\n` +
         `> \n` +
         `> ${E.arrowBlue} **First-Time Orders:** The guarantee applies strictly to your initial service setup to prevent service cycling or abuse.\n` +
         `> \n` +
         `> ${E.arrowBlue} **Payout Options:** Eligible refunds can be sent back to the original payment method, or credited to your Dream Nodes account balance with an **extra +10% bonus credit**.\n\n` +
-        `## ${E.cross} Non-Refundable Products & Exceptions\n` +
+        `### ${E.cross} **Non-Refundable Products & Exceptions**\n` +
         `> ${E.redDot} **Domain Registrations & Transfers:** Due to upstream registry processing fees, domains cannot be cancelled or refunded once registered.\n` +
         `> \n` +
         `> ${E.redDot} **Dedicated Hardware:** Custom bare-metal servers, GPU instances, and custom enterprise deployments.\n` +
@@ -685,15 +685,15 @@ client.on('interactionCreate', async interaction => {
         `> ${E.redDot} **Crypto Payments:** Due to market volatility, payments made in cryptocurrency are non-refundable to wallets (eligible only as account store credit).\n` +
         `> \n` +
         `> ${E.redDot} **Abuse & TOS Terminations:** Any service suspended or terminated for violating our Acceptable Use Policy (DDoS, mining, spam, etc.) automatically forfeits all refund rights.\n\n` +
-        `## ${E.alert} Disputes & Chargebacks\n` +
-        `> ${E.siren} Filing an unauthorized PayPal dispute, credit card chargeback, or bank reversal without contacting support first will result in **immediate permanent server termination**, account blacklisting, and loss of all server files.`;
+        `### ${E.siren} **Disputes & Chargebacks**\n` +
+        `> ${E.alert} Filing an unauthorized PayPal dispute, credit card chargeback, or bank reversal without contacting support first will result in **immediate permanent server termination**, account blacklisting, and loss of all server files.`;
       footerTag = `-# ${E.verifiedBlue} Dream Nodes • Official Refund & Billing Agreement`;
     } else if (selected === 'tos_vps') {
       contentBody =
-        `# ${E.vps} Dream Nodes | VPS & Cloud Policies\n\n` +
-        `## ${E.cpu} Fair-Use & Resource Quotas\n` +
-        `> ${E.hostinger} All Virtual Private Servers and RDPs run on enterprise Intel Xeon / AMD EPYC processors backed by Gen4 NVMe arrays. To ensure uninterrupted performance across all neighbor instances, shared-thread nodes follow fair-use resource allocation.\n\n` +
-        `## ${E.tick5} Permitted Use Cases\n` +
+        `# ${E.vps} **DREAM NODES ┃ VPS & Cloud Policies**\n\n` +
+        `### ${E.cpu} **Fair-Use & Resource Quotas**\n` +
+        `> ${E.server} All Virtual Private Servers and RDPs run on enterprise Intel Xeon / AMD EPYC processors backed by Gen4 NVMe arrays. To ensure uninterrupted performance across all neighbor instances, shared-thread nodes follow fair-use resource allocation.\n\n` +
+        `### ${E.tick5} **Permitted Use Cases**\n` +
         `> ${E.arrowBlue} **Game & Bot Hosting:** Running Discord bots, Minecraft networks, FiveM servers, CS2 servers, and backend APIs.\n` +
         `> \n` +
         `> ${E.arrowBlue} **Development & CI/CD:** Docker containers, software compilation, web hosting (Nginx/Apache), and personal databases.\n` +
@@ -701,7 +701,7 @@ client.on('interactionCreate', async interaction => {
         `> ${E.arrowBlue} **Personal VPNs:** Private WireGuard or OpenVPN tunnels for personal privacy.\n` +
         `> \n` +
         `> ${E.arrowBlue} **Full Root / Administrator:** Complete SSH / RDP control over your environment and operating system.\n\n` +
-        `## ${E.cross} Prohibited Activities (Zero Tolerance)\n` +
+        `### ${E.cross} **Prohibited Activities (Zero Tolerance)**\n` +
         `> ${E.redDot} **Cryptocurrency Mining:** Any CPU/GPU mining (Monero, Bitcoin, Ravencoin, etc.) results in immediate termination with no refund.\n` +
         `> \n` +
         `> ${E.redDot} **Network Attacks & Stressers:** Initiating or participating in DDoS/DoS attacks, botnet controllers, or IP flooders.\n` +
@@ -711,15 +711,15 @@ client.on('interactionCreate', async interaction => {
         `> ${E.redDot} **Tor & Open Relays:** Operating public Tor exit nodes, open proxies, or malicious redirection services.\n` +
         `> \n` +
         `> ${E.redDot} **Mass Mailers (Spam):** Outbound SMTP port 25 is blocked by default across all VPS nodes to prevent email spam.\n\n` +
-        `## ${E.siren} Automated Node Defense\n` +
-        `> ${E.shield} Automated network filters monitor for abnormal outgoing traffic spikes. Instances engaging in attacks are frozen instantly by our automated sentinels.`;
+        `### ${E.shield} **Automated Node Defense**\n` +
+        `> ${E.security} Automated network filters monitor for abnormal outgoing traffic spikes. Instances engaging in attacks are frozen instantly by our automated sentinels.`;
       footerTag = `-# ${E.verifiedBlue} Dream Nodes • Cloud VPS & Compute Standards`;
     } else if (selected === 'tos_mc') {
       contentBody =
-        `# ${E.minecraft} Dream Nodes | Minecraft Hosting Policies\n\n` +
-        `## ${E.hostinger} Game Server Architecture\n` +
+        `# ${E.minecraft} **DREAM NODES ┃ Minecraft Hosting Policies**\n\n` +
+        `### ${E.sword} **Game Server Architecture**\n` +
         `> ${E.lightning} Dream Nodes Minecraft instances are built on high single-core frequency processors and enterprise NVMe storage to guarantee 20 TPS, zero hitching, and rapid chunk loading.\n\n` +
-        `## ${E.tick5} Included Features & Benefits\n` +
+        `### ${E.tick5} **Included Features & Benefits**\n` +
         `> ${E.arrowBlue} **Unmetered NVMe SSD Storage:** Fair-use storage for world saves, modpacks, plugins, and server logs.\n` +
         `> \n` +
         `> ${E.arrowBlue} **Automated DDoS Shielding:** Enterprise Layer 4 and Layer 7 filtration engineered specifically for Minecraft packet protocols (preventing ping attacks and null-ping boots).\n` +
@@ -727,7 +727,7 @@ client.on('interactionCreate', async interaction => {
         `> ${E.arrowBlue} **SFTP & Custom JARs:** Full access to upload any custom software including Paper, Purpur, Fabric, Forge, NeoForge, Velocity, and BungeeCord.\n` +
         `> \n` +
         `> ${E.arrowBlue} **Automated Backups:** Daily snapshots stored off-node for easy world recovery.\n\n` +
-        `## ${E.alert} Server Guidelines & Prohibitions\n` +
+        `### ${E.alert} **Server Guidelines & Prohibitions**\n` +
         `> ${E.redDot} **Intentional Node Lag Machines:** Building deliberate redstone or entity loop lag contraptions intended to degrade node stability is forbidden.\n` +
         `> \n` +
         `> ${E.redDot} **Cracked / Backdoored Plugins:** Uploading malware-infected plugins or leaking server credentials puts your service at risk and leads to suspension.\n` +
@@ -736,10 +736,10 @@ client.on('interactionCreate', async interaction => {
       footerTag = `-# ${E.verifiedBlue} Dream Nodes • Game Server Policies`;
     } else if (selected === 'tos_general') {
       contentBody =
-        `# ${E.membership} Dream Nodes | General Terms of Service\n\n` +
-        `## ${E.hostinger} Official Service Agreement\n` +
-        `> ${E.membership} By purchasing, leasing, or using any service provided by Dream Nodes, you contractually agree to comply with all terms laid out in this agreement.\n\n` +
-        `## ${E.tick5} Account Ownership & Billing Cycles\n` +
+        `# ${E.rulesBook} **DREAM NODES ┃ General Terms of Service**\n\n` +
+        `### ${E.rulesBook} **Official Service Agreement**\n` +
+        `> ${E.sparkles} By purchasing, leasing, or using any service provided by Dream Nodes, you contractually agree to comply with all terms laid out in this agreement.\n\n` +
+        `### ${E.tick5} **Account Ownership & Billing Cycles**\n` +
         `> ${E.arrowBlue} **Age Requirement:** Clients must be at least 13 years old or have explicit authorization from a parent or legal guardian.\n` +
         `> \n` +
         `> ${E.arrowBlue} **Invoicing:** Renewal invoices are issued 7 days before the service due date. Reminders are dispatched via email and Discord.\n` +
@@ -747,17 +747,17 @@ client.on('interactionCreate', async interaction => {
         `> ${E.arrowBlue} **Grace Period & Suspension:** Unpaid invoices result in service suspension after **48 hours** past due.\n` +
         `> \n` +
         `> ${E.arrowBlue} **Data Termination:** Suspended services that remain unpaid for **7 consecutive days** are permanently deleted and cannot be recovered.\n\n` +
-        `## ${E.lightning} Uptime SLA & Service Continuity\n` +
+        `### ${E.lightning} **Uptime SLA & Service Continuity**\n` +
         `> ${E.arrowBlue} **99.9% Network Guarantee:** We strive for continuous operational uptime. In the event of unforeseen node hardware failure exceeding SLA terms, service credits may be granted upon request.\n` +
         `> \n` +
         `> ${E.arrowBlue} **Scheduled Maintenance:** Routine hardware upgrades and kernel updates are announced in advance in <#1573281463858630726>.`;
       footerTag = `-# ${E.verifiedBlue} Dream Nodes • Master Terms of Service`;
     } else if (selected === 'tos_discord') {
       contentBody =
-        `# ${E.discord} Dream Nodes | Community & Support Rules\n\n` +
-        `## ${E.chat} Support Ticket Conduct\n` +
-        `> ${E.hostinger} Our staff and technical support team work around the clock to provide swift assistance for sales, billing, and technical queries.\n\n` +
-        `## ${E.tick5} How to Open a Ticket\n` +
+        `# ${E.discord} **DREAM NODES ┃ Community & Support Rules**\n\n` +
+        `### ${E.supporter} **Support Ticket Conduct**\n` +
+        `> ${E.chat} Our staff and technical support team work around the clock to provide swift assistance for sales, billing, and technical queries.\n\n` +
+        `### ${E.tick5} **How to Open a Ticket**\n` +
         `> ${E.arrowBlue} **Official Channel:** Open tickets solely through <#1573281601775870043>. Never DM staff members for official technical support.\n` +
         `> \n` +
         `> ${E.arrowBlue} **Include Details:** State your service ID, node location, and a detailed description of the error to speed up resolution.\n` +
@@ -765,7 +765,7 @@ client.on('interactionCreate', async interaction => {
         `> ${E.arrowBlue} **No Staff Pings:** Pinging staff members inside or outside tickets will not accelerate your ticket and may result in a warning.\n` +
         `> \n` +
         `> ${E.arrowBlue} **Duplicate Tickets:** Opening multiple tickets for the same inquiry is prohibited and leads to a ticket blacklist.\n\n` +
-        `## ${E.cross} Server Community Standards\n` +
+        `### ${E.cross} **Server Community Standards**\n` +
         `> ${E.redDot} **No Toxicity or Harassment:** Respect every member in public channels and voice lounges.\n` +
         `> \n` +
         `> ${E.redDot} **No Unsolicited Advertising:** Direct messaging members to sell hosting, services, or bot invites is strictly prohibited.\n` +
@@ -779,6 +779,7 @@ client.on('interactionCreate', async interaction => {
       components: [
         {
           type: 17, // Borderless Container
+          accent_color: null,
           components: [
             {
               type: 10,
