@@ -10,6 +10,7 @@ const clientRoleId = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡
 const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
 const websiteUrl = 'https://dreamnodes.cloud';
+const panelUrl = 'https://panel.dreamnodes.cloud';
 
 // 100% Custom & Animated Emojis only — Zero standard/normal Unicode emojis
 const changelogMarkdown = 
@@ -61,7 +62,7 @@ const v2Payload = {
               type: 2,
               style: 5,
               label: 'Client Panel',
-              url: websiteUrl,
+              url: panelUrl,
               emoji: { id: '1573382507863220246', name: 'vps' }
             },
             {
