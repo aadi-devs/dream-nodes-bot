@@ -754,7 +754,6 @@ async function handleTicketClaim(interaction) {
         `> ${E.lightning} **Status:** In Progress • Active Support\n` +
         `> ${E.chat} Your specialist is reviewing your inquiry and will message below.`,
       footer: `-# ${E.ticket} Dream Nodes • Dedicated Support Desk`,
-      accentColor: 0x00FF88,
       ephemeral: false
     });
     await ticketChannel.send({ flags: claimNotice.flags, components: claimNotice.components });
@@ -960,7 +959,6 @@ async function handleTicketPingFounder(interaction) {
         `> ${E.lightning} **Priority Tier:** Urgent Escalation\n` +
         `> ${E.sparkles} A server Founder has been pinged and will inspect this ticket channel shortly.`,
       footer: `-# ${E.crown} Dream Nodes • Executive Management Escalation`,
-      accentColor: 0xFFAA00,
       ephemeral: false
     });
 
@@ -1065,7 +1063,6 @@ async function handleTicketAddUser(interaction) {
         `> ${E.staff} **Authorized By:** <@${interaction.user.id}>\n` +
         `> ${E.security} **Permissions:** View channel, read message history, and participate in discussion.`,
       footer: `-# ${E.ticket} Dream Nodes • Ticket Access Management`,
-      accentColor: 0x00FF88,
       ephemeral: false
     });
 
@@ -1147,7 +1144,6 @@ async function handleTicketRemoveUser(interaction) {
         `> ${E.staff} **Removed By:** <@${interaction.user.id}>\n` +
         `> ${E.security} **Status:** Channel view override cleared.`,
       footer: `-# ${E.ticket} Dream Nodes • Ticket Access Management`,
-      accentColor: 0xFF8800,
       ephemeral: false
     });
 

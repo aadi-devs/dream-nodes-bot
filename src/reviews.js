@@ -273,7 +273,6 @@ function buildClientRequiredV2() {
       }
     ],
     footer: `-# ${E.security} Dream Nodes • Client Verification Hub`,
-    accentColor: 0xFF3366,
     ephemeral: true
   });
 }
@@ -389,7 +388,6 @@ async function handleReviewModalSubmit(interaction) {
         `> ${E.sparkles} Thank you <@${interaction.user.id}> for your valuable review!\n` +
         `> ${E.arrowBlue} Founders & Management (<@&${FOUNDER_ROLE_ID}>) will reply to your feedback here.`,
       footer: `-# ${E.verifiedBlue} Dream Nodes • Customer Relations`,
-      accentColor: 0xFFAA00,
       ephemeral: false
     });
     await thread.send({ flags: threadWelcome.flags, components: threadWelcome.components });
@@ -544,7 +542,6 @@ async function handleReviewRespondSlashCommand(interaction) {
       subtitle: `${E.staff} Response from Executive Staff (<@${interaction.user.id}>)`,
       description: `> ${responseText}`,
       footer: `-# ${E.verifiedBlue} Dream Nodes • Executive Client Relations`,
-      accentColor: 0xFFAA00,
       ephemeral: false
     });
 

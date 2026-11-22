@@ -1,7 +1,7 @@
 const { E, B } = require('./emojis');
 
 /**
- * Build a Discord Components V2 payload (type: 17 container)
+ * Build a Discord Components V2 payload (type: 17 borderless container)
  */
 function buildV2Container({
   title,
@@ -10,48 +10,54 @@ function buildV2Container({
   sections = [],
   buttons = [],
   footer,
-  accentColor = 0x00F0FF,
+  accentColor = null,
   ephemeral = false
 }) {
-  let content = '';
+  const components = [];
 
-  if (title) {
-    content += `${title}\n`;
-  }
-  if (subtitle) {
-    content += `> ${subtitle}\n\n`;
-  } else if (title) {
-    content += '\n';
-  }
-  if (description) {
-    content += `${description}\n\n`;
+  // Header section
+  let headerContent = '';
+  if (title) headerContent += `${title}\n`;
+  if (subtitle) headerContent += `> ${subtitle}\n`;
+  if (description) headerContent += `\n${description}`;
+
+  if (headerContent.trim()) {
+    components.push({
+      type: 10, // Text Display
+      content: headerContent.trim()
+    });
   }
 
+  // Body sections separated by dividers
   if (sections && sections.length > 0) {
     for (const sec of sections) {
-      if (typeof sec === 'string') {
-        content += `${sec}\n\n`;
-      } else {
-        if (sec.title) {
-          content += `${sec.title}\n`;
-        }
-        if (sec.body) {
-          content += `${sec.body}\n\n`;
-        }
+      if (components.length > 0) {
+        components.push({
+          type: 14, // Divider
+          divider: true,
+          spacing: 1
+        });
       }
+
+      let secContent = '';
+      if (typeof sec === 'string') {
+        secContent = sec;
+      } else {
+        if (sec.title) secContent += `${sec.title}\n`;
+        if (sec.body) secContent += `${sec.body}`;
+      }
+
+      components.push({
+        type: 10, // Text Display
+        content: secContent.trim()
+      });
     }
   }
 
-  const components = [
-    {
-      type: 10, // Text Display
-      content: content.trim()
-    }
-  ];
-
+  // Action Row / Buttons
   if (buttons && buttons.length > 0) {
     components.push({
-      type: 14, // Separator / Divider
+      type: 14, // Divider
       divider: true,
       spacing: 1
     });
@@ -69,6 +75,7 @@ function buildV2Container({
     });
   }
 
+  // Footer subtext
   if (footer) {
     components.push({
       type: 10,
@@ -76,15 +83,19 @@ function buildV2Container({
     });
   }
 
+  const container = {
+    type: 17, // Borderless Container
+    components
+  };
+
+  if (accentColor !== null && accentColor !== undefined) {
+    container.accent_color = accentColor;
+  }
+
   return {
     flags: ephemeral ? 32832 : 32768, // 32768 = IS_COMPONENTS_V2 | 64 = EPHEMERAL
-    components: [
-      {
-        type: 17, // Borderless Container
-        accent_color: accentColor,
-        components
-      }
-    ]
+    embeds: [],
+    components: [container]
   };
 }
 
@@ -100,24 +111,20 @@ function buildV2Alert({
   ephemeral = true
 }) {
   let icon = E.sparkles;
-  let accentColor = 0x00F0FF;
   let defaultFooter = `-# ${E.sparkles} Dʀᴇᴀᴍ Nᴏᴅᴇs • Cloud Systems`;
 
   if (type === 'success') {
     icon = E.tick5;
-    accentColor = 0x00FF88;
     defaultFooter = `-# ${E.verifiedBlue} Dʀᴇᴀᴍ Nᴏᴅᴇs • Verified Operation`;
   } else if (type === 'error') {
     icon = E.cross;
-    accentColor = 0xFF3366;
     defaultFooter = `-# ${E.security} Dʀᴇᴀᴍ Nᴏᴅᴇs • Sentinel Security`;
   } else if (type === 'warning') {
     icon = E.alert;
-    accentColor = 0xFFAA00;
     defaultFooter = `-# ${E.security} Dʀᴇᴀᴍ Nᴏᴅᴇs • Access Enforcement`;
   }
 
-  const finalTitle = title ? (title.includes('<a:') ? title : `### ${icon} ${title}`) : '';
+  const finalTitle = title ? (title.includes('<a:') ? title : `### ${icon} **${title}**`) : '';
   const finalDescription = message ? (message.startsWith('>') ? message : `> ${message}`) : '';
 
   return buildV2Container({
@@ -125,17 +132,16 @@ function buildV2Alert({
     description: finalDescription,
     buttons,
     footer: footer || defaultFooter,
-    accentColor,
     ephemeral
   });
 }
 
 /**
- * /ping Slash Command V2 Container
+ * /ping Slash Command V2 Container (Borderless)
  */
 function buildPingV2(wsPing, uptimeHours) {
   return buildV2Container({
-    title: `# ${E.ping} Dʀᴇᴀᴍ Nᴏᴅᴇs ┃ Pᴏɴɢ!`,
+    title: `# ${E.ping} **DREAM NODES ┃ Network & Gateway Telemetry**`,
     subtitle: `${E.sparkles} Real-time Discord Gateway & bot process connectivity.`,
     description:
       `> ${E.lightning} **Gateway Latency:** \`${wsPing}ms\`\n` +
@@ -153,22 +159,21 @@ function buildPingV2(wsPing, uptimeHours) {
         emoji: B.world
       }
     ],
-    footer: `-# ${E.verifiedBlue} Dʀᴇᴀᴍ Nᴏᴅᴇs • Operational Telemetry Synchronized`,
-    accentColor: 0x00F0FF,
+    footer: `-# ${E.verifiedBlue} Dream Nodes • Operational Telemetry Synchronized`,
     ephemeral: true
   });
 }
 
 /**
- * /status Slash Command V2 Container
+ * /status Slash Command V2 Container (Borderless)
  */
 function buildStatusV2({ wsPing, uptimeHours, memUsage }) {
   return buildV2Container({
-    title: `# ${E.stats} Dʀᴇᴀᴍ Nᴏᴅᴇs ┃ Iɴꜰʀᴀꜱᴛʀᴜᴄᴛᴜʀᴇ Sᴛᴀᴛᴜꜱ`,
+    title: `# ${E.stats} **DREAM NODES ┃ Infrastructure Status**`,
     subtitle: `${E.sparkles} Real-time operational telemetry for Dream Nodes hosting systems.`,
     sections: [
       {
-        title: `### ${E.greenDot} Core Fleet Health`,
+        title: `### ${E.greenDot} **Core Fleet Health**`,
         body:
           `> ${E.tick5} **Fleet Status:** \`ALL OPERATIONAL (100%)\`\n` +
           `> ${E.lightning} **Gateway Ping:** \`${wsPing}ms\`\n` +
@@ -176,14 +181,14 @@ function buildStatusV2({ wsPing, uptimeHours, memUsage }) {
           `> ${E.gear} **Memory Heap:** \`${memUsage} MB\``
       },
       {
-        title: `### ${E.server} Global Compute Clusters`,
+        title: `### ${E.server} **Global Compute Clusters**`,
         body:
           `> ${E.arrowBlue} **Node-US-East (Virginia):** \`Operational • 20.0 TPS\`\n` +
           `> ${E.arrowBlue} **Node-EU-Central (Frankfurt):** \`Operational • 20.0 TPS\`\n` +
           `> ${E.arrowBlue} **Node-SG-Asia (Singapore):** \`Operational • 20.0 TPS\``
       },
       {
-        title: `### ${E.shield} Enterprise Network Protection`,
+        title: `### ${E.shield} **Enterprise Network Protection**`,
         body:
           `> ${E.security} **DDoS Mitigation:** \`Active • Multi-Tbps Scrubbing\`\n` +
           `> ${E.disk} **Storage Matrix:** \`Enterprise Gen4 NVMe RAID-10\``
@@ -206,39 +211,38 @@ function buildStatusV2({ wsPing, uptimeHours, memUsage }) {
         emoji: B.ticket
       }
     ],
-    footer: `-# ${E.verifiedBlue} Dʀᴇᴀᴍ Nᴏᴅᴇs • developing solutions`,
-    accentColor: 0x00F0FF,
+    footer: `-# ${E.verifiedBlue} Dream Nodes • developing solutions`,
     ephemeral: false
   });
 }
 
 /**
- * /plans Slash Command V2 Container
+ * /plans Slash Command V2 Container (Borderless)
  */
 function buildPlansV2() {
   return buildV2Container({
-    title: `# ${E.clouds} Dʀᴇᴀᴍ Nᴏᴅᴇs ┃ Hᴏꜱᴛɪɴɢ Pʟᴀɴꜱ & Sᴇʀᴠɪᴄᴇꜱ`,
-    subtitle: `${E.sparkles} High-performance game servers, enterprise VPS, and custom cloud compute.`,
+    title: `# ${E.clouds} **DREAM NODES ┃ Hosting Plans & Services**`,
+    subtitle: `${E.sparkles} High-performance game servers, enterprise VPS, and tailored cloud compute.`,
     sections: [
       {
-        title: `### ${E.minecraft} Minecraft Game Server Hosting`,
+        title: `### ${E.minecraft} **Minecraft Game Server Hosting**`,
         body:
           `> ${E.arrowBlue} **Compute:** Intel Xeon & AMD Ryzen 9 high-frequency performance cores.\n` +
           `> ${E.arrowBlue} **Storage & Protection:** Unmetered Gen4 NVMe arrays, daily backups & L7 DDoS filters.\n` +
           `> ${E.arrowBlue} **Configurations:** Browse node plans & order in <#1573281486822445128>.`
       },
       {
-        title: `### ${E.vps} Cloud Virtual Private Servers (VPS / VDS)`,
+        title: `### ${E.vps} **Cloud Virtual Private Servers (VPS / VDS)**`,
         body:
           `> ${E.arrowBlue} **Compute:** Dedicated AMD EPYC & Intel Xeon virtualization with full Root / SSH access.\n` +
           `> ${E.arrowBlue} **Transit:** Tier-1 multi-homed 10Gbps uplinks in US, Germany & Singapore.\n` +
           `> ${E.arrowBlue} **Configurations:** Browse VPS specifications in <#1573281509140336816>.`
       },
       {
-        title: `### ${E.ticket} Bespoke Custom Deployments`,
+        title: `### ${E.ticket} **Bespoke Custom Deployments**`,
         body:
           `> ${E.arrowBlue} **Enterprise:** Need private proxy routing, BGP transit, or dedicated game networks?\n` +
-          `> ${E.arrowBlue} **Assistance:** Open a consultation ticket in <#1573281601775870043> to speak with Founders.`
+          `> ${E.arrowBlue} **Assistance:** Open a consultation ticket in <#1573281601775870043> to speak directly with Founders.`
       }
     ],
     buttons: [
@@ -259,17 +263,16 @@ function buildPlansV2() {
       }
     ],
     footer: `-# ${E.verifiedBlue} Dream Nodes • Premium Cloud Infrastructure`,
-    accentColor: 0x9D00FF,
     ephemeral: false
   });
 }
 
 /**
- * /testwelcome Slash Command V2 Container
+ * /testwelcome Slash Command V2 Container (Borderless)
  */
 function buildTestWelcomeV2(channelId) {
   return buildV2Container({
-    title: `### ${E.tick5} Welcome Dispatch Preview Sent!`,
+    title: `### ${E.tick5} **Welcome Dispatch Preview Sent!**`,
     subtitle: `${E.sparkles} Interactive Discord Components V2 welcome container dispatched.`,
     description:
       `> ${E.arrowBlue} **Target Channel:** <#${channelId}>\n` +
@@ -282,14 +285,13 @@ function buildTestWelcomeV2(channelId) {
         emoji: B.announce
       }
     ],
-    footer: `-# ${E.sparkles} Dʀᴇᴀᴍ Nᴏᴅᴇs • Automated Onboarding Sentinel`,
-    accentColor: 0x00FF88,
+    footer: `-# ${E.sparkles} Dream Nodes • Automated Onboarding Sentinel`,
     ephemeral: true
   });
 }
 
 /**
- * Honeypot Kicks Log V2 Container
+ * Honeypot Kicks Log V2 Container (Borderless)
  */
 function buildHoneypotLogsV2(logs) {
   const totalAttempts = logs.length;
@@ -313,23 +315,22 @@ function buildHoneypotLogsV2(logs) {
   }
 
   return buildV2Container({
-    title: `# ${E.attacks} Dʀᴇᴀᴍ Nᴏᴅᴇs ┃ Hᴏɴᴇʏᴘᴏᴛ Sᴇᴄᴜʀɪᴛʏ Lᴏɢꜱ`,
+    title: `# ${E.attacks} **DREAM NODES ┃ Honeypot Security Logs**`,
     subtitle: `${E.security} Real-time intrusion detection and automatic softban sentinel.`,
     sections: [
       {
-        title: `### ${E.stats} Intrusion Statistics`,
+        title: `### ${E.stats} **Intrusion Statistics**`,
         body:
           `> ${E.arrowBlue} **Total Traps Triggered:** \`${totalAttempts}\`\n` +
           `> ${E.hammer} **Malicious Kicks / Softbans:** \`${totalKicks}\`\n` +
           `> ${E.shield} **Immune / Role Protected:** \`${immuneCount}\``
       },
       {
-        title: `### ${E.rulesBook} Recent Incident History`,
+        title: `### ${E.rulesBook} **Recent Incident History**`,
         body: recentIncidents
       }
     ],
     footer: `-# ${E.security} Dream Nodes • Honeypot Sentinel Security`,
-    accentColor: 0xFF3366,
     ephemeral: true
   });
 }
