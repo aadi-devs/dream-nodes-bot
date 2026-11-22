@@ -20,7 +20,7 @@ const containerComponents = [
     type: 10,
     content:
       `# ${E.minecraft} **DREAM NODES ┃ Advance Minecraft Hosting**\n` +
-      `> ${E.fireWorld} Flagship compute nodes with enterprise Game-Shield DDoS mitigation & 20.0 TPS guarantee.`
+      `> ${E.fireWorld} Flagship compute nodes with enterprise Dream Shield DDoS mitigation & 20.0 TPS guarantee.`
   },
   // 2. Divider
   {
@@ -45,11 +45,11 @@ const containerComponents = [
     divider: true,
     spacing: 1
   },
-  // 5. Game-Shield & Hardware Highlights
+  // 5. Dream Shield & Hardware Highlights
   {
     type: 10,
     content:
-      `### ${E.shield} **Enterprise Game-Shield Defense (Included)**\n` +
+      `### ${E.shield} **Enterprise Dream Shield Defense (Included)**\n` +
       `> ${E.attacks} **1.2+ Tbps Automated Filtering:** Layer 4 & Layer 7 scrubbing engineered specifically for Minecraft protocols.\n` +
       `> \n` +
       `> ${E.tick5} **Zero Lag Spikes:** Sub-second mitigation intercepts bot raids, null-pings & SYN storms with zero player disconnects.\n` +
@@ -68,13 +68,13 @@ const containerComponents = [
     content:
       `### ${E.sparkles} **Starter & Small SMP Tiers**\n` +
       `> ${E.arrowBlue} **Coal • Ember [ 2 GB ]** ➔ ${E.cash} **\`₹200 /mo\`**\n` +
-      `> ${E.sparkles} **\`2 GB DDR4\`** ┃ **\`1 CPU Core\`** ┃ **\`15 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> ${E.sparkles} **\`2 GB DDR4\`** ┃ **\`1 CPU Core\`** ┃ **\`15 GB NVMe\`** ┃ \`Dream Shield\`\n` +
       `> \n` +
       `> ${E.arrowBlue} **Copper • Spark [ 4 GB ]** ➔ ${E.cash} **\`₹400 /mo\`**\n` +
-      `> ${E.sparkles} **\`4 GB DDR4\`** ┃ **\`1 CPU Core\`** ┃ **\`25 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> ${E.sparkles} **\`4 GB DDR4\`** ┃ **\`1 CPU Core\`** ┃ **\`25 GB NVMe\`** ┃ \`Dream Shield\`\n` +
       `> \n` +
       `> ${E.arrowBlue} **Iron • Flare [ 6 GB ]** ➔ ${E.cash} **\`₹600 /mo\`**\n` +
-      `> ${E.sparkles} **\`6 GB DDR4\`** ┃ **\`2 CPU Cores\`** ┃ **\`35 GB NVMe\`** ┃ \`Game-Shield\``
+      `> ${E.sparkles} **\`6 GB DDR4\`** ┃ **\`2 CPU Cores\`** ┃ **\`35 GB NVMe\`** ┃ \`Dream Shield\``
   },
   // 8. Divider
   {
@@ -88,13 +88,13 @@ const containerComponents = [
     content:
       `### ${E.diamond} **Community & Expansion Tiers**\n` +
       `> ${E.arrowBlue} **Gold • Blaze [ 8 GB ]** ➔ ${E.cash} **\`₹750 /mo\`**\n` +
-      `> ${E.diamond} **\`8 GB DDR4\`** ┃ **\`2 CPU Cores\`** ┃ **\`50 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> ${E.diamond} **\`8 GB DDR4\`** ┃ **\`2 CPU Cores\`** ┃ **\`50 GB NVMe\`** ┃ \`Dream Shield\`\n` +
       `> \n` +
       `> ${E.arrowBlue} **Emerald • Aurora [ 12 GB ]** ➔ ${E.cash} **\`₹1,150 /mo\`**\n` +
-      `> ${E.diamond} **\`12 GB DDR4\`** ┃ **\`3 CPU Cores\`** ┃ **\`75 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> ${E.diamond} **\`12 GB DDR4\`** ┃ **\`3 CPU Cores\`** ┃ **\`75 GB NVMe\`** ┃ \`Dream Shield\`\n` +
       `> \n` +
       `> ${E.arrowBlue} **Diamond • Nova [ 16 GB ]** ➔ ${E.cash} **\`₹1,500 /mo\`**\n` +
-      `> ${E.diamond} **\`16 GB DDR4\`** ┃ **\`4 CPU Cores\`** ┃ **\`100 GB NVMe\`** ┃ \`Game-Shield\``
+      `> ${E.diamond} **\`16 GB DDR4\`** ┃ **\`4 CPU Cores\`** ┃ **\`100 GB NVMe\`** ┃ \`Dream Shield\``
   },
   // 10. Divider
   {
@@ -108,16 +108,16 @@ const containerComponents = [
     content:
       `### ${E.sword} **Heavy Modded & Network Flagships**\n` +
       `> ${E.arrowBlue} **Netherite • Eclipse [ 24 GB ]** ➔ ${E.cash} **\`₹2,250 /mo\`**\n` +
-      `> ${E.crownRed} **\`24 GB DDR4\`** ┃ **\`6 CPU Cores\`** ┃ **\`120 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> ${E.crownRed} **\`24 GB DDR4\`** ┃ **\`6 CPU Cores\`** ┃ **\`120 GB NVMe\`** ┃ \`Dream Shield\`\n` +
       `> \n` +
       `> ${E.arrowBlue} **Beacon • Zenith [ 32 GB ]** ➔ ${E.cash} **\`₹3,000 /mo\`**\n` +
-      `> ${E.crownRed} **\`32 GB DDR4\`** ┃ **\`8 CPU Cores\`** ┃ **\`150 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> ${E.crownRed} **\`32 GB DDR4\`** ┃ **\`8 CPU Cores\`** ┃ **\`150 GB NVMe\`** ┃ \`Dream Shield\`\n` +
       `> \n` +
       `> ${E.arrowBlue} **Ender • Galaxy [ 48 GB ]** ➔ ${E.cash} **\`₹4,500 /mo\`**\n` +
-      `> ${E.crownRed} **\`48 GB DDR4\`** ┃ **\`12 CPU Cores\`** ┃ **\`220 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> ${E.crownRed} **\`48 GB DDR4\`** ┃ **\`12 CPU Cores\`** ┃ **\`220 GB NVMe\`** ┃ \`Dream Shield\`\n` +
       `> \n` +
       `> ${E.arrowBlue} **Dragon • Cosmos [ 64 GB ]** ➔ ${E.cash} **\`₹6,000 /mo\`**\n` +
-      `> ${E.crownRed} **\`64 GB DDR4\`** ┃ **\`16 CPU Cores\`** ┃ **\`300 GB NVMe\`** ┃ \`Game-Shield\``
+      `> ${E.crownRed} **\`64 GB DDR4\`** ┃ **\`16 CPU Cores\`** ┃ **\`300 GB NVMe\`** ┃ \`Dream Shield\``
   },
   // 12. Divider
   {
@@ -169,7 +169,7 @@ const containerComponents = [
   // 16. Footer
   {
     type: 10,
-    content: `-# ${E.verifiedBlue} Dream Nodes • Enterprise Game-Shield Protected Minecraft Hosting • 99.9% Uptime SLA`
+    content: `-# ${E.verifiedBlue} Dream Nodes • Enterprise Dream Shield Protected Minecraft Hosting • 99.9% Uptime SLA`
   }
 ];
 
