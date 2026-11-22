@@ -26,7 +26,7 @@ const markdownContent =
 > <:disk:1573382500795818114> **Storage:** 50GB NVMe SSD
 > <a:location:1573382361574277130> **Location:** India 🇮🇳
 
-<:money:1574082659775160447> **Offer Price: ₹80/ month** (Same at Renewal)
+<:money:1574082659775160447> **Offer Price: ₹160/ month** (Same at Renewal)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -37,7 +37,7 @@ const markdownContent =
 > <:disk:1573382500795818114> **Storage:** 100GB NVMe SSD
 > <a:location:1573382361574277130> **Location:** India 🇮🇳
 
-<:money:1574082659775160447> **Offer Price: ₹160 / month** (Same at Renewal)
+<:money:1574082659775160447> **Offer Price: ₹300/ month** (Same at Renewal)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -104,9 +104,33 @@ const v2Payload = {
   ]
 };
 
-async function postToOffers() {
-  console.log('Posting Intel India Minecraft Server Offer to # ♘・ᴏꜰꜰᴇʀꜱ:', offersChannelId);
+async function updateOffers() {
+  console.log('Updating Intel India Minecraft Server Offer in # ♘・ᴏꜰꜰᴇʀꜱ:', offersChannelId);
 
+  // Check existing message in channel
+  const getRes = await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages?limit=5`, {
+    headers: { Authorization: `Bot ${token}` }
+  });
+  const msgs = await getRes.json();
+  if (Array.isArray(msgs) && msgs.length > 0) {
+    const msgId = msgs[0].id;
+    console.log('Editing existing offer message in place:', msgId);
+    const patchRes = await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages/${msgId}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bot ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(v2Payload)
+    });
+    const patchData = await patchRes.json();
+    if (patchData.id) {
+      console.log('✓ Successfully updated price to ₹160 and ₹300! Message ID:', patchData.id);
+      return;
+    }
+  }
+
+  // If no message found, post fresh
   const res = await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages`, {
     method: 'POST',
     headers: {
@@ -118,25 +142,8 @@ async function postToOffers() {
 
   const data = await res.json();
   if (data.id) {
-    console.log('✓ Successfully posted to Offers! Message ID:', data.id);
-
-    // Add reactions
-    await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages/${data.id}/reactions/%F0%9F%87%AE%F0%9F%87%B3/@me`, { // 🇮🇳
-      method: 'PUT',
-      headers: { Authorization: `Bot ${token}` }
-    });
-    await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages/${data.id}/reactions/%E2%9A%A1/@me`, { // ⚡
-      method: 'PUT',
-      headers: { Authorization: `Bot ${token}` }
-    });
-    await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages/${data.id}/reactions/%F0%9F%8E%AB/@me`, { // 🎫
-      method: 'PUT',
-      headers: { Authorization: `Bot ${token}` }
-    });
-    console.log('✓ Reactions added to Offers message');
-  } else {
-    console.error('✗ Failed to post to Offers:', JSON.stringify(data, null, 2));
+    console.log('✓ Successfully posted updated offer to Offers! Message ID:', data.id);
   }
 }
 
-postToOffers();
+updateOffers();

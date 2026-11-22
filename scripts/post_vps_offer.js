@@ -6,10 +6,11 @@ const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].tr
 
 // Target channel: # ♘・ᴀᴜᴄᴛɪᴏɴꜱ (under ✦----- VPS PLANS -----✦)
 const auctionsChannelId = '1573281528031481967';
+const announcementsChannelId = '1573337308529434756';
 const clientRoleId = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
 
 const markdownContent = 
-`# **INTEL PLATINUM VPS OFFER • VELTRION HOSTING**
+`# **INTEL PLATINUM VPS OFFER • DREAM NODES**
 
 ╭・<a:announce:1573382228795457687> **Dream Nodes • Intel Platinum 8269-CY**
 ╰┈➤ <a:Lightning:1573382171257737317> **High Performance VPS** :flag_in:
@@ -94,9 +95,24 @@ const v2Payload = {
   ]
 };
 
-async function postToAuctions() {
-  console.log('Posting Intel Platinum VPS Offer to Auctions channel:', auctionsChannelId);
+async function resendAuctions() {
+  // 1. Delete previous message in Auctions if it exists
+  const getRes = await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages?limit=5`, {
+    headers: { Authorization: `Bot ${token}` }
+  });
+  const msgs = await getRes.json();
+  if (Array.isArray(msgs)) {
+    for (const msg of msgs) {
+      console.log('Deleting previous auctions message:', msg.id);
+      await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages/${msg.id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bot ${token}` }
+      });
+    }
+  }
 
+  // 2. Post clean Dream Nodes message in Auctions
+  console.log('Posting updated Dream Nodes message to Auctions channel:', auctionsChannelId);
   const res = await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages`, {
     method: 'POST',
     headers: {
@@ -108,7 +124,7 @@ async function postToAuctions() {
 
   const data = await res.json();
   if (data.id) {
-    console.log('✓ Successfully posted to Auctions! Message ID:', data.id);
+    console.log('✓ Successfully posted clean Dream Nodes message to Auctions! Message ID:', data.id);
 
     // Add reactions
     await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages/${data.id}/reactions/%E2%9A%A1/@me`, { // ⚡
@@ -119,10 +135,25 @@ async function postToAuctions() {
       method: 'PUT',
       headers: { Authorization: `Bot ${token}` }
     });
-    console.log('✓ Reactions added to Auctions message');
-  } else {
-    console.error('✗ Failed to post to Auctions:', JSON.stringify(data, null, 2));
+  }
+
+  // 3. Also update announcements message if present
+  const annRes = await fetch(`https://discord.com/api/v10/channels/${announcementsChannelId}/messages?limit=5`, {
+    headers: { Authorization: `Bot ${token}` }
+  });
+  const annMsgs = await annRes.json();
+  if (Array.isArray(annMsgs) && annMsgs.length > 0) {
+    console.log('Updating Announcements message in place:', annMsgs[0].id);
+    await fetch(`https://discord.com/api/v10/channels/${announcementsChannelId}/messages/${annMsgs[0].id}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bot ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(v2Payload)
+    });
+    console.log('✓ Successfully updated Announcements message branding to Dream Nodes');
   }
 }
 
-postToAuctions();
+resendAuctions();
