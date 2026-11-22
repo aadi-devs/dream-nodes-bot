@@ -6,7 +6,7 @@ const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].tr
 const channelId = '1573281486822445128'; // # ♘・ᴀᴅᴠᴀɴᴄᴇ-ᴘʟᴀɴꜱ
 const messageId = '1573688254908207249';
 const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
-const websiteUrl = 'https://dreamnodes.com';
+const websiteUrl = 'https://dreamnodes.host';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
 
 const sectionHeader =

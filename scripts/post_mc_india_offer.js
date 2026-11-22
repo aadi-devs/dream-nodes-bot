@@ -9,7 +9,7 @@ const offersChannelId = '1573281500290359338';
 const clientRoleId = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
 const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
-const websiteUrl = 'https://dreamnodes.com';
+const websiteUrl = 'https://dreamnodes.host';
 
 const markdownContent = 
 `# <:Offer:1574086348825174079> **INTEL INDIA MINECRAFT SERVER OFFER** <a:sparkles_sparkles:1573382447603785928>

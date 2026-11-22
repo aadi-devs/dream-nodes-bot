@@ -5,7 +5,7 @@ const envPath = path.join(__dirname, '..', '.env');
 const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].trim();
 const channelId = '1573281547564359710'; // # ⚜・ᴅᴏᴍᴀɪɴ-ᴘʟᴀɴꜱ
 const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
-const websiteUrl = 'https://dreamnodes.com';
+const websiteUrl = 'https://dreamnodes.host';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
 
 const sectionHeader =
@@ -19,12 +19,12 @@ const sectionSubdomains =
 `### 🏷️ 01. Dream Nodes Subdomains
 > <a:cash:1573382269735805008> **Price:** \`₹20 / Month\`
 > 
-> <a:arrowf:1573382243827585114> Get a professional **.dreamnodes.com** address for your Minecraft server, game network, or control panel without purchasing a full domain.
+> <a:arrowf:1573382243827585114> Get a professional **.dreamnodes.host** address for your Minecraft server, game network, or control panel without purchasing a full domain.
 > 
 > 📂 **Live Examples:**
-> ✦ \`yourname.dreamnodes.com\`
-> ✦ \`play.dreamnodes.com\`
-> ✦ \`myserver.dreamnodes.com\``;
+> ✦ \`yourname.dreamnodes.host\`
+> ✦ \`play.dreamnodes.host\`
+> ✦ \`myserver.dreamnodes.host\``;
 
 const sectionCustomFun =
 `### ✨ 02. Custom .FUN Top-Level Domains
