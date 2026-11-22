@@ -24,7 +24,7 @@ async function patchBudgetPlansV2() {
       type: 10,
       content:
         `# ${E.minecraft} **DREAM NODES ┃ Budget Minecraft Plans**\n` +
-        `> ${E.sparkles} Maximum resources, dedicated memory, and NVMe performance at pocket-friendly pricing.`
+        `> ${E.fireWorld} Maximum resources, dedicated memory, and NVMe performance at pocket-friendly pricing.`
     },
     // 2. Divider
     {
@@ -138,7 +138,7 @@ async function patchBudgetPlansV2() {
           style: 5,
           label: 'Official Website',
           url: websiteUrl,
-          emoji: B.world
+          emoji: B.fireWorld
         }
       ]
     },
