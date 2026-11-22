@@ -9,7 +9,7 @@ const changelogChannelId = '1573281468145336441';
 const clientRoleId = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
 const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
-const websiteUrl = 'https://dreamnodes.host';
+const websiteUrl = 'https://dreamnodes.cloud';
 
 // 100% Custom & Animated Emojis only — Zero standard/normal Unicode emojis
 const changelogMarkdown = 

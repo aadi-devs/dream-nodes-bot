@@ -81,7 +81,7 @@ const v2Payload = {
               type: 2,
               style: 5,
               label: 'Official Website',
-              url: 'https://dreamnodes.host',
+              url: 'https://dreamnodes.cloud',
               emoji: { name: '🌐' }
             }
           ]

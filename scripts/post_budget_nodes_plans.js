@@ -7,7 +7,7 @@ const channelId = '1573712408554377336'; // # ♘・ʙᴜᴅɢᴇᴛ-ᴘʟᴀɴ�
 const messageId = '1573738387918299259';
 const advancePlansChannelId = '1573281486822445128'; // # ♘・ᴀᴅᴠᴀɴᴄᴇ-ᴘʟᴀɴꜱ
 const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
-const websiteUrl = 'https://dreamnodes.host';
+const websiteUrl = 'https://dreamnodes.cloud';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
 
 const sectionHeader =

@@ -24,7 +24,7 @@ const targetMessages = [
 ];
 
 async function updateAll() {
-  console.log(`Starting update of ${targetMessages.length} messages with dreamnodes.host...`);
+  console.log(`Starting update of ${targetMessages.length} messages with dreamnodes.cloud...`);
   let successCount = 0;
 
   for (const item of targetMessages) {
@@ -39,7 +39,7 @@ async function updateAll() {
       const msg = await getRes.json();
       
       let rawJson = JSON.stringify(msg.components);
-      rawJson = rawJson.replace(/dreamnodes\.com/g, 'dreamnodes.host');
+      rawJson = rawJson.replace(/dreamnodes\.com/g, 'dreamnodes.cloud');
       const updatedComponents = JSON.parse(rawJson);
 
       const patchBody = {
@@ -47,7 +47,7 @@ async function updateAll() {
         flags: msg.flags || 32768
       };
       if (msg.content && typeof msg.content === 'string') {
-        patchBody.content = msg.content.replace(/dreamnodes\.com/g, 'dreamnodes.host');
+        patchBody.content = msg.content.replace(/dreamnodes\.com/g, 'dreamnodes.cloud');
       }
 
       const patchRes = await fetch(`https://discord.com/api/v10/channels/${item.chId}/messages/${item.msgId}`, {

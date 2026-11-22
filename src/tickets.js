@@ -232,18 +232,18 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
 
     if (eventType === 'OPEN') {
       const intakeSummary = (data.intakeAnswers || [])
-        .map(a => `> **${a.label}:** \`${a.value}\``)
+        .map(a => `> <a:arrowf:1573382243827585114> **${a.label}:** \`${a.value}\``)
         .join('\n');
 
       const embed = new EmbedBuilder()
-        .setTitle(`🟢 Ticket Opened: #${data.ticketNum}`)
+        .setTitle(`Ticket Opened: #${data.ticketNum}`)
         .setColor([67, 181, 129]) // Discord Green
         .setDescription(
-          `📂 **Category:** \`${data.categoryName}\`\n` +
-          `👤 **Opened By:** <@${data.userId}> (\`${data.userTag}\` ┃ \`${data.userId}\`)\n` +
-          `📍 **Channel:** <#${data.channelId}>\n` +
-          `⏰ **Opened At:** <t:${Math.floor(Date.now() / 1000)}:F> (<t:${Math.floor(Date.now() / 1000)}:R>)\n\n` +
-          `### 📋 Submitted Intake Details:\n` +
+          `<a:pin:1573382406206132427> **Category:** \`${data.categoryName}\`\n` +
+          `<a:membership:1573382371699458201> **Opened By:** <@${data.userId}> (\`${data.userTag}\` ┃ \`${data.userId}\`)\n` +
+          `<a:location:1573382361574277130> **Channel:** <#${data.channelId}>\n` +
+          `<a:Timer:1573382213985243146> **Opened At:** <t:${Math.floor(Date.now() / 1000)}:F> (<t:${Math.floor(Date.now() / 1000)}:R>)\n\n` +
+          `### <a:updates:1573382469938446390> Submitted Intake Details:\n` +
           (intakeSummary || '> *None provided*')
         )
         .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
@@ -252,14 +252,14 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
       await logsChannel.send({ embeds: [embed] });
     } else if (eventType === 'CLAIM') {
       const embed = new EmbedBuilder()
-        .setTitle(`✋ Ticket Claimed: #${data.ticketNum}`)
+        .setTitle(`Ticket Claimed: #${data.ticketNum}`)
         .setColor([250, 166, 26]) // Discord Amber
         .setDescription(
-          `📂 **Category:** \`${data.categoryName}\`\n` +
-          `🛡️ **Claimed By:** <@${data.claimedBy}> (\`${data.claimedTag}\`)\n` +
-          `👤 **Ticket Creator:** <@${data.userId}> (\`${data.userTag}\`)\n` +
-          `📍 **Channel:** <#${data.channelId}>\n` +
-          `⏰ **Claimed At:** <t:${Math.floor(Date.now() / 1000)}:R>`
+          `<a:pin:1573382406206132427> **Category:** \`${data.categoryName}\`\n` +
+          `<a:staff:1573382455384219929> **Claimed By:** <@${data.claimedBy}> (\`${data.claimedTag}\`)\n` +
+          `<a:membership:1573382371699458201> **Ticket Creator:** <@${data.userId}> (\`${data.userTag}\`)\n` +
+          `<a:location:1573382361574277130> **Channel:** <#${data.channelId}>\n` +
+          `<a:Timer:1573382213985243146> **Claimed At:** <t:${Math.floor(Date.now() / 1000)}:R>`
         )
         .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
         .setTimestamp();
@@ -267,16 +267,16 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
       await logsChannel.send({ embeds: [embed] });
     } else if (eventType === 'CLOSE') {
       const embed = new EmbedBuilder()
-        .setTitle(`🔒 Ticket Closed: #${data.ticketNum}`)
+        .setTitle(`Ticket Closed: #${data.ticketNum}`)
         .setColor([240, 71, 71]) // Discord Red
         .setDescription(
-          `📂 **Category:** \`${data.categoryName}\`\n` +
-          `👤 **Opened By:** <@${data.userId}> (\`${data.userTag}\`)\n` +
-          `🛡️ **Claimed By:** ${data.claimedBy ? `<@${data.claimedBy}> (\`${data.claimedTag}\`)` : '`Unclaimed`'}\n` +
-          `🔒 **Closed By:** <@${data.closedBy}> (\`${data.closedTag}\`)\n` +
-          `⏱️ **Total Duration:** \`${data.duration}\`\n` +
-          `💬 **Total Messages:** \`${data.messageCount}\`\n\n` +
-          `📄 **Transcript:** The full conversation history has been archived and uploaded below as an HTML transcript.`
+          `<a:pin:1573382406206132427> **Category:** \`${data.categoryName}\`\n` +
+          `<a:membership:1573382371699458201> **Opened By:** <@${data.userId}> (\`${data.userTag}\`)\n` +
+          `<a:staff:1573382455384219929> **Claimed By:** ${data.claimedBy ? `<@${data.claimedBy}> (\`${data.claimedTag}\`)` : '`Unclaimed`'}\n` +
+          `<a:Cross:1573382156296917032> **Closed By:** <@${data.closedBy}> (\`${data.closedTag}\`)\n` +
+          `<a:Timer:1573382213985243146> **Total Duration:** \`${data.duration}\`\n` +
+          `<a:chat:1573382277164040214> **Total Messages:** \`${data.messageCount}\`\n\n` +
+          `<a:updates:1573382469938446390> **Transcript:** The full conversation history has been archived and uploaded below as an HTML transcript.`
         )
         .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
         .setTimestamp();
@@ -295,7 +295,7 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
 // Build the Main Ticket Panel Components V2 Payload
 function buildTicketPanelPayload() {
   const panelHeader =
-`# 🎫 𝐃𝐑𝐄𝐀𝐌 𝐍𝐎𝐃𝐄𝐒 ┃ Support & Ticket Desk
+`# <a:updates:1573382469938446390> **DREAM NODES ┃ Support & Ticket Desk**
 ## <a:sparkles_sparkles:1573382447603785928> 24/7 Client Helpdesk • Instant Orders • Technical Support • Inquiries
 
 > <a:Rotating_Star:1573382194020491317> **Welcome to the official Dream Nodes Support Center!**
@@ -304,15 +304,15 @@ function buildTicketPanelPayload() {
 > Choose the relevant department from the **interactive menu below** to create your dedicated private ticket channel.
 
 ### <a:RedCrown:1573382179298353186> Support Departments:
-> 🛒 **Buy / Purchase Hosting:** Order Minecraft, Intel / AMD VPS, RDP, Web Hosting, or Bot Nodes.
-> ❓ **General Queries:** Ask questions regarding server specs, custom quotes, locations, or billing.
-> 🚨 **Staff Report:** Confidentially report staff misconduct directly to executive leadership.
-> 🛠️ **Problems & Issues:** Report downtime, control panel errors, server crashes, or network bugs.
+> <a:cash:1573382269735805008> **Buy / Purchase Hosting:** Order Minecraft, Intel / AMD VPS, RDP, Web Hosting, or Bot Nodes.
+> <a:chat:1573382277164040214> **General Queries:** Ask questions regarding server specs, custom quotes, locations, or billing.
+> <a:siren:1573382431065509981> **Staff Report:** Confidentially report staff misconduct directly to executive leadership.
+> <a:settings:1573382421611806763> **Problems & Issues:** Report downtime, control panel errors, server crashes, or network bugs.
 
 ### <a:info:1573382351214354483> Support Guidelines:
-> ✦ **One Ticket Per Topic:** Please avoid creating multiple tickets for the same inquiry.
-> ✦ **Fill Required Questions:** State your plan, node location, or issue details in the popup form.
-> ✦ **Patient Response:** Our staff team is alerted automatically. Unnecessary pings are not required.`;
+> <a:arrowf:1573382243827585114> **One Ticket Per Topic:** Please avoid creating multiple tickets for the same inquiry.
+> <a:arrowf:1573382243827585114> **Fill Required Questions:** State your plan, node location, or issue details in the popup form.
+> <a:arrowf:1573382243827585114> **Patient Response:** Our staff team is alerted automatically. Unnecessary pings are not required.`;
 
   return {
     flags: 32768, // IS_COMPONENTS_V2
@@ -335,7 +335,7 @@ function buildTicketPanelPayload() {
               {
                 type: 3, // String Select Menu
                 custom_id: 'ticket_create_menu',
-                placeholder: '📩 Select a department to open a ticket...',
+                placeholder: 'Select a department to open a ticket...',
                 options: Object.entries(CATEGORIES).map(([val, cat]) => ({
                   label: cat.name,
                   value: val,
@@ -357,28 +357,28 @@ function buildTicketPanelPayload() {
                 type: 2,
                 style: 5,
                 label: 'Official Website',
-                url: 'https://dreamnodes.host',
-                emoji: { name: '🌐' }
+                url: 'https://dreamnodes.cloud',
+                emoji: { id: '1573382112436949044', name: '2251worldrainbow', animated: true }
               },
               {
                 type: 2,
                 style: 5,
                 label: 'How To Buy',
                 url: 'https://discord.com/channels/1573272872737181696/1573281597464121425',
-                emoji: { name: '📖' }
+                emoji: { id: '1573382351214354483', name: 'info', animated: true }
               },
               {
                 type: 2,
                 style: 5,
                 label: 'Terms & Policies',
                 url: 'https://discord.com/channels/1573272872737181696/1573337303538208778',
-                emoji: { name: '📜' }
+                emoji: { id: '1573382406206132427', name: 'pin', animated: true }
               }
             ]
           },
           {
             type: 10,
-            content: '-# 💙 Dream Nodes • High-Performance Cloud Hosting & 24/7 Client Care Desk'
+            content: '-# <a:Rotating_Star:1573382194020491317> Dream Nodes • High-Performance Cloud Hosting & 24/7 Client Care Desk'
           }
         ]
       }
@@ -561,21 +561,21 @@ async function handleTicketModalSubmit(interaction) {
     // 1. Ping the staff role in the new ticket channel so staff are alerted immediately!
     const staffPingRole = catConfig.staffPingRoleId;
     await ticketChannel.send({
-      content: `🔔 <@&${staffPingRole}> • New **${catConfig.name}** ticket opened by <@${interaction.user.id}>!`
+      content: `<a:announce:1573382228795457687> <@&${staffPingRole}> • New **${catConfig.name}** ticket opened by <@${interaction.user.id}>!`
     });
 
     // 2. Format the user's intake questions & answers cleanly
-    const intakeFormatted = intakeAnswers.map(ans => `> 🔹 **${ans.label}:** \`${ans.value}\``).join('\n');
+    const intakeFormatted = intakeAnswers.map(ans => `> <a:arrowf:1573382243827585114> **${ans.label}:** \`${ans.value}\``).join('\n');
 
     // 3. Build the aesthetic welcoming Components V2 message inside the new ticket channel
     const welcomeHeader =
-`# 🎫 Dʀᴇᴀᴍ Nᴏᴅᴇs ┃ Ticket #${ticketNum}
+`# <a:updates:1573382469938446390> **DREAM NODES ┃ Ticket #${ticketNum}**
 ### <a:sparkles_sparkles:1573382447603785928> Welcome <@${interaction.user.id}>! Support Desk Initialized
 
 > <a:Rotating_Star:1573382194020491317> **Thank you for contacting Dream Nodes Support!**
 > Our staff team has been alerted and will assist you shortly.
 > 
-> ⏳ **Please wait patiently:** Our staff will claim this ticket soon. Avoid spamming pings so we can assist everyone swiftly. Feel free to send screenshots, error codes, or further details below.`;
+> <a:Timer:1573382213985243146> **Please wait patiently:** Our staff will claim this ticket soon. Avoid spamming pings so we can assist everyone swiftly. Feel free to send screenshots, error codes, or further details below.`;
 
     const ticketMessagePayload = {
       flags: 32768, // IS_COMPONENTS_V2
@@ -595,7 +595,7 @@ async function handleTicketModalSubmit(interaction) {
             {
               type: 10,
               content:
-                `### 📋 Intake Information Provided:\n` +
+                `### <a:updates:1573382469938446390> Intake Information Provided:\n` +
                 intakeFormatted
             },
             {
@@ -606,8 +606,8 @@ async function handleTicketModalSubmit(interaction) {
             {
               type: 10,
               content:
-                `> 📂 **Category:** \`${catConfig.name}\` ┃ 👤 **Opened By:** <@${interaction.user.id}>\n` +
-                `> 🛡️ **Status:** \`🟡 Unclaimed\` *(Staff will claim shortly)*`
+                `> <a:pin:1573382406206132427> **Category:** \`${catConfig.name}\` ┃ <a:membership:1573382371699458201> **Opened By:** <@${interaction.user.id}>\n` +
+                `> <a:staff:1573382455384219929> **Status:** \`Unclaimed\` *(Staff will claim shortly)*`
             },
             {
               type: 14,
@@ -622,20 +622,20 @@ async function handleTicketModalSubmit(interaction) {
                   style: 3, // Success / Green
                   label: 'Claim Ticket',
                   custom_id: `ticket_claim_${ticketChannel.id}`,
-                  emoji: { name: '✋' }
+                  emoji: { id: '1573382371699458201', name: 'membership', animated: true }
                 },
                 {
                   type: 2,
                   style: 4, // Danger / Red
                   label: 'Close Ticket',
                   custom_id: `ticket_close_${ticketChannel.id}`,
-                  emoji: { name: '🔒' }
+                  emoji: { id: '1573382156296917032', name: 'Cross', animated: true }
                 }
               ]
             },
             {
               type: 10,
-              content: '-# 💙 Dream Nodes • 24/7 Dedicated Client Support Helpdesk'
+              content: '-# <a:Rotating_Star:1573382194020491317> Dream Nodes • 24/7 Dedicated Client Support Helpdesk'
             }
           ]
         }
@@ -767,7 +767,7 @@ async function handleTicketClosePrompt(interaction) {
 
   // Ask for confirmation before deleting
   const confirmPayload = {
-    content: '⚠️ **Are you sure you want to close and archive this ticket channel?**\nA full transcript will be saved to the ticket logs channel.',
+    content: '<a:fsk_warning:1573382318364692703> **Are you sure you want to close and archive this ticket channel?**\nA full transcript will be saved to the ticket logs channel.',
     components: [
       {
         type: 1,
@@ -777,14 +777,14 @@ async function handleTicketClosePrompt(interaction) {
             style: 4, // Danger / Red
             label: 'Confirm Close',
             custom_id: `ticket_close_confirm_${interaction.channelId}`,
-            emoji: { name: '🔒' }
+            emoji: { id: '1573382156296917032', name: 'Cross', animated: true }
           },
           {
             type: 2,
             style: 2, // Secondary / Grey
             label: 'Cancel',
             custom_id: `ticket_close_cancel_${interaction.channelId}`,
-            emoji: { name: '❌' }
+            emoji: { id: '1573382205395177532', name: 'Tick5', animated: true }
           }
         ]
       }
