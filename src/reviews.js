@@ -135,7 +135,7 @@ function buildReviewActionRow(reviewId, usefulCount = 0) {
 }
 
 /**
- * Ensure persistent Review Hub prompt message exists in the review channel
+ * Ensure persistent Review Hub prompt message exists in the review channel using Components V2
  */
 async function postOrUpdateReviewHubPrompt(client) {
   try {
@@ -148,51 +148,105 @@ async function postOrUpdateReviewHubPrompt(client) {
     const avgRating = totalReviews === 0 ? '5.0' :
       (data.reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / totalReviews).toFixed(1);
 
-    const embed = new EmbedBuilder()
-      .setTitle(`✦ DREAM NODES ┃ Customer Reviews & Feedback`)
-      .setColor(0x5865F2)
-      .setDescription(
-        `# ${E.stars} **Share Your Experience With Dream Nodes**\n` +
-        `> ${E.starRotating} We take immense pride in delivering top-tier cloud compute, Minecraft hosting, and VPS infrastructure. Your reviews and feedback help us continuously improve and innovate!\n\n` +
-        `### ${E.updates} **Review Desk Statistics:**\n` +
-        `> ${E.star} **Average Community Rating:** \`${avgRating} / 5.0\` (${getStarDisplay(Math.round(Number(avgRating)))})\n` +
-        `> ${E.membership} **Total Client Reviews:** \`${totalReviews}\` verified testimonials\n` +
-        `> ${E.shield} **Satisfaction Guarantee:** 24/7 Dedicated Support Helpdesk\n\n` +
-        `### ${E.gift} **How To Review:**\n` +
-        `Click **Submit A Review** below or use \`/review\` to share your feedback. Our executive team reads and responds to every single review!`
-      )
-      .setImage('https://cdn.discordapp.com/attachments/1573281486822445128/1573688254144708709/Gemini_Generated_Image_l610mrl610mrl610_1.jpeg?ex=6922fd18&is=6921ab98&hm=74ff15175510f22fa2ffbe45bf69363539fb0421da7d526ea02e86bf4e8c56fa&')
-      .setFooter({ text: 'Dream Nodes • Client Trust & Verification Hub' })
-      .setTimestamp();
+    const v2Container = {
+      flags: 32768, // IS_COMPONENTS_V2
+      embeds: [],
+      components: [
+        {
+          type: 17, // Borderless Container
+          components: [
+            {
+              type: 10,
+              content:
+                `# ${E.stars} **DREAM NODES ┃ Verified Client Reviews**\n` +
+                `### ${E.starRotating} Official Customer Feedback & Testimonials Desk\n\n` +
+                `> ${E.diamond} We take immense pride in delivering enterprise cloud compute, high-frequency Minecraft nodes, VPS, and bot hosting. Genuine client reviews help us continuously improve and innovate!`
+            },
+            {
+              type: 14,
+              divider: true,
+              spacing: 1
+            },
+            {
+              type: 10,
+              content:
+                `### ${E.updates} **Review Desk Highlights:**\n` +
+                `> ${E.star} **Average Community Rating:** \`${avgRating} / 5.0\` (${getStarDisplay(Math.round(Number(avgRating)))})\n` +
+                `> ${E.membership} **Verified Client Reviews:** \`${totalReviews}\` live testimonials from server owners\n` +
+                `> ${E.shield} **Verified Client Protection:** Submitting reviews & voting is strictly reserved for **Paid Clients** (<@&${PAID_CLIENT_ROLE_ID}>)\n\n` +
+                `### ${E.gift} **How To Submit A Review:**\n` +
+                `> ${E.arrowBlue} Verified clients can click **Submit A Review** below or type \`/review\`.\n` +
+                `> ${E.arrowBlue} Founders & Management respond directly to every client review in the attached **Owner's Response** thread!`
+            },
+            {
+              type: 14,
+              divider: true,
+              spacing: 1
+            },
+            {
+              type: 1, // Action Row
+              components: [
+                {
+                  type: 2,
+                  style: 1, // Primary / Blurple
+                  label: 'Submit A Review',
+                  custom_id: 'review_submit_btn',
+                  emoji: B.rulesBook
+                },
+                {
+                  type: 2,
+                  style: 5, // Link
+                  label: 'Client Panel',
+                  url: 'https://panel.dreamnodes.cloud',
+                  emoji: B.hostinger
+                },
+                {
+                  type: 2,
+                  style: 5, // Link
+                  label: 'Support Desk',
+                  url: 'https://discord.com/channels/1573272872737181696/1573281601775870043',
+                  emoji: B.ticket
+                }
+              ]
+            },
+            {
+              type: 10,
+              content: `-# ${E.starRotating} Dream Nodes • Verified Customer Reputation Hub`
+            }
+          ]
+        }
+      ]
+    };
 
-    const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId('review_submit_btn')
-        .setLabel('Submit A Review')
-        .setStyle(ButtonStyle.Primary)
-        .setEmoji(B.rulesBook)
-    );
+    const token = process.env.DISCORD_TOKEN || client.token;
+    const promptMsgId = data.promptMessageId || '1574121350958948363';
 
-    let promptMsg = null;
-    if (data.promptMessageId) {
-      promptMsg = await channel.messages.fetch(data.promptMessageId).catch(() => null);
-    }
+    const res = await fetch(`https://discord.com/api/v10/channels/${REVIEWS_CHANNEL_ID}/messages/${promptMsgId}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bot ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(v2Container)
+    });
 
-    if (promptMsg) {
-      await promptMsg.edit({ embeds: [embed], components: [row] });
+    if (res.ok) {
+      data.promptMessageId = promptMsgId;
+      saveReviewsData(data);
     } else {
-      // Look for previous messages sent by bot in channel
-      const messages = await channel.messages.fetch({ limit: 10 }).catch(() => null);
-      const existingBotMsg = messages?.find(m => m.author.id === client.user.id && m.embeds[0]?.title?.includes('Customer Reviews'));
-      if (existingBotMsg) {
-        await existingBotMsg.edit({ embeds: [embed], components: [row] });
-        data.promptMessageId = existingBotMsg.id;
+      const postRes = await fetch(`https://discord.com/api/v10/channels/${REVIEWS_CHANNEL_ID}/messages`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bot ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(v2Container)
+      });
+      const postData = await postRes.json();
+      if (postRes.ok) {
+        data.promptMessageId = postData.id;
         saveReviewsData(data);
-      } else {
-        const newMsg = await channel.send({ embeds: [embed], components: [row] });
-        data.promptMessageId = newMsg.id;
-        saveReviewsData(data);
-        await newMsg.pin().catch(() => null);
+        await channel.messages.fetch(postData.id).then(m => m.pin()).catch(() => null);
       }
     }
   } catch (err) {
