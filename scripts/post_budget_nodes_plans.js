@@ -45,13 +45,15 @@ const containerComponents = [
     divider: true,
     spacing: 1
   },
-  // 5. Hardware Highlights (Clean, stated once)
+  // 5. Hardware Highlights (Spaced, stated once)
   {
     type: 10,
     content:
       `### ${E.settings} **Hardware & Infrastructure Highlights**\n` +
       `> ${E.tick5} **Control Panel:** Pterodactyl access, SFTP file management & split port allocation.\n` +
+      `> \n` +
       `> ${E.arrowBlue} **Databases & Backups:** Free MySQL databases with automated snapshot recovery.\n` +
+      `> \n` +
       `> ${E.arrowBlue} **Network Protection:** 10 Gbps DDoS mitigation (for high-threat filtering, see <#${advancePlansChannelId}>).`
   },
   // 6. Divider
@@ -60,16 +62,25 @@ const containerComponents = [
     divider: true,
     spacing: 1
   },
-  // 7. Starter & Creator Plans
+  // 7. Starter & Creator Plans (Spaced with highlighted RAM & Specs)
   {
     type: 10,
     content:
       `### ${E.lightning} **Starter & Creator Tiers**\n` +
-      `> ${E.arrowBlue} **Pro Start [ 8 GB ]** • \`400% CPU\` • \`150 GB NVMe\` ➔ ${E.cash} **₹350 /mo**\n` +
-      `> ${E.arrowBlue} **Pro Advance [ 12 GB ]** • \`500% CPU\` • \`200 GB NVMe\` ➔ ${E.cash} **₹525 /mo**\n` +
-      `> ${E.arrowBlue} **Pro Plus [ 16 GB ]** • \`600% CPU\` • \`250 GB NVMe\` ➔ ${E.cash} **₹700 /mo**\n` +
-      `> ${E.arrowBlue} **Elite [ 24 GB ]** • \`700% CPU\` • \`350 GB NVMe\` ➔ ${E.cash} **₹1,050 /mo**\n` +
-      `> ${E.arrowBlue} **Elite Plus [ 32 GB ]** • \`800% CPU\` • \`500 GB NVMe\` ➔ ${E.cash} **₹1,400 /mo**`
+      `> ${E.arrowBlue} **Pro Start [ 8 GB ]** ➔ ${E.cash} **\`₹350 /mo\`**\n` +
+      `> ${E.sparkles} **\`8 GB RAM\`** ┃ **\`400% CPU\`** ┃ **\`150 GB NVMe\`** ┃ **\`1 Gbps\`**\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Pro Advance [ 12 GB ]** ➔ ${E.cash} **\`₹525 /mo\`**\n` +
+      `> ${E.sparkles} **\`12 GB RAM\`** ┃ **\`500% CPU\`** ┃ **\`200 GB NVMe\`** ┃ **\`1 Gbps\`**\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Pro Plus [ 16 GB ]** ➔ ${E.cash} **\`₹700 /mo\`**\n` +
+      `> ${E.sparkles} **\`16 GB RAM\`** ┃ **\`600% CPU\`** ┃ **\`250 GB NVMe\`** ┃ **\`1 Gbps\`**\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Elite Community [ 24 GB ]** ➔ ${E.cash} **\`₹1,050 /mo\`**\n` +
+      `> ${E.sparkles} **\`24 GB RAM\`** ┃ **\`700% CPU\`** ┃ **\`350 GB NVMe\`** ┃ **\`1 Gbps\`**\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Elite Plus [ 32 GB ]** ➔ ${E.cash} **\`₹1,400 /mo\`**\n` +
+      `> ${E.sparkles} **\`32 GB RAM\`** ┃ **\`800% CPU\`** ┃ **\`500 GB NVMe\`** ┃ **\`1 Gbps\`**`
   },
   // 8. Divider
   {
@@ -77,15 +88,22 @@ const containerComponents = [
     divider: true,
     spacing: 1
   },
-  // 9. High-Capacity & Network Plans
+  // 9. High-Capacity & Network Plans (Spaced with highlighted RAM & Specs)
   {
     type: 10,
     content:
       `### ${E.rocket} **High-Capacity & Network Tiers**\n` +
-      `> ${E.arrowBlue} **Enterprise [ 48 GB ]** • \`1200% CPU\` • \`750 GB NVMe\` ➔ ${E.cash} **₹2,100 /mo**\n` +
-      `> ${E.arrowBlue} **Enterprise Plus [ 64 GB ]** • \`1600% CPU\` • \`1 TB NVMe\` ➔ ${E.cash} **₹2,800 /mo**\n` +
-      `> ${E.arrowBlue} **Titan [ 128 GB ]** • \`3200% CPU\` • \`2 TB NVMe\` ➔ ${E.cash} **₹5,600 /mo**\n` +
-      `> ${E.arrowBlue} **Titan Max [ 256 GB ]** • \`6400% CPU\` • \`4 TB NVMe\` ➔ ${E.cash} **₹11,200 /mo**`
+      `> ${E.arrowBlue} **Enterprise [ 48 GB ]** ➔ ${E.cash} **\`₹2,100 /mo\`**\n` +
+      `> ${E.diamond} **\`48 GB RAM\`** ┃ **\`1200% CPU\`** ┃ **\`750 GB NVMe\`** ┃ **\`1 Gbps\`**\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Enterprise Plus [ 64 GB ]** ➔ ${E.cash} **\`₹2,800 /mo\`**\n` +
+      `> ${E.diamond} **\`64 GB RAM\`** ┃ **\`1600% CPU\`** ┃ **\`1 TB NVMe SSD\`** ┃ **\`1 Gbps\`**\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Titan Colossus [ 128 GB ]** ➔ ${E.cash} **\`₹5,600 /mo\`**\n` +
+      `> ${E.diamond} **\`128 GB RAM\`** ┃ **\`3200% CPU\`** ┃ **\`2 TB NVMe SSD\`** ┃ **\`1 Gbps\`**\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Titan Max [ 256 GB ]** ➔ ${E.cash} **\`₹11,200 /mo\`**\n` +
+      `> ${E.diamond} **\`256 GB RAM\`** ┃ **\`6400% CPU\`** ┃ **\`4 TB NVMe SSD\`** ┃ **\`1 Gbps\`**`
   },
   // 10. Divider
   {
