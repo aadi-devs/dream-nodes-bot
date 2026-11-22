@@ -115,7 +115,21 @@ async function patchBudgetPlansV2() {
       divider: true,
       spacing: 1
     },
-    // 11. Action Row
+    // 11. Dedicated IPv4 Add-On
+    {
+      type: 10,
+      content:
+        `### ${E.world} **Dedicated IPv4 & Port Add-On**\n` +
+        `> ${E.arrowBlue} **Dedicated IPv4 + Default Port (25565):** ${E.cash} **\`₹350 /mo\`**\n` +
+        `> ${E.sparkles} Connect directly using your domain without entering any port numbers!`
+    },
+    // 12. Divider
+    {
+      type: 14,
+      divider: true,
+      spacing: 1
+    },
+    // 13. Action Row
     {
       type: 1,
       components: [

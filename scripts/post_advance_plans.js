@@ -6,168 +6,199 @@ const envPath = path.join(__dirname, '..', '.env');
 const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].trim();
 const channelId = '1573281486822445128'; // # ♘・ᴀᴅᴠᴀɴᴄᴇ-ᴘʟᴀɴꜱ
 const messageId = '1573688254908207249';
+const budgetPlansChannelId = '1573712408554377336';
 const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
+const budgetPlansUrl = `https://discord.com/channels/1573272872737181696/${budgetPlansChannelId}`;
 const websiteUrl = 'https://dreamnodes.cloud';
-const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
 
-const sectionHeader =
-`# ${E.minecraft} Dream Nodes | Advance Minecraft Hosting
-## ${E.attacks} ${E.shield} Enterprise Game-Shield Protected Nodes
+const bannerPath = path.join(__dirname, '..', 'assets', 'advance_plans_banner.jpg');
+const bannerBuf = fs.readFileSync(bannerPath);
 
-> ${E.siren} **MILITARY-GRADE DEFENSE INCLUDED ON ALL ADVANCE PLANS**
-> ${E.lightning} Fortified with automated **Layer 4 & Layer 7 Game Mitigation** built specifically for Minecraft protocols. Our edge filters intercept UDP/TCP floods, SYN storms, null-ping exploits, and bot raids in real time with **sub-second reaction**—keeping servers locked at 20 TPS with zero downtime.
-
-### ${E.hostinger} Key Defense Capabilities:
-> ${E.arrowBlue} **1.2+ Tbps Traffic Pipeline:** Absorbs massive volumetric attacks.
-> ${E.arrowBlue} **Minecraft Protocol Scrubbing:** Cleans packet spoofing & ping exploits on the fly.
-> ${E.arrowBlue} **Zero Disconnects:** Instant mitigation with zero player lag spikes.`;
-
-const sectionStarter =
-`### ${E.fireBlue} Starter Tier Plans
-
-> ${E.coal} **Coal • Ember** \`[ 2 GB ]\` ➔ ${E.cash} \`₹200 /mo\`
-> ${E.arrowBlue} \`2 GB DDR4\` ┃ \`1 Core\` ┃ \`15 GB NVMe\`
-> 
-> ${E.copper} **Copper • Spark** \`[ 4 GB ]\` ➔ ${E.cash} \`₹400 /mo\`
-> ${E.arrowBlue} \`4 GB DDR4\` ┃ \`1 Core\` ┃ \`25 GB NVMe\`
-> 
-> ${E.iron} **Iron • Flare** \`[ 6 GB ]\` ➔ ${E.cash} \`₹600 /mo\`
-> ${E.arrowBlue} \`6 GB DDR4\` ┃ \`2 Cores\` ┃ \`35 GB NVMe\``;
-
-const sectionCommunity =
-`### ${E.lightning} Community & Expansion Plans
-
-> ${E.gold} **Gold • Blaze** \`[ 8 GB ]\` ➔ ${E.cash} \`₹750 /mo\`
-> ${E.arrowBlue} \`8 GB DDR4\` ┃ \`2 Cores\` ┃ \`50 GB NVMe\`
-> 
-> ${E.emerald} **Emerald • Aurora** \`[ 12 GB ]\` ➔ ${E.cash} \`₹1,150 /mo\`
-> ${E.arrowBlue} \`12 GB DDR4\` ┃ \`3 Cores\` ┃ \`75 GB NVMe\`
-> 
-> ${E.diamond} **Diamond • Nova** \`[ 16 GB ]\` ➔ ${E.cash} \`₹1,500 /mo\`
-> ${E.arrowBlue} \`16 GB DDR4\` ┃ \`4 Cores\` ┃ \`100 GB NVMe\``;
-
-const sectionHeavy =
-`### ${E.crownRed} Heavy Modded & Network Plans
-
-> ${E.sword} **Netherite • Eclipse** \`[ 24 GB ]\` ➔ ${E.cash} \`₹2,250 /mo\`
-> ${E.arrowBlue} \`24 GB DDR4\` ┃ \`6 Cores\` ┃ \`120 GB NVMe\`
-> 
-> ${E.starRotating} **Beacon • Zenith** \`[ 32 GB ]\` ➔ ${E.cash} \`₹3,000 /mo\`
-> ${E.arrowBlue} \`32 GB DDR4\` ┃ \`8 Cores\` ┃ \`150 GB NVMe\`
-> 
-> ${E.enderman} **Ender • Galaxy** \`[ 48 GB ]\` ➔ ${E.cash} \`₹4,500 /mo\`
-> ${E.arrowBlue} \`48 GB DDR4\` ┃ \`12 Cores\` ┃ \`220 GB NVMe\`
-> 
-> ${E.vip} **Dragon • Cosmos** \`[ 64 GB ]\` ➔ ${E.cash} \`₹6,000 /mo\`
-> ${E.arrowBlue} \`64 GB DDR4\` ┃ \`16 Cores\` ┃ \`300 GB NVMe\``;
-
-const sectionFooter =
-`### ${E.sparkles} All Advance Plans Include:
-> ${E.bandwidth} **1 Gbps Network Uplink** ┃ ${E.backup} **Automated Off-site Daily Snapshots**
-> ${E.tick5} **Custom Pterodactyl Panel** (SFTP, Full Root File Access, Split Ports)
-> ${E.hostinger} **Instant Provisioning Upon Ticket Confirmation**
-
-### ${E.settings} Add-ons & Dedicated IP:
-> ${E.world} **Dedicated IPv4 + Default Port (25565):** ${E.cash} \`₹350 /mo\` (Direct join without port!)`;
+const containerComponents = [
+  // 1. Header
+  {
+    type: 10,
+    content:
+      `# ${E.minecraft} **DREAM NODES ┃ Advance Minecraft Hosting**\n` +
+      `> ${E.fireWorld} Flagship compute nodes with enterprise Game-Shield DDoS mitigation & 20.0 TPS guarantee.`
+  },
+  // 2. Divider
+  {
+    type: 14,
+    divider: true,
+    spacing: 1
+  },
+  // 3. Media Gallery (Banner)
+  {
+    type: 12,
+    items: [
+      {
+        media: {
+          url: 'attachment://advance_plans_banner.jpg'
+        }
+      }
+    ]
+  },
+  // 4. Divider
+  {
+    type: 14,
+    divider: true,
+    spacing: 1
+  },
+  // 5. Game-Shield & Hardware Highlights
+  {
+    type: 10,
+    content:
+      `### ${E.shield} **Enterprise Game-Shield Defense (Included)**\n` +
+      `> ${E.attacks} **1.2+ Tbps Automated Filtering:** Layer 4 & Layer 7 scrubbing engineered specifically for Minecraft protocols.\n` +
+      `> \n` +
+      `> ${E.tick5} **Zero Lag Spikes:** Sub-second mitigation intercepts bot raids, null-pings & SYN storms with zero player disconnects.\n` +
+      `> \n` +
+      `> ${E.lightning} **Flagship Hardware:** High-frequency performance cores paired with unmetered Gen4 NVMe arrays.`
+  },
+  // 6. Divider
+  {
+    type: 14,
+    divider: true,
+    spacing: 1
+  },
+  // 7. Starter & Small SMP Plans
+  {
+    type: 10,
+    content:
+      `### ${E.sparkles} **Starter & Small SMP Tiers**\n` +
+      `> ${E.arrowBlue} **Coal • Ember [ 2 GB ]** ➔ ${E.cash} **\`₹200 /mo\`**\n` +
+      `> ${E.sparkles} **\`2 GB DDR4\`** ┃ **\`1 CPU Core\`** ┃ **\`15 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Copper • Spark [ 4 GB ]** ➔ ${E.cash} **\`₹400 /mo\`**\n` +
+      `> ${E.sparkles} **\`4 GB DDR4\`** ┃ **\`1 CPU Core\`** ┃ **\`25 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Iron • Flare [ 6 GB ]** ➔ ${E.cash} **\`₹600 /mo\`**\n` +
+      `> ${E.sparkles} **\`6 GB DDR4\`** ┃ **\`2 CPU Cores\`** ┃ **\`35 GB NVMe\`** ┃ \`Game-Shield\``
+  },
+  // 8. Divider
+  {
+    type: 14,
+    divider: true,
+    spacing: 1
+  },
+  // 9. Community & Expansion Plans
+  {
+    type: 10,
+    content:
+      `### ${E.diamond} **Community & Expansion Tiers**\n` +
+      `> ${E.arrowBlue} **Gold • Blaze [ 8 GB ]** ➔ ${E.cash} **\`₹750 /mo\`**\n` +
+      `> ${E.diamond} **\`8 GB DDR4\`** ┃ **\`2 CPU Cores\`** ┃ **\`50 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Emerald • Aurora [ 12 GB ]** ➔ ${E.cash} **\`₹1,150 /mo\`**\n` +
+      `> ${E.diamond} **\`12 GB DDR4\`** ┃ **\`3 CPU Cores\`** ┃ **\`75 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Diamond • Nova [ 16 GB ]** ➔ ${E.cash} **\`₹1,500 /mo\`**\n` +
+      `> ${E.diamond} **\`16 GB DDR4\`** ┃ **\`4 CPU Cores\`** ┃ **\`100 GB NVMe\`** ┃ \`Game-Shield\``
+  },
+  // 10. Divider
+  {
+    type: 14,
+    divider: true,
+    spacing: 1
+  },
+  // 11. Heavy Modded & Network Flagships
+  {
+    type: 10,
+    content:
+      `### ${E.sword} **Heavy Modded & Network Flagships**\n` +
+      `> ${E.arrowBlue} **Netherite • Eclipse [ 24 GB ]** ➔ ${E.cash} **\`₹2,250 /mo\`**\n` +
+      `> ${E.crownRed} **\`24 GB DDR4\`** ┃ **\`6 CPU Cores\`** ┃ **\`120 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Beacon • Zenith [ 32 GB ]** ➔ ${E.cash} **\`₹3,000 /mo\`**\n` +
+      `> ${E.crownRed} **\`32 GB DDR4\`** ┃ **\`8 CPU Cores\`** ┃ **\`150 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Ender • Galaxy [ 48 GB ]** ➔ ${E.cash} **\`₹4,500 /mo\`**\n` +
+      `> ${E.crownRed} **\`48 GB DDR4\`** ┃ **\`12 CPU Cores\`** ┃ **\`220 GB NVMe\`** ┃ \`Game-Shield\`\n` +
+      `> \n` +
+      `> ${E.arrowBlue} **Dragon • Cosmos [ 64 GB ]** ➔ ${E.cash} **\`₹6,000 /mo\`**\n` +
+      `> ${E.crownRed} **\`64 GB DDR4\`** ┃ **\`16 CPU Cores\`** ┃ **\`300 GB NVMe\`** ┃ \`Game-Shield\``
+  },
+  // 12. Divider
+  {
+    type: 14,
+    divider: true,
+    spacing: 1
+  },
+  // 13. Dedicated IPv4 Add-On
+  {
+    type: 10,
+    content:
+      `### ${E.world} **Dedicated IPv4 & Default Port Add-On**\n` +
+      `> ${E.arrowBlue} **Dedicated Clean IPv4 + Default Port (25565):** ${E.cash} **\`₹350 /mo\`**\n` +
+      `> ${E.sparkles} Connect players directly using your custom server domain without typing port numbers!`
+  },
+  // 14. Divider
+  {
+    type: 14,
+    divider: true,
+    spacing: 1
+  },
+  // 15. Action Row
+  {
+    type: 1,
+    components: [
+      {
+        type: 2,
+        style: 5,
+        label: 'Order via Ticket',
+        url: ticketChannelUrl,
+        emoji: B.ticket
+      },
+      {
+        type: 2,
+        style: 5,
+        label: 'Budget Plans',
+        url: budgetPlansUrl,
+        emoji: B.minecraft
+      },
+      {
+        type: 2,
+        style: 5,
+        label: 'Official Website',
+        url: websiteUrl,
+        emoji: B.fireWorld
+      }
+    ]
+  },
+  // 16. Footer
+  {
+    type: 10,
+    content: `-# ${E.verifiedBlue} Dream Nodes • Enterprise Game-Shield Protected Minecraft Hosting • 99.9% Uptime SLA`
+  }
+];
 
 const v2Payload = {
-  flags: 32768, // IS_COMPONENTS_V2
+  flags: 32768,
+  content: '',
+  embeds: [],
+  attachments: [{ id: 0, filename: 'advance_plans_banner.jpg' }],
   components: [
     {
-      type: 17, // Borderless Container
-      components: [
-        {
-          type: 10,
-          content: sectionHeader
-        },
-        {
-          type: 14,
-          divider: true,
-          spacing: 1
-        },
-        {
-          type: 10,
-          content: sectionStarter
-        },
-        {
-          type: 14,
-          divider: true,
-          spacing: 1
-        },
-        {
-          type: 10,
-          content: sectionCommunity
-        },
-        {
-          type: 14,
-          divider: true,
-          spacing: 1
-        },
-        {
-          type: 10,
-          content: sectionHeavy
-        },
-        {
-          type: 14,
-          divider: true,
-          spacing: 1
-        },
-        {
-          type: 10,
-          content: sectionFooter
-        },
-        {
-          type: 14,
-          divider: true,
-          spacing: 1
-        },
-        {
-          type: 1, // Action Row
-          components: [
-            {
-              type: 2,
-              style: 5,
-              label: 'Open Ticket to Order',
-              url: ticketChannelUrl,
-              emoji: B.ticket
-            },
-            {
-              type: 2,
-              style: 5,
-              label: 'Official Website',
-              url: websiteUrl,
-              emoji: B.world
-            },
-            {
-              type: 2,
-              style: 5,
-              label: 'How To Buy',
-              url: howToBuyUrl,
-              emoji: B.info
-            }
-          ]
-        },
-        {
-          type: 10,
-          content: `-# ${E.security} Dream Nodes • Enterprise Protected Advance Minecraft Hosting Solutions`
-        }
-      ]
+      type: 17,
+      accent_color: null,
+      components: containerComponents
     }
   ]
 };
 
 async function updateAdvancePlans() {
-  console.log('Updating Advance Plans V2 Container...');
-  const totalChars = [sectionHeader, sectionStarter, sectionCommunity, sectionHeavy, sectionFooter].reduce((acc, s) => acc + s.length, 0);
-  console.log(`Payload character count: ${totalChars} / 4000`);
+  console.log('Updating Advance Plans V2 Container with Banner...');
+  const formData = new FormData();
+  formData.append('files[0]', new File([bannerBuf], 'advance_plans_banner.jpg', { type: 'image/jpeg' }));
+  formData.append('payload_json', JSON.stringify(v2Payload));
 
   const res = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages/${messageId}`, {
     method: 'PATCH',
     headers: {
-      Authorization: `Bot ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bot ${token}`
     },
-    body: JSON.stringify(v2Payload)
+    body: formData
   });
 
   const data = await res.json();
