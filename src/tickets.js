@@ -8,6 +8,7 @@ const {
 } = require('discord.js');
 const { generateHtmlTranscript, formatDuration } = require('./transcript');
 const { E, B } = require('./emojis');
+const { buildV2Container, buildV2Alert } = require('./v2Containers');
 
 const dataDir = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
@@ -695,10 +696,12 @@ async function handleTicketClaim(interaction) {
   const ticket = data.activeTickets[ticketChannel.id];
 
   if (!ticket) {
-    return interaction.reply({
-      content: 'This channel is not recognized as an active ticket.',
+    return interaction.reply(buildV2Alert({
+      title: 'Invalid Ticket',
+      message: 'This channel is not recognized as an active ticket.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   // Permission check
@@ -706,24 +709,30 @@ async function handleTicketClaim(interaction) {
   const isGeneralStaff = isStaff(interaction.member, false);
 
   if (ticket.categoryKey === 'report' && !isHighStaff) {
-    return interaction.reply({
-      content: 'Staff Reports can only be claimed by Executive Staff (Admin / Manager / CEO / Founder).',
+    return interaction.reply(buildV2Alert({
+      title: 'Restricted Category',
+      message: 'Staff Reports can only be claimed by Executive Staff (Admin / Manager / CEO / Founder).',
+      type: 'warning',
       ephemeral: true
-    });
+    }));
   }
 
   if (!isGeneralStaff) {
-    return interaction.reply({
-      content: 'Only verified Dream Nodes staff members can claim support tickets.',
+    return interaction.reply(buildV2Alert({
+      title: 'Staff Only Action',
+      message: 'Only verified Dream Nodes staff members can claim support tickets.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   if (ticket.claimedBy) {
-    return interaction.reply({
-      content: `This ticket has already been claimed by <@${ticket.claimedBy}>.`,
+    return interaction.reply(buildV2Alert({
+      title: 'Ticket Already Claimed',
+      message: `This ticket has already been claimed by <@${ticket.claimedBy}>.`,
+      type: 'info',
       ephemeral: true
-    });
+    }));
   }
 
   const staffSlug = interaction.user.username.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 10) || 'staff';
@@ -736,10 +745,19 @@ async function handleTicketClaim(interaction) {
   try {
     await ticketChannel.setName(newChannelName, `Ticket claimed by ${interaction.user.tag}`);
 
-    // Post claim announcement in ticket channel
-    await ticketChannel.send({
-      content: `${E.staff} **<@${interaction.user.id}> has claimed this ticket!** They are now reviewing your inquiry and will assist you immediately.`
+    // Post claim announcement in ticket channel (V2 Container)
+    const claimNotice = buildV2Container({
+      title: `### ${E.staff} Ticket Claimed`,
+      subtitle: `${E.sparkles} Support staff assigned to this case.`,
+      description:
+        `> ${E.staff} **Assigned Specialist:** <@${interaction.user.id}>\n` +
+        `> ${E.lightning} **Status:** In Progress • Active Support\n` +
+        `> ${E.chat} Your specialist is reviewing your inquiry and will message below.`,
+      footer: `-# ${E.ticket} Dream Nodes • Dedicated Support Desk`,
+      accentColor: 0x00FF88,
+      ephemeral: false
     });
+    await ticketChannel.send({ flags: claimNotice.flags, components: claimNotice.components });
 
     // Log claim event in ticket logs channel
     await logTicketEvent(interaction.client, 'CLAIM', {
@@ -752,16 +770,20 @@ async function handleTicketClaim(interaction) {
       claimedTag: interaction.user.tag
     });
 
-    await interaction.reply({
-      content: `${E.tick5} You have successfully claimed ticket **#${ticket.ticketNum}**! Channel updated to \`${newChannelName}\`.`,
+    await interaction.reply(buildV2Alert({
+      title: 'Ticket Claimed',
+      message: `You have successfully claimed ticket **#${ticket.ticketNum}**! Channel updated to \`${newChannelName}\`.`,
+      type: 'success',
       ephemeral: true
-    });
+    }));
   } catch (err) {
     console.error('[TICKET CLAIM ERROR]', err);
-    await interaction.reply({
-      content: 'Failed to rename channel, but claim has been recorded.',
+    await interaction.reply(buildV2Alert({
+      title: 'Ticket Claimed (Partial)',
+      message: 'Claim recorded, though channel rename hit a rate limit.',
+      type: 'info',
       ephemeral: true
-    });
+    }));
   }
 }
 
@@ -893,10 +915,12 @@ async function handleTicketCloseConfirm(interaction) {
 
 // Handle Ticket Close Cancellation
 async function handleTicketCloseCancel(interaction) {
-  await interaction.reply({
-    content: `${E.tick5} Ticket closure cancelled. Channel remains open.`,
+  await interaction.reply(buildV2Alert({
+    title: 'Closure Cancelled',
+    message: 'Ticket closure was cancelled. This support channel will remain open.',
+    type: 'success',
     ephemeral: true
-  });
+  }));
 }
 
 // Handle Pinging Founders inside a Ticket Channel (Staff / Ticket Support only)
@@ -909,35 +933,57 @@ async function handleTicketPingFounder(interaction) {
   const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || ticketChannel.name.includes('〔');
 
   if (!isTicketChannel) {
-    return interaction.reply({
-      content: `${E.cross} **This action can only be performed inside an active ticket channel.**`,
+    return interaction.reply(buildV2Alert({
+      title: 'Invalid Channel',
+      message: 'This command can only be performed inside an active support ticket channel.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   if (!isStaff(interaction.member)) {
-    return interaction.reply({
-      content: `${E.cross} **Only Ticket Support staff can ping Founders.**`,
+    return interaction.reply(buildV2Alert({
+      title: 'Staff Only Action',
+      message: 'Only verified Ticket Support staff members can request Founder assistance.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   try {
-    // Post founder escalation alert in the ticket channel
-    await ticketChannel.send({
-      content: `${E.crown} ${E.siren} <@&${FOUNDER_ROLE_ID}> **Founder Attention Requested!**\n> ${E.staff} Staff member <@${interaction.user.id}> has requested Founder assistance for this ticket.`
+    // Post founder escalation alert in the ticket channel (V2 Container)
+    const founderAlertPayload = buildV2Container({
+      title: `# ${E.crown} ${E.siren} Founder Escalation Requested`,
+      subtitle: `${E.staff} Staff member <@${interaction.user.id}> has requested immediate Founder intervention.`,
+      description:
+        `> ${E.arrowBlue} **Target Attention:** <@&${FOUNDER_ROLE_ID}>\n` +
+        `> ${E.lightning} **Priority Tier:** Urgent Escalation\n` +
+        `> ${E.sparkles} A server Founder has been pinged and will inspect this ticket channel shortly.`,
+      footer: `-# ${E.crown} Dream Nodes • Executive Management Escalation`,
+      accentColor: 0xFFAA00,
+      ephemeral: false
     });
 
-    await interaction.reply({
-      content: `${E.tick5} **Founders have been notified!**`,
-      ephemeral: true
+    await ticketChannel.send({
+      content: `<@&${FOUNDER_ROLE_ID}>`,
+      flags: founderAlertPayload.flags,
+      components: founderAlertPayload.components
     });
+
+    await interaction.reply(buildV2Alert({
+      title: 'Founders Notified',
+      message: 'Founders have been notified with high priority for this ticket.',
+      type: 'success',
+      ephemeral: true
+    }));
   } catch (err) {
     console.error('[TICKET PING FOUNDER ERROR]', err);
-    await interaction.reply({
-      content: `${E.alert} **Failed to ping founders:** \`${err.message}\``,
+    await interaction.reply(buildV2Alert({
+      title: 'Escalation Error',
+      message: `Failed to ping founders: \`${err.message}\``,
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 }
 
@@ -947,10 +993,12 @@ async function handleTicketAddUser(interaction) {
   const targetUser = interaction.options.getUser('user');
 
   if (!targetUser) {
-    return interaction.reply({
-      content: `${E.cross} **Please specify a valid user to add.**`,
+    return interaction.reply(buildV2Alert({
+      title: 'Invalid User',
+      message: 'Please specify a valid Discord user to add to this ticket.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   const data = getTicketData();
@@ -960,29 +1008,35 @@ async function handleTicketAddUser(interaction) {
   const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || ticketChannel.name.includes('〔');
 
   if (!isTicketChannel) {
-    return interaction.reply({
-      content: `${E.cross} **This command can only be used inside active ticket channels.**`,
+    return interaction.reply(buildV2Alert({
+      title: 'Invalid Channel',
+      message: 'The `/add` command can only be used inside active ticket channels.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   const isStaffMember = isStaff(interaction.member);
   const isCreator = ticket && ticket.userId === interaction.user.id;
 
   if (!isStaffMember && !isCreator) {
-    return interaction.reply({
-      content: `${E.cross} **You do not have permission to add members to this ticket.**`,
+    return interaction.reply(buildV2Alert({
+      title: 'Access Denied',
+      message: 'Only ticket creators and Ticket Support staff have permission to add members to this ticket.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   // Check if target is already in the channel
   const existingOverwrite = ticketChannel.permissionOverwrites.cache.get(targetUser.id);
   if (existingOverwrite && existingOverwrite.allow.has(PermissionFlagsBits.ViewChannel)) {
-    return interaction.reply({
-      content: `${E.info} **<@${targetUser.id}> is already in this ticket!**`,
+    return interaction.reply(buildV2Alert({
+      title: 'Member Already Present',
+      message: `<@${targetUser.id}> already has access to this ticket channel.`,
+      type: 'info',
       ephemeral: true
-    });
+    }));
   }
 
   try {
@@ -1003,15 +1057,27 @@ async function handleTicketAddUser(interaction) {
       }
     }
 
-    await interaction.reply({
-      content: `${E.tick5} **<@${targetUser.id}>** has been added to this ticket by <@${interaction.user.id}>! ${E.sparkles}`
+    const addV2Payload = buildV2Container({
+      title: `### ${E.tick5} Member Added to Ticket`,
+      subtitle: `${E.sparkles} Ticket access permissions granted.`,
+      description:
+        `> ${E.arrowBlue} **Member Added:** <@${targetUser.id}> (\`${targetUser.tag}\`)\n` +
+        `> ${E.staff} **Authorized By:** <@${interaction.user.id}>\n` +
+        `> ${E.security} **Permissions:** View channel, read message history, and participate in discussion.`,
+      footer: `-# ${E.ticket} Dream Nodes • Ticket Access Management`,
+      accentColor: 0x00FF88,
+      ephemeral: false
     });
+
+    await interaction.reply(addV2Payload);
   } catch (err) {
     console.error('[TICKET ADD USER ERROR]', err);
-    await interaction.reply({
-      content: `${E.alert} **Failed to add user to ticket:** \`${err.message}\``,
+    await interaction.reply(buildV2Alert({
+      title: 'Add Member Error',
+      message: `Failed to add user to ticket: \`${err.message}\``,
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 }
 
@@ -1021,10 +1087,12 @@ async function handleTicketRemoveUser(interaction) {
   const targetUser = interaction.options.getUser('user');
 
   if (!targetUser) {
-    return interaction.reply({
-      content: `${E.cross} **Please specify a valid user to remove.**`,
+    return interaction.reply(buildV2Alert({
+      title: 'Invalid User',
+      message: 'Please specify a valid Discord user to remove from this ticket.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   const data = getTicketData();
@@ -1034,27 +1102,33 @@ async function handleTicketRemoveUser(interaction) {
   const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || ticketChannel.name.includes('〔');
 
   if (!isTicketChannel) {
-    return interaction.reply({
-      content: `${E.cross} **This command can only be used inside active ticket channels.**`,
+    return interaction.reply(buildV2Alert({
+      title: 'Invalid Channel',
+      message: 'The `/remove` command can only be used inside active ticket channels.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   const isStaffMember = isStaff(interaction.member);
   const isCreator = ticket && ticket.userId === interaction.user.id;
 
   if (!isStaffMember && !isCreator) {
-    return interaction.reply({
-      content: `${E.cross} **You do not have permission to remove members from this ticket.**`,
+    return interaction.reply(buildV2Alert({
+      title: 'Access Denied',
+      message: 'Only ticket creators and Ticket Support staff have permission to remove members from this ticket.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   if (ticket && targetUser.id === ticket.userId) {
-    return interaction.reply({
-      content: `${E.alert} **Cannot remove the ticket creator from their own ticket!**`,
+    return interaction.reply(buildV2Alert({
+      title: 'Action Prohibited',
+      message: 'Cannot remove the original ticket creator from their own ticket.',
+      type: 'warning',
       ephemeral: true
-    });
+    }));
   }
 
   try {
@@ -1065,15 +1139,27 @@ async function handleTicketRemoveUser(interaction) {
       saveTicketData(data);
     }
 
-    await interaction.reply({
-      content: `${E.cross} **<@${targetUser.id}>** has been removed from this ticket by <@${interaction.user.id}>.`
+    const removeV2Payload = buildV2Container({
+      title: `### ${E.cross} Member Removed from Ticket`,
+      subtitle: `${E.security} Ticket access permissions revoked.`,
+      description:
+        `> ${E.arrowBlue} **Member Removed:** <@${targetUser.id}> (\`${targetUser.tag}\`)\n` +
+        `> ${E.staff} **Removed By:** <@${interaction.user.id}>\n` +
+        `> ${E.security} **Status:** Channel view override cleared.`,
+      footer: `-# ${E.ticket} Dream Nodes • Ticket Access Management`,
+      accentColor: 0xFF8800,
+      ephemeral: false
     });
+
+    await interaction.reply(removeV2Payload);
   } catch (err) {
     console.error('[TICKET REMOVE USER ERROR]', err);
-    await interaction.reply({
-      content: `${E.alert} **Failed to remove user from ticket:** \`${err.message}\``,
+    await interaction.reply(buildV2Alert({
+      title: 'Remove Member Error',
+      message: `Failed to remove user from ticket: \`${err.message}\``,
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 }
 

@@ -11,6 +11,7 @@ const {
   TextInputStyle 
 } = require('discord.js');
 const { E, B } = require('./emojis');
+const { buildV2Container, buildV2Alert } = require('./v2Containers');
 
 const dataDir = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
@@ -255,17 +256,34 @@ async function postOrUpdateReviewHubPrompt(client) {
 }
 
 /**
+ * Build Components V2 alert for paid clients only
+ */
+function buildClientRequiredV2() {
+  return buildV2Container({
+    title: `# ${E.stopSign} Verified Paid Clients Only`,
+    subtitle: `${E.security} Customer reviews and feedback interactions are reserved for verified **Paid Clients** (<@&${PAID_CLIENT_ROLE_ID}>).`,
+    description:
+      `> ${E.ticket} **Need your client role?** If you have purchased a hosting plan or VPS with Dream Nodes, please open a support ticket in <#1573281601775870043> to receive your verified client role!\n` +
+      `> ${E.sparkles} Once assigned, you will unlock review submissions, feature upvoting, and client channels.`,
+    buttons: [
+      {
+        label: 'Open Support Ticket',
+        url: 'https://discord.com/channels/1573272872737181696/1573281601775870043',
+        emoji: B.ticket
+      }
+    ],
+    footer: `-# ${E.security} Dream Nodes • Client Verification Hub`,
+    accentColor: 0xFF3366,
+    ephemeral: true
+  });
+}
+
+/**
  * Handle "Submit A Review" button click
  */
 async function handleReviewSubmitBtn(interaction) {
   if (!isPaidClient(interaction.member)) {
-    return interaction.reply({
-      content:
-        `### ${E.stopSign} **Verified Paid Clients Only!**\n` +
-        `> ${E.alert} Submitting customer reviews is reserved exclusively for verified **Paid Clients** (<@&${PAID_CLIENT_ROLE_ID}>).\n` +
-        `> ${E.ticket} If you have purchased a hosting plan or VPS with Dream Nodes, please open a ticket in <#1573281601775870043> to receive your client role!`,
-      ephemeral: true
-    });
+    return interaction.reply(buildClientRequiredV2());
   }
 
   const modal = buildReviewModal();
@@ -277,12 +295,7 @@ async function handleReviewSubmitBtn(interaction) {
  */
 async function handleReviewModalSubmit(interaction) {
   if (!isPaidClient(interaction.member)) {
-    return interaction.reply({
-      content:
-        `### ${E.stopSign} **Verified Paid Clients Only!**\n` +
-        `> ${E.alert} Submitting customer reviews is reserved exclusively for verified **Paid Clients** (<@&${PAID_CLIENT_ROLE_ID}>).`,
-      ephemeral: true
-    });
+    return interaction.reply(buildClientRequiredV2());
   }
 
   const rawRating = interaction.fields.getTextInputValue('review_rating');
@@ -303,10 +316,12 @@ async function handleReviewModalSubmit(interaction) {
     await interaction.client.channels.fetch(REVIEWS_CHANNEL_ID).catch(() => null);
 
   if (!channel) {
-    return interaction.reply({
-      content: `${E.cross} Review channel not found. Please contact administration.`,
+    return interaction.reply(buildV2Alert({
+      title: 'Channel Error',
+      message: 'Review channel not found. Please contact administration.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   const userAvatar = interaction.user.displayAvatarURL({ dynamic: true, size: 256 });
@@ -314,7 +329,7 @@ async function handleReviewModalSubmit(interaction) {
   // Build aesthetic embed matching the requested ReviewHub layout
   const embed = new EmbedBuilder()
     .setAuthor({
-      name: `New Review! ❤️`,
+      name: `New Customer Review`,
       iconURL: userAvatar
     })
     .setTitle(`${interaction.user.tag} • new review`)
@@ -367,11 +382,17 @@ async function handleReviewModalSubmit(interaction) {
     });
     threadId = thread.id;
 
-    await thread.send({
-      content:
-        `${E.crown} ${E.staff} **Owner's Response Channel**\n` +
-        `> Thank you <@${interaction.user.id}> for your valuable review! Founders & Management (<@&${FOUNDER_ROLE_ID}>) can reply to your feedback here.`
+    const threadWelcome = buildV2Container({
+      title: `### ${E.crown} Owner's Response Thread`,
+      subtitle: `${E.staff} Official feedback channel for Founders & Management`,
+      description:
+        `> ${E.sparkles} Thank you <@${interaction.user.id}> for your valuable review!\n` +
+        `> ${E.arrowBlue} Founders & Management (<@&${FOUNDER_ROLE_ID}>) will reply to your feedback here.`,
+      footer: `-# ${E.verifiedBlue} Dream Nodes • Customer Relations`,
+      accentColor: 0xFFAA00,
+      ephemeral: false
     });
+    await thread.send({ flags: threadWelcome.flags, components: threadWelcome.components });
   } catch (threadErr) {
     console.error('[REVIEW THREAD CREATE ERROR]', threadErr);
   }
@@ -397,10 +418,12 @@ async function handleReviewModalSubmit(interaction) {
   // Update prompt stats if needed
   await postOrUpdateReviewHubPrompt(interaction.client).catch(() => null);
 
-  await interaction.reply({
-    content: `${E.tick5} **Thank you for your valuable review!** It has been published in <#${REVIEWS_CHANNEL_ID}>! ${E.sparkles}`,
+  await interaction.reply(buildV2Alert({
+    title: 'Review Published',
+    message: `Thank you for your valuable feedback! Your customer review has been published in <#${REVIEWS_CHANNEL_ID}>!`,
+    type: 'success',
     ephemeral: true
-  });
+  }));
 }
 
 /**
@@ -408,13 +431,7 @@ async function handleReviewModalSubmit(interaction) {
  */
 async function handleReviewUsefulBtn(interaction) {
   if (!isPaidClient(interaction.member)) {
-    return interaction.reply({
-      content:
-        `### ${E.stopSign} **Verified Paid Clients Only!**\n` +
-        `> ${E.alert} Only verified **Paid Clients** (<@&${PAID_CLIENT_ROLE_ID}>) can mark reviews as useful.\n` +
-        `> ${E.ticket} If you have purchased a service with Dream Nodes, please open a ticket in <#1573281601775870043> to receive your client role!`,
-      ephemeral: true
-    });
+    return interaction.reply(buildClientRequiredV2());
   }
 
   const customId = interaction.customId;
@@ -424,17 +441,21 @@ async function handleReviewUsefulBtn(interaction) {
   const review = data.reviews.find(r => r.id === reviewId);
 
   if (!review) {
-    return interaction.reply({
-      content: `${E.cross} Review record not found.`,
+    return interaction.reply(buildV2Alert({
+      title: 'Review Not Found',
+      message: 'Review record could not be found.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   if (review.userId === interaction.user.id) {
-    return interaction.reply({
-      content: `${E.alert} You cannot mark your own review as useful!`,
+    return interaction.reply(buildV2Alert({
+      title: 'Action Prohibited',
+      message: 'You cannot mark your own review as useful!',
+      type: 'warning',
       ephemeral: true
-    });
+    }));
   }
 
   review.usefulVotes = review.usefulVotes || [];
@@ -455,12 +476,14 @@ async function handleReviewUsefulBtn(interaction) {
     console.error('[USEFUL UPDATE ERROR]', err);
   }
 
-  await interaction.followUp({
-    content: alreadyVoted ?
-      `${E.info} Removed your useful vote for review **#${reviewId}**.` :
-      `${E.tick5} Marked review **#${reviewId}** as useful! (${review.usefulVotes.length} total)`,
+  await interaction.followUp(buildV2Alert({
+    title: alreadyVoted ? 'Vote Removed' : 'Vote Registered',
+    message: alreadyVoted ?
+      `Removed your useful vote for review **#${reviewId}**.` :
+      `Marked review **#${reviewId}** as useful! (${review.usefulVotes.length} total votes recorded)`,
+    type: alreadyVoted ? 'info' : 'success',
     ephemeral: true
-  }).catch(() => null);
+  })).catch(() => null);
 }
 
 /**
@@ -468,13 +491,7 @@ async function handleReviewUsefulBtn(interaction) {
  */
 async function handleReviewSlashCommand(interaction) {
   if (!isPaidClient(interaction.member)) {
-    return interaction.reply({
-      content:
-        `### ${E.stopSign} **Verified Paid Clients Only!**\n` +
-        `> ${E.alert} Submitting customer reviews is reserved exclusively for verified **Paid Clients** (<@&${PAID_CLIENT_ROLE_ID}>).\n` +
-        `> ${E.ticket} If you have purchased a hosting plan or VPS with Dream Nodes, please open a ticket in <#1573281601775870043> to receive your client role!`,
-      ephemeral: true
-    });
+    return interaction.reply(buildClientRequiredV2());
   }
 
   const modal = buildReviewModal();
@@ -492,17 +509,21 @@ async function handleReviewRespondSlashCommand(interaction) {
   const review = data.reviews.find(r => r.id.toLowerCase() === reviewId.toLowerCase());
 
   if (!review) {
-    return interaction.reply({
-      content: `${E.cross} Could not find review with ID \`${reviewId}\`.`,
+    return interaction.reply(buildV2Alert({
+      title: 'Review Not Found',
+      message: `Could not find review with ID \`${reviewId}\`.`,
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   if (!review.threadId) {
-    return interaction.reply({
-      content: `${E.cross} This review does not have an active Owner's Response thread.`,
+    return interaction.reply(buildV2Alert({
+      title: 'Thread Unavailable',
+      message: 'This review does not have an active Owner\'s Response thread.',
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 
   try {
@@ -510,26 +531,39 @@ async function handleReviewRespondSlashCommand(interaction) {
       await interaction.client.channels.fetch(review.threadId).catch(() => null);
 
     if (!thread) {
-      return interaction.reply({
-        content: `${E.cross} Could not access the thread for review \`${reviewId}\`.`,
+      return interaction.reply(buildV2Alert({
+        title: 'Thread Unreachable',
+        message: `Could not access the discussion thread for review \`${reviewId}\`.`,
+        type: 'error',
         ephemeral: true
-      });
+      }));
     }
 
-    await thread.send({
-      content: `${E.crown} **Official Response from <@${interaction.user.id}>:**\n> ${responseText}`
+    const ownerResponsePayload = buildV2Container({
+      title: `### ${E.crown} Official Owner Response`,
+      subtitle: `${E.staff} Response from Executive Staff (<@${interaction.user.id}>)`,
+      description: `> ${responseText}`,
+      footer: `-# ${E.verifiedBlue} Dream Nodes • Executive Client Relations`,
+      accentColor: 0xFFAA00,
+      ephemeral: false
     });
 
-    await interaction.reply({
-      content: `${E.tick5} Successfully posted response in review thread for **#${reviewId}**!`,
+    await thread.send({ flags: ownerResponsePayload.flags, components: ownerResponsePayload.components });
+
+    await interaction.reply(buildV2Alert({
+      title: 'Response Dispatched',
+      message: `Successfully posted official response to review **#${reviewId}** in the thread!`,
+      type: 'success',
       ephemeral: true
-    });
+    }));
   } catch (err) {
     console.error('[REVIEW RESPOND ERROR]', err);
-    await interaction.reply({
-      content: `${E.alert} Failed to post response: \`${err.message}\``,
+    await interaction.reply(buildV2Alert({
+      title: 'Response Error',
+      message: `Failed to post response: \`${err.message}\``,
+      type: 'error',
       ephemeral: true
-    });
+    }));
   }
 }
 

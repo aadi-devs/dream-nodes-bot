@@ -50,6 +50,17 @@ const {
   handleReviewRespondSlashCommand
 } = require('./reviews');
 
+// Components V2 Helpers
+const {
+  buildV2Container,
+  buildV2Alert,
+  buildPingV2,
+  buildStatusV2,
+  buildPlansV2,
+  buildTestWelcomeV2,
+  buildHoneypotLogsV2
+} = require('./v2Containers');
+
 function getHoneypotLogs() {
   try {
     if (fs.existsSync(honeypotLogsFile)) {
@@ -591,38 +602,8 @@ client.on('interactionCreate', async interaction => {
   if (interaction.isButton()) {
     if (interaction.customId === 'honeypot_kicks_display') {
       const logs = getHoneypotLogs();
-      const totalKicks = logs.filter(l => l.action === 'KICKED').length;
-      const totalAttempts = logs.length;
-      const immuneCount = logs.filter(l => l.action.startsWith('IMMUNE') || l.action.startsWith('FAILED')).length;
-
-      const embed = new EmbedBuilder()
-        .setTitle(`✦ ${E.attacks} ・ ʜᴏɴᴇʏᴘᴏᴛ ꜱᴇᴄᴜʀɪᴛʏ & ᴋɪᴄᴋ ʜɪꜱᴛᴏʀʏ`)
-        .setColor([55, 55, 61])
-        .setDescription(
-          `${E.stats} **ᴛᴏᴛᴀʟ ᴛʀɪɢɢᴇʀꜱ:** \`${totalAttempts}\` ┃ ${E.hammer} **ꜱᴏꜰᴛʙᴀɴꜱ / ᴋɪᴄᴋꜱ:** \`${totalKicks}\` ┃ ${E.shield} **ɪᴍᴍᴜɴᴇ:** \`${immuneCount}\`\n\n` +
-          `### ${E.rulesBook} ʀᴇᴄᴇɴᴛ ɪɴᴄɪᴅᴇɴᴛ ʜɪꜱᴛᴏʀʏ\n` +
-          (logs.length === 0
-            ? '`No honeypot violations recorded yet. Server is clean and secure!`'
-            : logs.slice(-8).reverse().map((entry, idx) => {
-                const time = `<t:${entry.timestamp}:R>`;
-                const dmTag = entry.dmStatus === 'SENT' ? ` • ${E.tick5} DM Alert: Delivered` : (entry.dmStatus ? ` • ${E.cross} DM: Closed` : '');
-                if (entry.action === 'KICKED') {
-                  return `**${idx + 1}.** ${E.hammer} **ᴋɪᴄᴋᴇᴅ:** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}${dmTag}\n` +
-                         `> ${E.chat} *"${entry.contentSnippet}"*`;
-                } else {
-                  return `**${idx + 1}.** ${E.alert} **ꜰᴀɪʟᴇᴅ (ʜɪɢʜᴇʀ ᴘᴇʀᴍꜱ):** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}${dmTag}\n` +
-                         `> ${E.shield} *${entry.failReason || 'Administrator / Role Hierarchy'}*\n` +
-                         `> ${E.chat} *"${entry.contentSnippet}"*`;
-                }
-              }).join('\n\n'))
-        )
-        .setFooter({ text: 'Dʀᴇᴀᴍ Nᴏᴅᴇs • Honeypot Sentinel Security' })
-        .setTimestamp();
-
-      await interaction.reply({
-        embeds: [embed],
-        ephemeral: true // Dismissable hidden message
-      });
+      const logsPayload = buildHoneypotLogsV2(logs);
+      await interaction.reply(logsPayload);
       return;
     } else if (interaction.customId.startsWith('ticket_claim_')) {
       await handleTicketClaim(interaction);
@@ -855,56 +836,25 @@ client.on('interactionCreate', async interaction => {
 
   if (commandName === 'ping') {
     const wsPing = client.ws.ping;
-    await interaction.reply({
-      content: `${E.ping} **Pong!** Gateway Latency: \`${wsPing}ms\``,
-      ephemeral: true
-    });
+    const uptimeHours = (process.uptime() / 3600).toFixed(1);
+    await interaction.reply(buildPingV2(wsPing, uptimeHours));
   }
 
   else if (commandName === 'status') {
     const memUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
     const uptimeHours = (process.uptime() / 3600).toFixed(1);
-
-    const embed = new EmbedBuilder()
-      .setTitle('✦ Dʀᴇᴀᴍ Nᴏᴅᴇs ┃ Iɴꜰʀᴀꜱᴛʀᴜᴄᴛᴜʀᴇ Sᴛᴀᴛᴜꜱ')
-      .setColor(0x00f0ff)
-      .setDescription(`${E.sparkles} Live operational telemetry for Dream Nodes hosting systems.`)
-      .addFields(
-        { name: `${E.greenDot} Core Systems`, value: '`ALL OPERATIONAL (100%)`', inline: true },
-        { name: `${E.lightning} Gateway Ping`, value: `\`${client.ws.ping}ms\``, inline: true },
-        { name: `${E.timer} Bot Uptime`, value: `\`${uptimeHours}h\``, inline: true },
-        { name: `${E.cpu} Compute Nodes`, value: '• **Node-US-East**: `Operational`\n• **Node-EU-Central**: `Operational`\n• **Node-SG-Asia**: `Operational`', inline: false },
-        { name: `${E.shield} DDoS Shield`, value: '`Active • Layer 3/4/7 Scrubbing`', inline: true },
-        { name: `${E.disk} Storage Layer`, value: '`NVMe Gen4 Enterprise RAID-10`', inline: true }
-      )
-      .setFooter({ text: 'Dʀᴇᴀᴍ Nᴏᴅᴇs • developing solutions' })
-      .setTimestamp();
-
-    await interaction.reply({ embeds: [embed] });
+    const wsPing = client.ws.ping;
+    await interaction.reply(buildStatusV2({ wsPing, uptimeHours, memUsage }));
   }
 
   else if (commandName === 'plans') {
-    const embed = new EmbedBuilder()
-      .setTitle('✦ Dʀᴇᴀᴍ Nᴏᴅᴇs ┃ Hᴏꜱᴛɪɴɢ Pʟᴀɴꜱ')
-      .setColor(0x9d00ff)
-      .setDescription(`${E.sparkles} Explore our high-performance cloud compute, VPS, and game servers.`)
-      .addFields(
-        { name: `${E.minecraft} Minecraft Plans`, value: 'Check out <#1573281486822445128> for Intel & AMD Ryzen 9 nodes.', inline: false },
-        { name: `${E.vps} VPS / VDS Plans`, value: 'Check out <#1573281509140336816> for AMD EPYC & Intel Xeon servers.', inline: false },
-        { name: `${E.ticket} Need a Custom Spec?`, value: 'Head over to <#1573281601775870043> to create a ticket.', inline: false }
-      )
-      .setFooter({ text: 'Dʀᴇᴀᴍ Nᴏᴅᴇs • Premium Hosting' });
-
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply(buildPlansV2());
   }
 
   else if (commandName === 'testwelcome') {
     const targetChannel = interaction.guild.channels.cache.get(welcomeChannelId) || interaction.channel;
     await sendWelcomeV2(targetChannel.id, interaction.member);
-    await interaction.reply({
-      content: `${E.tick5} Sent preview Components V2 welcome message to <#${targetChannel.id}>!`,
-      ephemeral: true
-    });
+    await interaction.reply(buildTestWelcomeV2(targetChannel.id));
   }
 
   else if (commandName === 'add') {
