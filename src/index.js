@@ -39,6 +39,16 @@ const {
   handleTicketRemoveUser
 } = require('./tickets');
 
+// Reviews System Module
+const {
+  postOrUpdateReviewHubPrompt,
+  handleReviewSubmitBtn,
+  handleReviewModalSubmit,
+  handleReviewUsefulBtn,
+  handleReviewSlashCommand,
+  handleReviewRespondSlashCommand
+} = require('./reviews');
+
 function getHoneypotLogs() {
   try {
     if (fs.existsSync(honeypotLogsFile)) {
@@ -334,7 +344,27 @@ const commands = [
 
   new SlashCommandBuilder()
     .setName('pingfounder')
-    .setDescription('Request assistance from server Founders for this ticket (Staff only)')
+    .setDescription('Request assistance from server Founders for this ticket (Staff only)'),
+
+  new SlashCommandBuilder()
+    .setName('review')
+    .setDescription('Submit a customer review for Dream Nodes hosting services'),
+
+  new SlashCommandBuilder()
+    .setName('respond')
+    .setDescription('Post an official owner/staff response to a customer review')
+    .addStringOption(option =>
+      option
+        .setName('review_id')
+        .setDescription('The 8-character Review ID to respond to (e.g. 5e1d9d3f)')
+        .setRequired(true)
+    )
+    .addStringOption(option =>
+      option
+        .setName('response')
+        .setDescription('Your response message to the client')
+        .setRequired(true)
+    )
 ].map(cmd => cmd.toJSON());
 
 // Register Slash Commands
@@ -448,6 +478,7 @@ client.once('clientReady', async () => {
 
   console.log(`[PRESENCE SET] Activity set to "developing solutions"`);
   await registerCommands();
+  await postOrUpdateReviewHubPrompt(client).catch(err => console.error('[REVIEW PROMPT INIT ERROR]', err));
 });
 
 // Automatic Welcome Message and Instant Client Auto-Role on Member Join
@@ -607,6 +638,12 @@ client.on('interactionCreate', async interaction => {
     } else if (interaction.customId.startsWith('ticket_close_')) {
       await handleTicketClosePrompt(interaction);
       return;
+    } else if (interaction.customId === 'review_submit_btn') {
+      await handleReviewSubmitBtn(interaction);
+      return;
+    } else if (interaction.customId.startsWith('review_useful_')) {
+      await handleReviewUsefulBtn(interaction);
+      return;
     }
     return;
   }
@@ -621,14 +658,23 @@ client.on('interactionCreate', async interaction => {
     return;
   }
 
-  // Handle Ticket Modal Submission (Create Ticket with Intake answers)
-  if (interaction.isModalSubmit() && interaction.customId.startsWith('modal_ticket_')) {
-    try {
-      await handleTicketModalSubmit(interaction);
-    } catch (err) {
-      console.error('[TICKET MODAL ERROR]', err);
+  // Handle Modals
+  if (interaction.isModalSubmit()) {
+    if (interaction.customId.startsWith('modal_ticket_')) {
+      try {
+        await handleTicketModalSubmit(interaction);
+      } catch (err) {
+        console.error('[TICKET MODAL ERROR]', err);
+      }
+      return;
+    } else if (interaction.customId === 'modal_review_submit') {
+      try {
+        await handleReviewModalSubmit(interaction);
+      } catch (err) {
+        console.error('[REVIEW MODAL ERROR]', err);
+      }
+      return;
     }
-    return;
   }
 
   // Handle Terms of Service / Policy Dropdown Select Menu
@@ -870,6 +916,14 @@ client.on('interactionCreate', async interaction => {
 
   else if (commandName === 'pingfounder') {
     await handleTicketPingFounder(interaction);
+  }
+
+  else if (commandName === 'review') {
+    await handleReviewSlashCommand(interaction);
+  }
+
+  else if (commandName === 'respond') {
+    await handleReviewRespondSlashCommand(interaction);
   }
 });
 

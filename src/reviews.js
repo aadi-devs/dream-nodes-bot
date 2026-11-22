@@ -1,0 +1,436 @@
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const { 
+  EmbedBuilder, 
+  ActionRowBuilder, 
+  ButtonBuilder, 
+  ButtonStyle, 
+  ModalBuilder, 
+  TextInputBuilder, 
+  TextInputStyle 
+} = require('discord.js');
+const { E, B } = require('./emojis');
+
+const dataDir = path.join(__dirname, '..', 'data');
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+const reviewsFile = path.join(dataDir, 'reviews.json');
+
+const REVIEWS_CHANNEL_ID = '1574120437938520187'; // # ✦・ʀᴇᴠɪᴇᴡꜱ
+const GENERAL_CHANNEL_ID = '1574120435828662512'; // # ✦・ɢᴇɴᴇʀᴀʟ-ᴄʜᴀᴛ
+const FOUNDER_ROLE_ID = '1573412727383392427'; // ⋆｡°✩ ϝσυɳԃҽɾ ✩°｡⋆
+
+function loadReviewsData() {
+  try {
+    if (fs.existsSync(reviewsFile)) {
+      return JSON.parse(fs.readFileSync(reviewsFile, 'utf8'));
+    }
+  } catch (err) {
+    console.error('[REVIEWS DATA READ ERROR]', err);
+  }
+  return { promptMessageId: null, reviews: [] };
+}
+
+function saveReviewsData(data) {
+  try {
+    fs.writeFileSync(reviewsFile, JSON.stringify(data, null, 2), 'utf8');
+  } catch (err) {
+    console.error('[REVIEWS DATA WRITE ERROR]', err);
+  }
+}
+
+/**
+ * Generate formatted star string from a rating 1-5
+ */
+function getStarDisplay(rating) {
+  const count = Math.max(1, Math.min(5, Math.round(rating)));
+  return Array(count).fill(E.star).join(' ');
+}
+
+/**
+ * Build the review modal popup
+ */
+function buildReviewModal() {
+  const modal = new ModalBuilder()
+    .setCustomId('modal_review_submit')
+    .setTitle('Submit A Review');
+
+  const ratingInput = new TextInputBuilder()
+    .setCustomId('review_rating')
+    .setLabel('Rating (1 to 5 Stars)')
+    .setPlaceholder('5 (Enter 1, 2, 3, 4, or 5)')
+    .setStyle(TextInputStyle.Short)
+    .setMinLength(1)
+    .setMaxLength(1)
+    .setRequired(true);
+
+  const headlineInput = new TextInputBuilder()
+    .setCustomId('review_headline')
+    .setLabel('Review Headline / Summary')
+    .setPlaceholder('e.g. Excellent Support! Fast & Reliable')
+    .setStyle(TextInputStyle.Short)
+    .setMinLength(3)
+    .setMaxLength(100)
+    .setRequired(true);
+
+  const serviceInput = new TextInputBuilder()
+    .setCustomId('review_service')
+    .setLabel('Service Purchased (Optional)')
+    .setPlaceholder('e.g. Budget MC 4GB, Intel VPS, Bot Hosting, Domain')
+    .setStyle(TextInputStyle.Short)
+    .setMaxLength(60)
+    .setRequired(false);
+
+  const commentInput = new TextInputBuilder()
+    .setCustomId('review_comment')
+    .setLabel('Your Review & Experience')
+    .setPlaceholder('Describe your experience with Dream Nodes performance, uptime, staff, and pricing...')
+    .setStyle(TextInputStyle.Paragraph)
+    .setMinLength(10)
+    .setMaxLength(1000)
+    .setRequired(true);
+
+  modal.addComponents(
+    new ActionRowBuilder().addComponents(ratingInput),
+    new ActionRowBuilder().addComponents(headlineInput),
+    new ActionRowBuilder().addComponents(serviceInput),
+    new ActionRowBuilder().addComponents(commentInput)
+  );
+
+  return modal;
+}
+
+/**
+ * Build the action row for a review message
+ */
+function buildReviewActionRow(reviewId, usefulCount = 0) {
+  return new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId('review_submit_btn')
+      .setLabel('Submit A Review')
+      .setStyle(ButtonStyle.Primary)
+      .setEmoji(B.rulesBook),
+    new ButtonBuilder()
+      .setCustomId(`review_useful_${reviewId}`)
+      .setLabel(`Useful (${usefulCount})`)
+      .setStyle(ButtonStyle.Secondary)
+      .setEmoji(B.goldMedal)
+  );
+}
+
+/**
+ * Ensure persistent Review Hub prompt message exists in the review channel
+ */
+async function postOrUpdateReviewHubPrompt(client) {
+  try {
+    const channel = client.channels.cache.get(REVIEWS_CHANNEL_ID) ||
+      await client.channels.fetch(REVIEWS_CHANNEL_ID).catch(() => null);
+    if (!channel) return;
+
+    const data = loadReviewsData();
+    const totalReviews = data.reviews.length;
+    const avgRating = totalReviews === 0 ? '5.0' :
+      (data.reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / totalReviews).toFixed(1);
+
+    const embed = new EmbedBuilder()
+      .setTitle(`✦ DREAM NODES ┃ Customer Reviews & Feedback`)
+      .setColor(0x5865F2)
+      .setDescription(
+        `# ${E.stars} **Share Your Experience With Dream Nodes**\n` +
+        `> ${E.starRotating} We take immense pride in delivering top-tier cloud compute, Minecraft hosting, and VPS infrastructure. Your reviews and feedback help us continuously improve and innovate!\n\n` +
+        `### ${E.updates} **Review Desk Statistics:**\n` +
+        `> ${E.star} **Average Community Rating:** \`${avgRating} / 5.0\` (${getStarDisplay(Math.round(Number(avgRating)))})\n` +
+        `> ${E.membership} **Total Client Reviews:** \`${totalReviews}\` verified testimonials\n` +
+        `> ${E.shield} **Satisfaction Guarantee:** 24/7 Dedicated Support Helpdesk\n\n` +
+        `### ${E.gift} **How To Review:**\n` +
+        `Click **Submit A Review** below or use \`/review\` to share your feedback. Our executive team reads and responds to every single review!`
+      )
+      .setImage('https://cdn.discordapp.com/attachments/1573281486822445128/1573688254144708709/Gemini_Generated_Image_l610mrl610mrl610_1.jpeg?ex=6922fd18&is=6921ab98&hm=74ff15175510f22fa2ffbe45bf69363539fb0421da7d526ea02e86bf4e8c56fa&')
+      .setFooter({ text: 'Dream Nodes • Client Trust & Verification Hub' })
+      .setTimestamp();
+
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId('review_submit_btn')
+        .setLabel('Submit A Review')
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji(B.rulesBook)
+    );
+
+    let promptMsg = null;
+    if (data.promptMessageId) {
+      promptMsg = await channel.messages.fetch(data.promptMessageId).catch(() => null);
+    }
+
+    if (promptMsg) {
+      await promptMsg.edit({ embeds: [embed], components: [row] });
+    } else {
+      // Look for previous messages sent by bot in channel
+      const messages = await channel.messages.fetch({ limit: 10 }).catch(() => null);
+      const existingBotMsg = messages?.find(m => m.author.id === client.user.id && m.embeds[0]?.title?.includes('Customer Reviews'));
+      if (existingBotMsg) {
+        await existingBotMsg.edit({ embeds: [embed], components: [row] });
+        data.promptMessageId = existingBotMsg.id;
+        saveReviewsData(data);
+      } else {
+        const newMsg = await channel.send({ embeds: [embed], components: [row] });
+        data.promptMessageId = newMsg.id;
+        saveReviewsData(data);
+        await newMsg.pin().catch(() => null);
+      }
+    }
+  } catch (err) {
+    console.error('[REVIEW PROMPT ERROR]', err);
+  }
+}
+
+/**
+ * Handle "Submit A Review" button click
+ */
+async function handleReviewSubmitBtn(interaction) {
+  const modal = buildReviewModal();
+  await interaction.showModal(modal);
+}
+
+/**
+ * Handle Review Modal Submission
+ */
+async function handleReviewModalSubmit(interaction) {
+  const rawRating = interaction.fields.getTextInputValue('review_rating');
+  let rating = parseInt(rawRating.trim(), 10);
+  if (isNaN(rating) || rating < 1 || rating > 5) {
+    rating = 5;
+  }
+
+  const headline = interaction.fields.getTextInputValue('review_headline').trim();
+  const service = (interaction.fields.getTextInputValue('review_service') || '').trim();
+  const comment = interaction.fields.getTextInputValue('review_comment').trim();
+
+  const reviewId = crypto.randomBytes(4).toString('hex'); // e.g. "5e1d9d3f"
+  const starString = getStarDisplay(rating);
+  const now = Math.floor(Date.now() / 1000);
+
+  const channel = interaction.client.channels.cache.get(REVIEWS_CHANNEL_ID) ||
+    await interaction.client.channels.fetch(REVIEWS_CHANNEL_ID).catch(() => null);
+
+  if (!channel) {
+    return interaction.reply({
+      content: `${E.cross} Review channel not found. Please contact administration.`,
+      ephemeral: true
+    });
+  }
+
+  const userAvatar = interaction.user.displayAvatarURL({ dynamic: true, size: 256 });
+
+  // Build aesthetic embed matching the requested ReviewHub layout
+  const embed = new EmbedBuilder()
+    .setAuthor({
+      name: `New Review! ❤️`,
+      iconURL: userAvatar
+    })
+    .setTitle(`${interaction.user.tag} • new review`)
+    .setThumbnail(userAvatar)
+    .setColor(0x5865F2)
+    .setDescription(
+      `${starString} **${rating}/5 - ${headline}**\n\n` +
+      `${comment}`
+    )
+    .addFields(
+      {
+        name: 'Rating',
+        value: `${starString}(${rating}/5)`,
+        inline: true
+      },
+      {
+        name: 'Reviewed',
+        value: `<t:${now}:R>`,
+        inline: true
+      }
+    )
+    .setFooter({
+      text: `ReviewHub • Review ID: ${reviewId}`,
+      iconURL: 'https://cdn.discordapp.com/emojis/1574105084130893889.gif'
+    })
+    .setTimestamp();
+
+  if (service) {
+    embed.addFields({
+      name: `${E.server} Service`,
+      value: `\`${service}\``,
+      inline: false
+    });
+  }
+
+  const row = buildReviewActionRow(reviewId, 0);
+
+  // Send review message to review channel
+  const reviewMessage = await channel.send({
+    embeds: [embed],
+    components: [row]
+  });
+
+  // Create Discord Thread for Owner's Response
+  let threadId = null;
+  try {
+    const thread = await reviewMessage.startThread({
+      name: "Owner's Response",
+      autoArchiveDuration: 1440
+    });
+    threadId = thread.id;
+
+    await thread.send({
+      content:
+        `${E.crown} ${E.staff} **Owner's Response Channel**\n` +
+        `> Thank you <@${interaction.user.id}> for your valuable review! Founders & Management (<@&${FOUNDER_ROLE_ID}>) can reply to your feedback here.`
+    });
+  } catch (threadErr) {
+    console.error('[REVIEW THREAD CREATE ERROR]', threadErr);
+  }
+
+  // Save review in persistent storage
+  const data = loadReviewsData();
+  data.reviews.push({
+    id: reviewId,
+    messageId: reviewMessage.id,
+    channelId: channel.id,
+    threadId,
+    userId: interaction.user.id,
+    userTag: interaction.user.tag,
+    rating,
+    headline,
+    service,
+    comment,
+    timestamp: now,
+    usefulVotes: []
+  });
+  saveReviewsData(data);
+
+  // Update prompt stats if needed
+  await postOrUpdateReviewHubPrompt(interaction.client).catch(() => null);
+
+  await interaction.reply({
+    content: `${E.tick5} **Thank you for your valuable review!** It has been published in <#${REVIEWS_CHANNEL_ID}>! ${E.sparkles}`,
+    ephemeral: true
+  });
+}
+
+/**
+ * Handle clicking "Useful (N)" button
+ */
+async function handleReviewUsefulBtn(interaction) {
+  const customId = interaction.customId;
+  const reviewId = customId.replace('review_useful_', '');
+
+  const data = loadReviewsData();
+  const review = data.reviews.find(r => r.id === reviewId);
+
+  if (!review) {
+    return interaction.reply({
+      content: `${E.cross} Review record not found.`,
+      ephemeral: true
+    });
+  }
+
+  if (review.userId === interaction.user.id) {
+    return interaction.reply({
+      content: `${E.alert} You cannot mark your own review as useful!`,
+      ephemeral: true
+    });
+  }
+
+  review.usefulVotes = review.usefulVotes || [];
+  const alreadyVoted = review.usefulVotes.includes(interaction.user.id);
+
+  if (alreadyVoted) {
+    review.usefulVotes = review.usefulVotes.filter(id => id !== interaction.user.id);
+  } else {
+    review.usefulVotes.push(interaction.user.id);
+  }
+  saveReviewsData(data);
+
+  const updatedRow = buildReviewActionRow(reviewId, review.usefulVotes.length);
+
+  try {
+    await interaction.update({ components: [updatedRow] });
+  } catch (err) {
+    console.error('[USEFUL UPDATE ERROR]', err);
+  }
+
+  await interaction.followUp({
+    content: alreadyVoted ?
+      `${E.info} Removed your useful vote for review **#${reviewId}**.` :
+      `${E.tick5} Marked review **#${reviewId}** as useful! (${review.usefulVotes.length} total)`,
+    ephemeral: true
+  }).catch(() => null);
+}
+
+/**
+ * Handle /review slash command
+ */
+async function handleReviewSlashCommand(interaction) {
+  const modal = buildReviewModal();
+  await interaction.showModal(modal);
+}
+
+/**
+ * Handle /respond slash command for owner/staff to respond to a review
+ */
+async function handleReviewRespondSlashCommand(interaction) {
+  const reviewId = interaction.options.getString('review_id');
+  const responseText = interaction.options.getString('response');
+
+  const data = loadReviewsData();
+  const review = data.reviews.find(r => r.id.toLowerCase() === reviewId.toLowerCase());
+
+  if (!review) {
+    return interaction.reply({
+      content: `${E.cross} Could not find review with ID \`${reviewId}\`.`,
+      ephemeral: true
+    });
+  }
+
+  if (!review.threadId) {
+    return interaction.reply({
+      content: `${E.cross} This review does not have an active Owner's Response thread.`,
+      ephemeral: true
+    });
+  }
+
+  try {
+    const thread = interaction.client.channels.cache.get(review.threadId) ||
+      await interaction.client.channels.fetch(review.threadId).catch(() => null);
+
+    if (!thread) {
+      return interaction.reply({
+        content: `${E.cross} Could not access the thread for review \`${reviewId}\`.`,
+        ephemeral: true
+      });
+    }
+
+    await thread.send({
+      content: `${E.crown} **Official Response from <@${interaction.user.id}>:**\n> ${responseText}`
+    });
+
+    await interaction.reply({
+      content: `${E.tick5} Successfully posted response in review thread for **#${reviewId}**!`,
+      ephemeral: true
+    });
+  } catch (err) {
+    console.error('[REVIEW RESPOND ERROR]', err);
+    await interaction.reply({
+      content: `${E.alert} Failed to post response: \`${err.message}\``,
+      ephemeral: true
+    });
+  }
+}
+
+module.exports = {
+  REVIEWS_CHANNEL_ID,
+  GENERAL_CHANNEL_ID,
+  postOrUpdateReviewHubPrompt,
+  handleReviewSubmitBtn,
+  handleReviewModalSubmit,
+  handleReviewUsefulBtn,
+  handleReviewSlashCommand,
+  handleReviewRespondSlashCommand
+};
