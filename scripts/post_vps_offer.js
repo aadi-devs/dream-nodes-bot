@@ -4,12 +4,8 @@ const path = require('path');
 const envPath = path.join(__dirname, '..', '.env');
 const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].trim();
 
-// Channels:
-// 1573337308529434756: # 𖹭ᐟ・ᴀɴɴᴏᴜɴᴄᴇᴍᴇɴᴛꜱ
-// 1573281500290359338: # ♘・ᴏꜰꜰᴇʀꜱ
-const announcementsChannelId = '1573337308529434756';
-const offersChannelId = '1573281500290359338';
-
+// Target channel: # ♘・ᴀᴜᴄᴛɪᴏɴꜱ (under ✦----- VPS PLANS -----✦)
+const auctionsChannelId = '1573281528031481967';
 const clientRoleId = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
 
 const markdownContent = 
@@ -98,10 +94,10 @@ const v2Payload = {
   ]
 };
 
-async function postOffer() {
-  console.log('Posting Intel Platinum VPS Offer to Announcements channel:', announcementsChannelId);
+async function postToAuctions() {
+  console.log('Posting Intel Platinum VPS Offer to Auctions channel:', auctionsChannelId);
 
-  const res = await fetch(`https://discord.com/api/v10/channels/${announcementsChannelId}/messages`, {
+  const res = await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages`, {
     method: 'POST',
     headers: {
       Authorization: `Bot ${token}`,
@@ -112,28 +108,21 @@ async function postOffer() {
 
   const data = await res.json();
   if (data.id) {
-    console.log('✓ Successfully posted to Announcements! Message ID:', data.id);
-  } else {
-    console.error('✗ Failed to post to Announcements:', JSON.stringify(data, null, 2));
-  }
+    console.log('✓ Successfully posted to Auctions! Message ID:', data.id);
 
-  // Also post to # ♘・ᴏꜰꜰᴇʀꜱ
-  console.log('Posting Intel Platinum VPS Offer to Offers channel:', offersChannelId);
-  const res2 = await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bot ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(v2Payload)
-  });
-
-  const data2 = await res2.json();
-  if (data2.id) {
-    console.log('✓ Successfully posted to Offers! Message ID:', data2.id);
+    // Add reactions
+    await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages/${data.id}/reactions/%E2%9A%A1/@me`, { // ⚡
+      method: 'PUT',
+      headers: { Authorization: `Bot ${token}` }
+    });
+    await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages/${data.id}/reactions/%F0%9F%8E%AB/@me`, { // 🎫
+      method: 'PUT',
+      headers: { Authorization: `Bot ${token}` }
+    });
+    console.log('✓ Reactions added to Auctions message');
   } else {
-    console.error('✗ Failed to post to Offers:', JSON.stringify(data2, null, 2));
+    console.error('✗ Failed to post to Auctions:', JSON.stringify(data, null, 2));
   }
 }
 
-postOffer();
+postToAuctions();
