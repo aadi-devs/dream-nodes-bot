@@ -1,4 +1,34 @@
 {
-  "counter": 2,
-  "activeTickets": {}
+  "counter": 4,
+  "activeTickets": {
+    "1574169855802871818": {
+      "ticketNum": "0002",
+      "categoryKey": "buy",
+      "categoryName": "Buy / Purchase Hosting",
+      "channelId": "1574169855802871818",
+      "userId": "1188142147522805780",
+      "userTag": "itsmevictus.",
+      "claimedBy": null,
+      "claimedTag": null,
+      "createdAt": 1795381740,
+      "intakeAnswers": [
+        {
+          "label": "Desired Service / Plan",
+          "value": "."
+        },
+        {
+          "label": "Server Location",
+          "value": "."
+        },
+        {
+          "label": "Preferred Payment Method",
+          "value": "."
+        },
+        {
+          "label": "Additional Requirements / Custom Specs",
+          "value": "."
+        }
+      ]
+    }
+  }
 }

@@ -24,6 +24,9 @@ try {
   console.error('[TICKET BANNER CACHE ERROR]', e);
 }
 
+const counterFile = path.join(dataDir, 'ticket_counter.txt');
+const historyFile = path.join(dataDir, 'ticket_history.json');
+
 function getTicketData() {
   try {
     if (fs.existsSync(ticketsFile)) {
@@ -43,9 +46,77 @@ function saveTicketData(data) {
   }
 }
 
+/**
+ * Strictly monotonic ticket number allocator.
+ * Guarantees a ticket number is NEVER reused once issued.
+ */
+function getNextTicketNumber() {
+  const data = getTicketData();
+  let currentCounter = Number(data.counter) || 1;
+
+  if (fs.existsSync(counterFile)) {
+    try {
+      const val = parseInt(fs.readFileSync(counterFile, 'utf8').trim(), 10);
+      if (!isNaN(val) && val > currentCounter) {
+        currentCounter = val;
+      }
+    } catch (e) {}
+  }
+
+  if (data.activeTickets) {
+    for (const t of Object.values(data.activeTickets)) {
+      const n = parseInt(t.ticketNum, 10);
+      if (!isNaN(n) && n >= currentCounter) {
+        currentCounter = n + 1;
+      }
+    }
+  }
+
+  let history = [];
+  if (fs.existsSync(historyFile)) {
+    try {
+      history = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
+      if (Array.isArray(history)) {
+        for (const h of history) {
+          const n = parseInt(h, 10);
+          if (!isNaN(n) && n >= currentCounter) {
+            currentCounter = n + 1;
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (currentCounter < 4) {
+    currentCounter = 4;
+  }
+
+  const allocatedNumber = currentCounter;
+  const nextCounter = currentCounter + 1;
+
+  // Persist synchronously to tickets.json, ticket_counter.txt, and ticket_history.json
+  data.counter = nextCounter;
+  saveTicketData(data);
+
+  try {
+    fs.writeFileSync(counterFile, String(nextCounter), 'utf8');
+  } catch (e) {}
+
+  try {
+    if (!history.includes(allocatedNumber)) {
+      history.push(allocatedNumber);
+    }
+    fs.writeFileSync(historyFile, JSON.stringify(history, null, 2), 'utf8');
+  } catch (e) {}
+
+  return String(allocatedNumber).padStart(4, '0');
+}
+
 const TICKET_LOGS_CHANNEL_ID = '1573780018834710548'; // ⊘・ᴛɪᴄᴋᴇᴛ-ʟᴏɢꜱ
 const TICKET_SUPPORT_ROLE_ID = '1574114981048225953'; // ⋆｡°✩ ƚιƈƙҽƚ ʂυρρσɾƚ ✩°｡⋆
 const FOUNDER_ROLE_ID = '1573412727383392427'; // ⋆｡°✩ ϝσυɳԃҽɾ ✩°｡⋆
+const PAID_CLIENT_ROLE_ID = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
+const REVIEWS_CHANNEL_ID = '1574120437938520187'; // # ✦・ʀᴇᴠɪᴇᴡꜱ
 
 const CATEGORIES = {
   ticket_buy: {
@@ -301,6 +372,23 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
         options.files = [attachment];
       }
       await logsChannel.send(options);
+    } else if (eventType === 'DEAL_DONE') {
+      const embed = new EmbedBuilder()
+        .setTitle(`Deal Completed: #${data.ticketNum}`)
+        .setColor([46, 204, 113]) // Green
+        .setDescription(
+          `${E.pin} **Category:** \`${data.categoryName}\`\n` +
+          `${E.staff} **Founder:** <@${data.founderId}> (\`${data.founderTag}\`)\n` +
+          `${E.membership} **Client:** <@${data.userId}> (\`${data.userTag}\`)\n` +
+          `${E.verifiedBlue} **Client Role Granted:** <@&${PAID_CLIENT_ROLE_ID}>\n` +
+          `${E.chat} **Review DM Dispatched:** ${data.dmSent ? 'Yes' : 'No (DMs Closed)'}\n` +
+          `${E.location} **Channel:** <#${data.channelId}>\n` +
+          `${E.timer} **Completed At:** <t:${Math.floor(Date.now() / 1000)}:R>`
+        )
+        .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
+        .setTimestamp();
+
+      await logsChannel.send({ embeds: [embed] });
     }
   } catch (err) {
     console.error('[TICKET LOG EVENT ERROR]', err);
@@ -479,6 +567,9 @@ async function handleTicketDepartmentSelect(interaction) {
         content: `You already have an open ticket in this department: <#${existingTicket.channelId}>. Please use that channel or close it before creating a new one.`,
         ephemeral: true
       });
+    } else {
+      delete data.activeTickets[existingTicket.channelId];
+      saveTicketData(data);
     }
   }
 
@@ -533,12 +624,14 @@ async function handleTicketModalSubmit(interaction) {
       return interaction.editReply({
         content: `You already have an open ticket in this department: <#${existingTicket.channelId}>. Please use that channel or close it before creating a new one.`
       });
+    } else {
+      delete data.activeTickets[existingTicket.channelId];
+      saveTicketData(data);
     }
   }
 
   try {
-    const ticketNum = String(data.counter).padStart(4, '0');
-    data.counter++;
+    const ticketNum = getNextTicketNumber();
 
     // Collect answers submitted by the user
     const intakeAnswers = catConfig.modalInputs.map(input => {
@@ -554,8 +647,8 @@ async function handleTicketModalSubmit(interaction) {
       };
     });
 
-    // Format requested by user: [Ticket Number]-Categoryname-claimed byname
-    const channelName = `〔${ticketNum}〕-${catConfig.key}-unclaimed`;
+    // Format requested by user: number-category-claimedby (unclaimed before being claimed)
+    const channelName = `${ticketNum}-${catConfig.key}-unclaimed`;
 
     // Roles to grant channel view
     const rolesToGrant = catConfig.highStaffOnly ? HIGH_STAFF_ROLES : STAFF_ROLES;
@@ -722,7 +815,16 @@ async function handleTicketModalSubmit(interaction) {
             label: 'Close Ticket',
             custom_id: `ticket_close_${ticketChannel.id}`,
             emoji: B.cross
-          }
+          },
+          ...(catConfig.key === 'buy' ? [
+            {
+              type: 2,
+              style: 3, // Success / Green
+              label: 'Deal Done',
+              custom_id: `ticket_deal_done_${ticketChannel.id}`,
+              emoji: B.cash
+            }
+          ] : [])
         ]
       },
       {
@@ -839,8 +941,8 @@ async function handleTicketClaim(interaction) {
     }));
   }
 
-  const staffSlug = interaction.user.username.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 10) || 'staff';
-  const newChannelName = `〔${ticket.ticketNum}〕-${ticket.categoryKey}-${staffSlug}`;
+  const staffSlug = interaction.user.username.toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 15) || 'staff';
+  const newChannelName = `${ticket.ticketNum}-${ticket.categoryKey}-${staffSlug}`;
 
   ticket.claimedBy = interaction.user.id;
   ticket.claimedTag = interaction.user.tag;
@@ -1033,7 +1135,7 @@ async function handleTicketPingFounder(interaction) {
   const ticket = data.activeTickets[ticketChannel.id];
 
   const isTicketCategory = Object.values(CATEGORIES).some(cat => cat.categoryId === ticketChannel.parentId);
-  const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || ticketChannel.name.includes('〔');
+  const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || /^\d{4}-/.test(ticketChannel.name) || ticketChannel.name.includes('〔');
 
   if (!isTicketChannel) {
     return interaction.reply(buildV2Alert({
@@ -1066,8 +1168,10 @@ async function handleTicketPingFounder(interaction) {
       ephemeral: false
     });
 
+    // Send mention first, then V2 container with empty content to comply with Discord API
+    await ticketChannel.send({ content: `<@&${FOUNDER_ROLE_ID}>` });
     await ticketChannel.send({
-      content: `<@&${FOUNDER_ROLE_ID}>`,
+      content: '',
       flags: founderAlertPayload.flags,
       components: founderAlertPayload.components
     });
@@ -1107,7 +1211,7 @@ async function handleTicketAddUser(interaction) {
   const ticket = data.activeTickets[ticketChannel.id];
 
   const isTicketCategory = Object.values(CATEGORIES).some(cat => cat.categoryId === ticketChannel.parentId);
-  const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || ticketChannel.name.includes('〔');
+  const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || /^\d{4}-/.test(ticketChannel.name) || ticketChannel.name.includes('〔');
 
   if (!isTicketChannel) {
     return interaction.reply(buildV2Alert({
@@ -1200,7 +1304,7 @@ async function handleTicketRemoveUser(interaction) {
   const ticket = data.activeTickets[ticketChannel.id];
 
   const isTicketCategory = Object.values(CATEGORIES).some(cat => cat.categoryId === ticketChannel.parentId);
-  const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || ticketChannel.name.includes('〔');
+  const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || /^\d{4}-/.test(ticketChannel.name) || ticketChannel.name.includes('〔');
 
   if (!isTicketChannel) {
     return interaction.reply(buildV2Alert({
@@ -1263,6 +1367,166 @@ async function handleTicketRemoveUser(interaction) {
   }
 }
 
+/**
+ * Handle "Deal Done" button click inside Buy Category Tickets.
+ * Restricted strictly to Server Founders.
+ * Grants Paid Client role, sends DM thanking client & prompting review in reviews channel,
+ * and posts confirmation inside ticket channel.
+ */
+async function handleTicketDealDone(interaction) {
+  const ticketChannel = interaction.channel;
+  const data = getTicketData();
+  const ticket = data.activeTickets[ticketChannel.id];
+
+  if (!ticket) {
+    return interaction.reply(buildV2Alert({
+      title: 'Invalid Ticket',
+      message: 'This channel is not recognized as an active ticket.',
+      type: 'error',
+      ephemeral: true
+    }));
+  }
+
+  // Permission check: STRICTLY restricted to Server Founders (or Server Owner)
+  const isFounder = interaction.member.roles?.cache?.has(FOUNDER_ROLE_ID) || 
+                    interaction.guild.ownerId === interaction.user.id;
+
+  if (!isFounder) {
+    return interaction.reply(buildV2Alert({
+      title: 'Founder Only Action',
+      message: 'Only server Founders have permission to finalize orders and grant the Client role.',
+      type: 'error',
+      ephemeral: true
+    }));
+  }
+
+  if (ticket.dealDone) {
+    return interaction.reply(buildV2Alert({
+      title: 'Deal Already Completed',
+      message: `This order was already finalized by <@${ticket.dealDoneBy}> on <t:${ticket.dealDoneAt}:f>.`,
+      type: 'info',
+      ephemeral: true
+    }));
+  }
+
+  // Defer reply immediately so Discord Gateway never times out
+  await interaction.deferReply({ ephemeral: true });
+
+  let roleGranted = false;
+  let clientUser = null;
+  let dmDelivered = false;
+
+  // 1. Grant Paid Client Role to ticket creator
+  try {
+    const member = await interaction.guild.members.fetch(ticket.userId).catch(() => null);
+    if (member) {
+      if (!member.roles.cache.has(PAID_CLIENT_ROLE_ID)) {
+        await member.roles.add(PAID_CLIENT_ROLE_ID, `Deal marked done by Founder ${interaction.user.tag}`);
+      }
+      roleGranted = true;
+    }
+  } catch (err) {
+    console.error('[DEAL DONE ROLE ERROR]', err);
+  }
+
+  // 2. Send thank-you and review reminder DM to the customer
+  try {
+    clientUser = await interaction.client.users.fetch(ticket.userId).catch(() => null);
+    if (clientUser) {
+      const dmEmbed = new EmbedBuilder()
+        .setTitle(`${E.cash} Thank You for Buying Our Service!`)
+        .setColor([88, 101, 242]) // Blurple
+        .setDescription(
+          `### ${E.sparkles} Welcome to Dream Nodes!\n\n` +
+          `> ${E.fireWorld} **Dear <@${ticket.userId}>,**\n` +
+          `> Thanks for buying our service! Your order has been fulfilled, and you have officially been granted the **Client** role in **Dream Nodes - Official**!\n\n` +
+          `### ${E.chat} **Make Sure to Leave a Review!**\n` +
+          `> We value your honest feedback! Please take a quick moment to drop a review of your experience with us in our client reviews channel: <#${REVIEWS_CHANNEL_ID}>.\n` +
+          `> Your reviews help our community grow and allow us to maintain top-tier hardware and customer support.\n\n` +
+          `*If you ever need any technical assistance, our support team is available 24/7.*`
+        )
+        .setFooter({ text: 'Dream Nodes • Client Care Team' })
+        .setTimestamp();
+
+      const dmActionRow = {
+        type: 1,
+        components: [
+          {
+            type: 2,
+            style: 5,
+            label: 'Leave a Review',
+            url: `https://discord.com/channels/${interaction.guild.id}/${REVIEWS_CHANNEL_ID}`,
+            emoji: B.sparkles
+          },
+          {
+            type: 2,
+            style: 5,
+            label: 'Official Website',
+            url: 'https://dreamnodes.cloud',
+            emoji: B.fireWorld
+          }
+        ]
+      };
+
+      await clientUser.send({
+        embeds: [dmEmbed],
+        components: [dmActionRow]
+      });
+      dmDelivered = true;
+    }
+  } catch (dmErr) {
+    console.warn('[DEAL DONE DM WARNING]', dmErr.message);
+    dmDelivered = false;
+  }
+
+  // 3. Update ticket database entry
+  ticket.dealDone = true;
+  ticket.dealDoneBy = interaction.user.id;
+  ticket.dealDoneTag = interaction.user.tag;
+  ticket.dealDoneAt = Math.floor(Date.now() / 1000);
+  saveTicketData(data);
+
+  // 4. Send celebratory announcement in the ticket channel (V2 Container)
+  const dealNotice = buildV2Container({
+    title: `### ${E.cash} Order Finalized ┃ Deal Completed`,
+    subtitle: `${E.sparkles} Founder <@${interaction.user.id}> has verified and completed this deal.`,
+    description:
+      `> ${E.membership} **Customer:** <@${ticket.userId}>\n` +
+      `> ${E.verifiedBlue} **Client Role:** ${roleGranted ? `<@&${PAID_CLIENT_ROLE_ID}> (Assigned)` : '`Failed to assign role`'}\n` +
+      `> ${E.staff} **Founder:** <@${interaction.user.id}>\n` +
+      `> ${E.chat} **Customer DM:** ${dmDelivered ? `${E.tick5} Dispatched thank-you note & review reminder` : `${E.alert} DMs closed (could not deliver)`}\n\n` +
+      `> ${E.sparkles} *Make sure to leave a review in <#${REVIEWS_CHANNEL_ID}>!*`,
+    footer: `-# ${E.cash} Dream Nodes • Order Completion`,
+    ephemeral: false
+  });
+
+  await ticketChannel.send({
+    content: '',
+    flags: dealNotice.flags,
+    components: dealNotice.components
+  });
+
+  // 5. Log event to ticket logs channel
+  await logTicketEvent(interaction.client, 'DEAL_DONE', {
+    ticketNum: ticket.ticketNum,
+    categoryName: ticket.categoryName,
+    channelId: ticketChannel.id,
+    userId: ticket.userId,
+    userTag: ticket.userTag,
+    founderId: interaction.user.id,
+    founderTag: interaction.user.tag,
+    dmSent: dmDelivered
+  });
+
+  // 6. Respond to Founder
+  await interaction.editReply(buildV2Alert({
+    title: 'Deal Completed',
+    message: `Order marked as completed! Granted Client role to <@${ticket.userId}>.${dmDelivered ? ' Sent thank-you & review reminder DM.' : ' (Client has DMs closed).' }`,
+    type: 'success',
+    ephemeral: true
+  }));
+}
+
 module.exports = {
   CATEGORIES,
   STAFF_ROLES,
@@ -1270,12 +1534,16 @@ module.exports = {
   TICKET_LOGS_CHANNEL_ID,
   TICKET_SUPPORT_ROLE_ID,
   FOUNDER_ROLE_ID,
+  PAID_CLIENT_ROLE_ID,
+  REVIEWS_CHANNEL_ID,
   getTicketData,
   saveTicketData,
+  getNextTicketNumber,
   buildTicketPanelPayload,
   handleTicketDepartmentSelect,
   handleTicketModalSubmit,
   handleTicketClaim,
+  handleTicketDealDone,
   handleTicketClosePrompt,
   handleTicketCloseConfirm,
   handleTicketCloseCancel,

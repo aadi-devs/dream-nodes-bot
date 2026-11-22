@@ -9,3 +9,5 @@ assets/dream_nodes_banner_4K.mp4
 scripts/test*
 *.png
 scripts/upload_aesthetic_emojis.js
+data/ticket_counter.txt
+data/ticket_history.json

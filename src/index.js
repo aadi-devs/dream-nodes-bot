@@ -32,6 +32,7 @@ const {
   handleTicketDepartmentSelect,
   handleTicketModalSubmit,
   handleTicketClaim,
+  handleTicketDealDone,
   handleTicketClosePrompt,
   handleTicketCloseConfirm,
   handleTicketCloseCancel,
@@ -607,6 +608,9 @@ client.on('interactionCreate', async interaction => {
       return;
     } else if (interaction.customId.startsWith('ticket_claim_')) {
       await handleTicketClaim(interaction);
+      return;
+    } else if (interaction.customId.startsWith('ticket_deal_done_')) {
+      await handleTicketDealDone(interaction);
       return;
     } else if (interaction.customId.startsWith('ticket_ping_founder_')) {
       await handleTicketPingFounder(interaction);
