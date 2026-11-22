@@ -21,7 +21,8 @@ const token = process.env.DISCORD_TOKEN;
 const clientId = process.env.DISCORD_CLIENT_ID || '1573271779915337811';
 const guildId = '1573272872737181696';
 const welcomeChannelId = '1573337290502176848';
-const clientRoleId = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
+const clientRoleId = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆ (Paid Client)
+const memberRoleId = '1573412782202818660'; // ⋆｡°✩ ɱҽɱႦҽɾ ✩°｡⋆ (General Community Member)
 const honeypotChannelId = '1573337296042729502';
 const honeypotMessageId = '1573402481214492685';
 const honeypotLogsFile = path.join(__dirname, '..', 'data', 'honeypot_logs.json');
@@ -481,16 +482,16 @@ client.once('clientReady', async () => {
   await postOrUpdateReviewHubPrompt(client).catch(err => console.error('[REVIEW PROMPT INIT ERROR]', err));
 });
 
-// Automatic Welcome Message and Instant Client Auto-Role on Member Join
+// Automatic Welcome Message and Instant Member Auto-Role on Member Join
 client.on('guildMemberAdd', async member => {
-  // 1. Instantly auto-assign the Client role
+  // 1. Instantly auto-assign the Member role (Client role is strictly reserved for paid customers)
   try {
-    if (!member.roles.cache.has(clientRoleId)) {
-      await member.roles.add(clientRoleId, 'Auto-assigned Client role on member join');
-      console.log(`[AUTOROLE] Instantly assigned Client role (1573412778620747886) to ${member.user.tag} (${member.id})`);
+    if (!member.roles.cache.has(memberRoleId)) {
+      await member.roles.add(memberRoleId, 'Auto-assigned Member role on member join');
+      console.log(`[AUTOROLE] Instantly assigned Member role (1573412782202818660) to ${member.user.tag} (${member.id})`);
     }
   } catch (roleErr) {
-    console.error(`[AUTOROLE ERROR] Failed to assign Client role to ${member.user.tag}:`, roleErr);
+    console.error(`[AUTOROLE ERROR] Failed to assign Member role to ${member.user.tag}:`, roleErr);
   }
 
   // 2. Dispatch the aesthetic welcome container

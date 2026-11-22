@@ -19,6 +19,22 @@ const reviewsFile = path.join(dataDir, 'reviews.json');
 const REVIEWS_CHANNEL_ID = '1574120437938520187'; // # ✦・ʀᴇᴠɪᴇᴡꜱ
 const GENERAL_CHANNEL_ID = '1574120435828662512'; // # ✦・ɢᴇɴᴇʀᴀʟ-ᴄʜᴀᴛ
 const FOUNDER_ROLE_ID = '1573412727383392427'; // ⋆｡°✩ ϝσυɳԃҽɾ ✩°｡⋆
+const PAID_CLIENT_ROLE_ID = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
+
+function isPaidClient(member) {
+  if (!member) return false;
+  // Administrators and Founders can always submit and verify
+  if (member.permissions?.has('Administrator')) return true;
+  if (member.roles?.cache) {
+    if (member.roles.cache.has(PAID_CLIENT_ROLE_ID)) return true;
+    return member.roles.cache.some(r => 
+      r.name.toLowerCase().includes('client') ||
+      r.name.includes('ƈʅιҽɳƚ') ||
+      r.name.toLowerCase().includes('paid')
+    );
+  }
+  return false;
+}
 
 function loadReviewsData() {
   try {
@@ -188,6 +204,16 @@ async function postOrUpdateReviewHubPrompt(client) {
  * Handle "Submit A Review" button click
  */
 async function handleReviewSubmitBtn(interaction) {
+  if (!isPaidClient(interaction.member)) {
+    return interaction.reply({
+      content:
+        `### ${E.stopSign} **Verified Paid Clients Only!**\n` +
+        `> ${E.alert} Submitting customer reviews is reserved exclusively for verified **Paid Clients** (<@&${PAID_CLIENT_ROLE_ID}>).\n` +
+        `> ${E.ticket} If you have purchased a hosting plan or VPS with Dream Nodes, please open a ticket in <#1573281601775870043> to receive your client role!`,
+      ephemeral: true
+    });
+  }
+
   const modal = buildReviewModal();
   await interaction.showModal(modal);
 }
@@ -196,6 +222,15 @@ async function handleReviewSubmitBtn(interaction) {
  * Handle Review Modal Submission
  */
 async function handleReviewModalSubmit(interaction) {
+  if (!isPaidClient(interaction.member)) {
+    return interaction.reply({
+      content:
+        `### ${E.stopSign} **Verified Paid Clients Only!**\n` +
+        `> ${E.alert} Submitting customer reviews is reserved exclusively for verified **Paid Clients** (<@&${PAID_CLIENT_ROLE_ID}>).`,
+      ephemeral: true
+    });
+  }
+
   const rawRating = interaction.fields.getTextInputValue('review_rating');
   let rating = parseInt(rawRating.trim(), 10);
   if (isNaN(rating) || rating < 1 || rating > 5) {
@@ -318,6 +353,16 @@ async function handleReviewModalSubmit(interaction) {
  * Handle clicking "Useful (N)" button
  */
 async function handleReviewUsefulBtn(interaction) {
+  if (!isPaidClient(interaction.member)) {
+    return interaction.reply({
+      content:
+        `### ${E.stopSign} **Verified Paid Clients Only!**\n` +
+        `> ${E.alert} Only verified **Paid Clients** (<@&${PAID_CLIENT_ROLE_ID}>) can mark reviews as useful.\n` +
+        `> ${E.ticket} If you have purchased a service with Dream Nodes, please open a ticket in <#1573281601775870043> to receive your client role!`,
+      ephemeral: true
+    });
+  }
+
   const customId = interaction.customId;
   const reviewId = customId.replace('review_useful_', '');
 
@@ -368,6 +413,16 @@ async function handleReviewUsefulBtn(interaction) {
  * Handle /review slash command
  */
 async function handleReviewSlashCommand(interaction) {
+  if (!isPaidClient(interaction.member)) {
+    return interaction.reply({
+      content:
+        `### ${E.stopSign} **Verified Paid Clients Only!**\n` +
+        `> ${E.alert} Submitting customer reviews is reserved exclusively for verified **Paid Clients** (<@&${PAID_CLIENT_ROLE_ID}>).\n` +
+        `> ${E.ticket} If you have purchased a hosting plan or VPS with Dream Nodes, please open a ticket in <#1573281601775870043> to receive your client role!`,
+      ephemeral: true
+    });
+  }
+
   const modal = buildReviewModal();
   await interaction.showModal(modal);
 }
