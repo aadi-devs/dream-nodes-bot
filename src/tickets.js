@@ -14,6 +14,16 @@ const dataDir = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 const ticketsFile = path.join(dataDir, 'tickets.json');
 
+const ticketBannerPath = path.join(__dirname, '..', 'assets', 'ticket_banner.jpg');
+let ticketBannerBuf = null;
+try {
+  if (fs.existsSync(ticketBannerPath)) {
+    ticketBannerBuf = fs.readFileSync(ticketBannerPath);
+  }
+} catch (e) {
+  console.error('[TICKET BANNER CACHE ERROR]', e);
+}
+
 function getTicketData() {
   try {
     if (fs.existsSync(ticketsFile)) {
@@ -300,47 +310,84 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
 // Build the Main Ticket Panel Components V2 Payload
 function buildTicketPanelPayload() {
   const panelHeader =
-`# ${E.updates} **DREAM NODES ┃ Support & Ticket Desk**
-## ${E.sparkles} 24/7 Client Helpdesk • Instant Orders • Technical Support • Inquiries
+`# ${E.ticket} **DREAM NODES ┃ Client Support & Helpdesk**\n` +
+`> ${E.fireWorld} 24/7 dedicated client assistance, custom order quotes & technical resolutions.`;
 
-> ${E.starRotating} **Welcome to the official Dream Nodes Support Center!**
-> Looking to purchase a hosting package, ask a pre-sales question, report a technical problem, or speak confidentially with management?
-> 
-> Choose the relevant department from the **interactive menu below** to create your dedicated private ticket channel.
+  const departmentsBlock =
+`### ${E.support} **Available Helpdesk Departments**\n` +
+`> ${E.cash} **Purchase Hosting:** Order Minecraft, Intel / AMD VPS, RDP, or Bot Nodes.\n` +
+`> \n` +
+`> ${E.chat} **General & Billing Queries:** Inquire about node specifications, billing, or custom plans.\n` +
+`> \n` +
+`> ${E.settings} **Technical Problems & Outages:** Report server crashes, node downtime, or SFTP issues.\n` +
+`> \n` +
+`> ${E.shield} **Staff Report & Leadership:** Confidentially escalate matters directly to Founders.`;
 
-### ${E.crownRed} Support Departments:
-> ${E.cash} **Buy / Purchase Hosting:** Order Minecraft, Intel / AMD VPS, RDP, Web Hosting, or Bot Nodes.
-> ${E.chat} **General Queries:** Ask questions regarding server specs, custom quotes, locations, or billing.
-> ${E.siren} **Staff Report:** Confidentially report staff misconduct directly to executive leadership.
-> ${E.settings} **Problems & Issues:** Report downtime, control panel errors, server crashes, or network bugs.
-
-### ${E.info} Support Guidelines:
-> ${E.arrowBlue} **One Ticket Per Topic:** Please avoid creating multiple tickets for the same inquiry.
-> ${E.arrowBlue} **Fill Required Questions:** State your plan, node location, or issue details in the popup form.
-> ${E.arrowBlue} **Patient Response:** Our staff team is alerted automatically. Unnecessary pings are not required.`;
+  const guidelinesBlock =
+`### ${E.rulesBook} **Helpdesk Guidelines**\n` +
+`> ${E.arrowBlue} **One Ticket Per Topic:** Please avoid creating duplicate tickets for the same inquiry.\n` +
+`> \n` +
+`> ${E.arrowBlue} **Provide Intake Details:** Fill out the popup modal accurately for rapid response.\n` +
+`> \n` +
+`> ${E.arrowBlue} **Staff Alert:** Support engineers are notified automatically upon creation.`;
 
   return {
     flags: 32768, // IS_COMPONENTS_V2
+    content: '',
+    embeds: [],
+    attachments: [{ id: 0, filename: 'ticket_banner.jpg' }],
     components: [
       {
         type: 17, // Borderless Container
+        accent_color: null,
         components: [
+          // 1. Header
           {
             type: 10,
             content: panelHeader
           },
+          // 2. Divider
           {
             type: 14,
             divider: true,
             spacing: 1
           },
+          // 3. Media Gallery (Banner)
           {
-            type: 1, // Action Row for Select Menu
+            type: 12,
+            items: [
+              {
+                media: {
+                  url: 'attachment://ticket_banner.jpg'
+                }
+              }
+            ]
+          },
+          // 4. Divider
+          {
+            type: 14,
+            divider: true,
+            spacing: 1
+          },
+          // 5. Departments
+          {
+            type: 10,
+            content: departmentsBlock
+          },
+          // 6. Divider
+          {
+            type: 14,
+            divider: true,
+            spacing: 1
+          },
+          // 7. Action Row for Select Menu
+          {
+            type: 1,
             components: [
               {
                 type: 3, // String Select Menu
                 custom_id: 'ticket_create_menu',
-                placeholder: 'Select a department to open a ticket...',
+                placeholder: 'Select a department to open your ticket...',
                 options: Object.entries(CATEGORIES).map(([val, cat]) => ({
                   label: cat.name,
                   value: val,
@@ -350,20 +397,33 @@ function buildTicketPanelPayload() {
               }
             ]
           },
+          // 8. Divider
           {
             type: 14,
             divider: true,
             spacing: 1
           },
+          // 9. Guidelines
           {
-            type: 1, // Action Row for Direct Links
+            type: 10,
+            content: guidelinesBlock
+          },
+          // 10. Divider
+          {
+            type: 14,
+            divider: true,
+            spacing: 1
+          },
+          // 11. Action Row for Direct Links
+          {
+            type: 1,
             components: [
               {
                 type: 2,
                 style: 5,
                 label: 'Official Website',
                 url: 'https://dreamnodes.cloud',
-                emoji: B.world
+                emoji: B.fireWorld
               },
               {
                 type: 2,
@@ -381,9 +441,10 @@ function buildTicketPanelPayload() {
               }
             ]
           },
+          // 12. Footer
           {
             type: 10,
-            content: `-# ${E.starRotating} Dream Nodes • High-Performance Cloud Hosting & 24/7 Client Care Desk`
+            content: `-# ${E.verifiedBlue} Dream Nodes • Dedicated 24/7 Client Helpdesk • Rapid SLA Response`
           }
         ]
       }
@@ -575,95 +636,138 @@ async function handleTicketModalSubmit(interaction) {
 
     // 3. Build the aesthetic welcoming Components V2 message inside the new ticket channel
     const welcomeHeader =
-`# ${E.updates} **DREAM NODES ┃ Ticket #${ticketNum}**
-### ${E.sparkles} Welcome <@${interaction.user.id}>! Support Desk Initialized
+`# ${E.ticket} **DREAM NODES ┃ Ticket #${ticketNum}**\n` +
+`### ${E.sparkles} Welcome <@${interaction.user.id}>! Support Desk Initialized\n\n` +
+`> ${E.fireWorld} **Thank you for reaching out to Dream Nodes Client Care.**\n` +
+`> A verified support engineer will claim your ticket shortly. Feel free to provide relevant error logs, screenshots, or invoice IDs below to accelerate your inquiry.\n` +
+`> \n` +
+`> ${E.timer} **Response Notice:** Staff are notified in real-time. Please avoid repetitive pings.`;
 
-> ${E.starRotating} **Thank you for contacting Dream Nodes Support!**
-> Our staff team has been alerted and will assist you shortly.
-> 
-> ${E.timer} **Please wait patiently:** Our staff will claim this ticket soon. Avoid spamming pings so we can assist everyone swiftly. Feel free to send screenshots, error codes, or further details below.`;
+    const ticketComponents = [
+      {
+        type: 10,
+        content: welcomeHeader
+      },
+      {
+        type: 14,
+        divider: true,
+        spacing: 1
+      }
+    ];
+
+    if (ticketBannerBuf) {
+      ticketComponents.push(
+        {
+          type: 12,
+          items: [
+            {
+              media: {
+                url: 'attachment://ticket_banner.jpg'
+              }
+            }
+          ]
+        },
+        {
+          type: 14,
+          divider: true,
+          spacing: 1
+        }
+      );
+    }
+
+    ticketComponents.push(
+      {
+        type: 10,
+        content:
+          `### ${E.rulesBook} **Intake Information Provided:**\n` +
+          intakeFormatted
+      },
+      {
+        type: 14,
+        divider: true,
+        spacing: 1
+      },
+      {
+        type: 10,
+        content:
+          `### ${E.settings} **Ticket Information & Session Status**\n` +
+          `> ${E.pin} **Department:** \`${catConfig.name}\` ┃ ${E.membership} **Opened By:** <@${interaction.user.id}>\n` +
+          `> ${E.staff} **Claim Status:** \`Unclaimed\` *(Awaiting staff member)*`
+      },
+      {
+        type: 14,
+        divider: true,
+        spacing: 1
+      },
+      {
+        type: 1, // Action Row with Buttons
+        components: [
+          {
+            type: 2,
+            style: 3, // Success / Green
+            label: 'Claim Ticket',
+            custom_id: `ticket_claim_${ticketChannel.id}`,
+            emoji: B.tick5
+          },
+          {
+            type: 2,
+            style: 2, // Secondary / Grey
+            label: 'Ping Founder',
+            custom_id: `ticket_ping_founder_${ticketChannel.id}`,
+            emoji: B.crown
+          },
+          {
+            type: 2,
+            style: 4, // Danger / Red
+            label: 'Close Ticket',
+            custom_id: `ticket_close_${ticketChannel.id}`,
+            emoji: B.cross
+          }
+        ]
+      },
+      {
+        type: 10,
+        content: `-# ${E.verifiedBlue} Dream Nodes • 24/7 Dedicated Client Support Helpdesk • Rapid SLA Response`
+      }
+    );
 
     const ticketMessagePayload = {
       flags: 32768, // IS_COMPONENTS_V2
+      content: '',
+      embeds: [],
+      ...(ticketBannerBuf ? { attachments: [{ id: 0, filename: 'ticket_banner.jpg' }] } : {}),
       components: [
         {
           type: 17, // Borderless Container
-          components: [
-            {
-              type: 10,
-              content: welcomeHeader
-            },
-            {
-              type: 14,
-              divider: true,
-              spacing: 1
-            },
-            {
-              type: 10,
-              content:
-                `### ${E.updates} Intake Information Provided:\n` +
-                intakeFormatted
-            },
-            {
-              type: 14,
-              divider: true,
-              spacing: 1
-            },
-            {
-              type: 10,
-              content:
-                `> ${E.pin} **Category:** \`${catConfig.name}\` ┃ ${E.membership} **Opened By:** <@${interaction.user.id}>\n` +
-                `> ${E.staff} **Status:** \`Unclaimed\` *(Staff will claim shortly)*`
-            },
-            {
-              type: 14,
-              divider: true,
-              spacing: 1
-            },
-            {
-              type: 1, // Action Row with Buttons
-              components: [
-                {
-                  type: 2,
-                  style: 3, // Success / Green
-                  label: 'Claim Ticket',
-                  custom_id: `ticket_claim_${ticketChannel.id}`,
-                  emoji: B.membership
-                },
-                {
-                  type: 2,
-                  style: 2, // Secondary / Grey
-                  label: 'Ping Founder',
-                  custom_id: `ticket_ping_founder_${ticketChannel.id}`,
-                  emoji: B.crown
-                },
-                {
-                  type: 2,
-                  style: 4, // Danger / Red
-                  label: 'Close Ticket',
-                  custom_id: `ticket_close_${ticketChannel.id}`,
-                  emoji: B.cross
-                }
-              ]
-            },
-            {
-              type: 10,
-              content: `-# ${E.starRotating} Dream Nodes • 24/7 Dedicated Client Support Helpdesk`
-            }
-          ]
+          accent_color: null,
+          components: ticketComponents
         }
       ]
     };
 
     const botAuthToken = process.env.DISCORD_TOKEN || interaction.client.token;
-    await fetch(`https://discord.com/api/v10/channels/${ticketChannel.id}/messages`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bot ${botAuthToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(ticketMessagePayload)
-    });
+    if (ticketBannerBuf) {
+      const formData = new FormData();
+      formData.append('files[0]', new File([ticketBannerBuf], 'ticket_banner.jpg', { type: 'image/jpeg' }));
+      formData.append('payload_json', JSON.stringify(ticketMessagePayload));
+
+      await fetch(`https://discord.com/api/v10/channels/${ticketChannel.id}/messages`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bot ${botAuthToken}`
+        },
+        body: formData
+      });
+    } else {
+      await fetch(`https://discord.com/api/v10/channels/${ticketChannel.id}/messages`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bot ${botAuthToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ticketMessagePayload)
+      });
+    }
 
     // 4. Log ticket creation in dedicated ticket logs channel (# ⊘・ᴛɪᴄᴋᴇᴛ-ʟᴏɢꜱ)
     await logTicketEvent(interaction.client, 'OPEN', {
