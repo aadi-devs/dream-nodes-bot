@@ -33,6 +33,8 @@ function saveTicketData(data) {
 }
 
 const TICKET_LOGS_CHANNEL_ID = '1573780018834710548'; // ⊘・ᴛɪᴄᴋᴇᴛ-ʟᴏɢꜱ
+const TICKET_SUPPORT_ROLE_ID = '1574114981048225953'; // ⋆｡°✩ ƚιƈƙҽƚ ʂυρρσɾƚ ✩°｡⋆
+const FOUNDER_ROLE_ID = '1573412727383392427'; // ⋆｡°✩ ϝσυɳԃҽɾ ✩°｡⋆
 
 const CATEGORIES = {
   ticket_buy: {
@@ -42,7 +44,7 @@ const CATEGORIES = {
     emoji: E.cash,
     emojiObj: B.cash,
     desc: 'Order Minecraft nodes, VPS, RDP, Web or Bot hosting',
-    staffPingRoleId: '1573412759532732567', // ⋆｡°✩ ʂυρρσɾƚ ✩°｡⋆
+    staffPingRoleId: TICKET_SUPPORT_ROLE_ID, // ⋆｡°✩ ƚιƈƙҽƚ ʂυρρσɾƚ ✩°｡⋆
     modalTitle: 'Order Hosting Services',
     modalInputs: [
       {
@@ -86,7 +88,7 @@ const CATEGORIES = {
     emoji: E.chat,
     emojiObj: B.chat,
     desc: 'Ask about server specs, custom builds, locations or billing',
-    staffPingRoleId: '1573412759532732567', // ⋆｡°✩ ʂυρρσɾƚ ✩°｡⋆
+    staffPingRoleId: TICKET_SUPPORT_ROLE_ID, // ⋆｡°✩ ƚιƈƙҽƚ ʂυρρσɾƚ ✩°｡⋆
     modalTitle: 'General Inquiry & Pre-Sales',
     modalInputs: [
       {
@@ -159,7 +161,7 @@ const CATEGORIES = {
     emoji: E.settings,
     emojiObj: B.settings,
     desc: 'Report server offline, node downtime, bugs or control panel help',
-    staffPingRoleId: '1573412759532732567', // ⋆｡°✩ ʂυρρσɾƚ ✩°｡⋆
+    staffPingRoleId: TICKET_SUPPORT_ROLE_ID, // ⋆｡°✩ ƚιƈƙҽƚ ʂυρρσɾƚ ✩°｡⋆
     modalTitle: 'Technical Problems & Support',
     modalInputs: [
       {
@@ -191,7 +193,7 @@ const CATEGORIES = {
 };
 
 const STAFF_ROLES = [
-  '1573412727383392427', // Founder
+  FOUNDER_ROLE_ID,       // Founder
   '1573412731644805140', // CEO
   '1573412734698004550', // COO
   '1573412738074550514', // Manager
@@ -201,6 +203,7 @@ const STAFF_ROLES = [
   '1573412753073381477', // Head Mod
   '1573412756286214306', // Mod
   '1573412759532732567', // Support
+  TICKET_SUPPORT_ROLE_ID,// Ticket Support
   '1573412762586189844'  // Trial Staff
 ];
 
@@ -531,7 +534,8 @@ async function handleTicketModalSubmit(interaction) {
           PermissionFlagsBits.SendMessages,
           PermissionFlagsBits.EmbedLinks,
           PermissionFlagsBits.AttachFiles,
-          PermissionFlagsBits.ReadMessageHistory
+          PermissionFlagsBits.ReadMessageHistory,
+          PermissionFlagsBits.MentionEveryone
         ],
         type: OverwriteType.Role
       }))
@@ -624,6 +628,13 @@ async function handleTicketModalSubmit(interaction) {
                   label: 'Claim Ticket',
                   custom_id: `ticket_claim_${ticketChannel.id}`,
                   emoji: B.membership
+                },
+                {
+                  type: 2,
+                  style: 2, // Secondary / Grey
+                  label: 'Ping Founder',
+                  custom_id: `ticket_ping_founder_${ticketChannel.id}`,
+                  emoji: B.crown
                 },
                 {
                   type: 2,
@@ -883,9 +894,187 @@ async function handleTicketCloseConfirm(interaction) {
 // Handle Ticket Close Cancellation
 async function handleTicketCloseCancel(interaction) {
   await interaction.reply({
-    content: 'Ticket closure cancelled. Channel remains open.',
+    content: `${E.tick5} Ticket closure cancelled. Channel remains open.`,
     ephemeral: true
   });
+}
+
+// Handle Pinging Founders inside a Ticket Channel (Staff / Ticket Support only)
+async function handleTicketPingFounder(interaction) {
+  const ticketChannel = interaction.channel;
+  const data = getTicketData();
+  const ticket = data.activeTickets[ticketChannel.id];
+
+  const isTicketCategory = Object.values(CATEGORIES).some(cat => cat.categoryId === ticketChannel.parentId);
+  const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || ticketChannel.name.includes('〔');
+
+  if (!isTicketChannel) {
+    return interaction.reply({
+      content: `${E.cross} **This action can only be performed inside an active ticket channel.**`,
+      ephemeral: true
+    });
+  }
+
+  if (!isStaff(interaction.member)) {
+    return interaction.reply({
+      content: `${E.cross} **Only Ticket Support staff can ping Founders.**`,
+      ephemeral: true
+    });
+  }
+
+  try {
+    // Post founder escalation alert in the ticket channel
+    await ticketChannel.send({
+      content: `${E.crown} ${E.siren} <@&${FOUNDER_ROLE_ID}> **Founder Attention Requested!**\n> ${E.staff} Staff member <@${interaction.user.id}> has requested Founder assistance for this ticket.`
+    });
+
+    await interaction.reply({
+      content: `${E.tick5} **Founders have been notified!**`,
+      ephemeral: true
+    });
+  } catch (err) {
+    console.error('[TICKET PING FOUNDER ERROR]', err);
+    await interaction.reply({
+      content: `${E.alert} **Failed to ping founders:** \`${err.message}\``,
+      ephemeral: true
+    });
+  }
+}
+
+// Handle /add Slash Command
+async function handleTicketAddUser(interaction) {
+  const ticketChannel = interaction.channel;
+  const targetUser = interaction.options.getUser('user');
+
+  if (!targetUser) {
+    return interaction.reply({
+      content: `${E.cross} **Please specify a valid user to add.**`,
+      ephemeral: true
+    });
+  }
+
+  const data = getTicketData();
+  const ticket = data.activeTickets[ticketChannel.id];
+
+  const isTicketCategory = Object.values(CATEGORIES).some(cat => cat.categoryId === ticketChannel.parentId);
+  const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || ticketChannel.name.includes('〔');
+
+  if (!isTicketChannel) {
+    return interaction.reply({
+      content: `${E.cross} **This command can only be used inside active ticket channels.**`,
+      ephemeral: true
+    });
+  }
+
+  const isStaffMember = isStaff(interaction.member);
+  const isCreator = ticket && ticket.userId === interaction.user.id;
+
+  if (!isStaffMember && !isCreator) {
+    return interaction.reply({
+      content: `${E.cross} **You do not have permission to add members to this ticket.**`,
+      ephemeral: true
+    });
+  }
+
+  // Check if target is already in the channel
+  const existingOverwrite = ticketChannel.permissionOverwrites.cache.get(targetUser.id);
+  if (existingOverwrite && existingOverwrite.allow.has(PermissionFlagsBits.ViewChannel)) {
+    return interaction.reply({
+      content: `${E.info} **<@${targetUser.id}> is already in this ticket!**`,
+      ephemeral: true
+    });
+  }
+
+  try {
+    await ticketChannel.permissionOverwrites.edit(targetUser.id, {
+      ViewChannel: true,
+      SendMessages: true,
+      ReadMessageHistory: true,
+      AttachFiles: true,
+      EmbedLinks: true,
+      AddReactions: true
+    });
+
+    if (ticket) {
+      ticket.addedUsers = ticket.addedUsers || [];
+      if (!ticket.addedUsers.includes(targetUser.id)) {
+        ticket.addedUsers.push(targetUser.id);
+        saveTicketData(data);
+      }
+    }
+
+    await interaction.reply({
+      content: `${E.tick5} **<@${targetUser.id}>** has been added to this ticket by <@${interaction.user.id}>! ${E.sparkles}`
+    });
+  } catch (err) {
+    console.error('[TICKET ADD USER ERROR]', err);
+    await interaction.reply({
+      content: `${E.alert} **Failed to add user to ticket:** \`${err.message}\``,
+      ephemeral: true
+    });
+  }
+}
+
+// Handle /remove Slash Command
+async function handleTicketRemoveUser(interaction) {
+  const ticketChannel = interaction.channel;
+  const targetUser = interaction.options.getUser('user');
+
+  if (!targetUser) {
+    return interaction.reply({
+      content: `${E.cross} **Please specify a valid user to remove.**`,
+      ephemeral: true
+    });
+  }
+
+  const data = getTicketData();
+  const ticket = data.activeTickets[ticketChannel.id];
+
+  const isTicketCategory = Object.values(CATEGORIES).some(cat => cat.categoryId === ticketChannel.parentId);
+  const isTicketChannel = Boolean(ticket) || isTicketCategory || ticketChannel.name.includes('ticket') || ticketChannel.name.includes('〔');
+
+  if (!isTicketChannel) {
+    return interaction.reply({
+      content: `${E.cross} **This command can only be used inside active ticket channels.**`,
+      ephemeral: true
+    });
+  }
+
+  const isStaffMember = isStaff(interaction.member);
+  const isCreator = ticket && ticket.userId === interaction.user.id;
+
+  if (!isStaffMember && !isCreator) {
+    return interaction.reply({
+      content: `${E.cross} **You do not have permission to remove members from this ticket.**`,
+      ephemeral: true
+    });
+  }
+
+  if (ticket && targetUser.id === ticket.userId) {
+    return interaction.reply({
+      content: `${E.alert} **Cannot remove the ticket creator from their own ticket!**`,
+      ephemeral: true
+    });
+  }
+
+  try {
+    await ticketChannel.permissionOverwrites.delete(targetUser.id);
+
+    if (ticket && ticket.addedUsers) {
+      ticket.addedUsers = ticket.addedUsers.filter(id => id !== targetUser.id);
+      saveTicketData(data);
+    }
+
+    await interaction.reply({
+      content: `${E.cross} **<@${targetUser.id}>** has been removed from this ticket by <@${interaction.user.id}>.`
+    });
+  } catch (err) {
+    console.error('[TICKET REMOVE USER ERROR]', err);
+    await interaction.reply({
+      content: `${E.alert} **Failed to remove user from ticket:** \`${err.message}\``,
+      ephemeral: true
+    });
+  }
 }
 
 module.exports = {
@@ -893,6 +1082,8 @@ module.exports = {
   STAFF_ROLES,
   HIGH_STAFF_ROLES,
   TICKET_LOGS_CHANNEL_ID,
+  TICKET_SUPPORT_ROLE_ID,
+  FOUNDER_ROLE_ID,
   getTicketData,
   saveTicketData,
   buildTicketPanelPayload,
@@ -902,5 +1093,8 @@ module.exports = {
   handleTicketClosePrompt,
   handleTicketCloseConfirm,
   handleTicketCloseCancel,
+  handleTicketPingFounder,
+  handleTicketAddUser,
+  handleTicketRemoveUser,
   logTicketEvent
 };

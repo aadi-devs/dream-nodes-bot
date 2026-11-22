@@ -33,7 +33,10 @@ const {
   handleTicketClaim,
   handleTicketClosePrompt,
   handleTicketCloseConfirm,
-  handleTicketCloseCancel
+  handleTicketCloseCancel,
+  handleTicketPingFounder,
+  handleTicketAddUser,
+  handleTicketRemoveUser
 } = require('./tickets');
 
 function getHoneypotLogs() {
@@ -307,7 +310,31 @@ const commands = [
 
   new SlashCommandBuilder()
     .setName('testwelcome')
-    .setDescription('Preview the animated welcome message in the welcome channel')
+    .setDescription('Preview the animated welcome message in the welcome channel'),
+
+  new SlashCommandBuilder()
+    .setName('add')
+    .setDescription('Add a user to this support ticket channel')
+    .addUserOption(option =>
+      option
+        .setName('user')
+        .setDescription('The user/member to add to this ticket channel')
+        .setRequired(true)
+    ),
+
+  new SlashCommandBuilder()
+    .setName('remove')
+    .setDescription('Remove a user from this support ticket channel')
+    .addUserOption(option =>
+      option
+        .setName('user')
+        .setDescription('The user/member to remove from this ticket channel')
+        .setRequired(true)
+    ),
+
+  new SlashCommandBuilder()
+    .setName('pingfounder')
+    .setDescription('Request assistance from server Founders for this ticket (Staff only)')
 ].map(cmd => cmd.toJSON());
 
 // Register Slash Commands
@@ -567,6 +594,9 @@ client.on('interactionCreate', async interaction => {
       return;
     } else if (interaction.customId.startsWith('ticket_claim_')) {
       await handleTicketClaim(interaction);
+      return;
+    } else if (interaction.customId.startsWith('ticket_ping_founder_')) {
+      await handleTicketPingFounder(interaction);
       return;
     } else if (interaction.customId.startsWith('ticket_close_confirm_')) {
       await handleTicketCloseConfirm(interaction);
@@ -828,6 +858,18 @@ client.on('interactionCreate', async interaction => {
       content: `${E.tick5} Sent preview Components V2 welcome message to <#${targetChannel.id}>!`,
       ephemeral: true
     });
+  }
+
+  else if (commandName === 'add') {
+    await handleTicketAddUser(interaction);
+  }
+
+  else if (commandName === 'remove') {
+    await handleTicketRemoveUser(interaction);
+  }
+
+  else if (commandName === 'pingfounder') {
+    await handleTicketPingFounder(interaction);
   }
 });
 
