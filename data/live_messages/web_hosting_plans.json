@@ -1,0 +1,152 @@
+{
+  "type": 0,
+  "content": "",
+  "mentions": [],
+  "mention_roles": [],
+  "attachments": [],
+  "embeds": [],
+  "timestamp": "2026-11-21T18:25:11.304000+00:00",
+  "edited_timestamp": "2026-11-22T16:14:47.672000+00:00",
+  "flags": 32768,
+  "components": [
+    {
+      "type": 17,
+      "id": 1,
+      "accent_color": null,
+      "components": [
+        {
+          "type": 10,
+          "id": 2,
+          "content": "# <a:2251worldrainbow:1573382112436949044> 𝐃𝐑𝐄𝐀𝐌 𝐍𝐎𝐃𝐄𝐒 ┃ High-Speed cPanel Web Hosting\n## 🌐 Powered by cPanel • Pure NVMe SSD • Free SSL • 1-Click WordPress\n\n> <a:sparkles_sparkles:1573382447603785928> **Fast, Secure & Reliable cPanel Web Hosting:** Everything your website, blog, community portal, or e-commerce store needs. Powered by industry-leading **cPanel**, high-frequency NVMe storage, automated SSL certificates, and LiteSpeed web acceleration."
+        },
+        {
+          "type": 14,
+          "id": 3,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 4,
+          "content": "### <a:b_fire:1573381944702533732> cPanel Web Hosting Packages:\n\n> 🌐 **WEBSPACE S** `[ STARTER ]` ── <a:cash:1573382269735805008> **`₹229 /mo`**\n> ✦ **Domains:** `1 Domain` ┃ <:disk:1573382500795818114> **Storage:** `25 GB NVMe`\n> ✦ **Email:** `10 Accounts` ┃ <:bandwith55:1573382523201912842> **Bandwidth:** `Unlimited` ┃ 🔒 **SSL:** `Free Auto-SSL`\n> \n> ⭐ **WEBSPACE M** `[ BUSINESS • MOST POPULAR ]` ── <a:cash:1573382269735805008> **`₹399 /mo`**\n> ✦ **Domains:** `2 Domains` ┃ <:disk:1573382500795818114> **Storage:** `50 GB NVMe`\n> ✦ **Email:** `20 Accounts` ┃ <:bandwith55:1573382523201912842> **Bandwidth:** `Unlimited` ┃ 🔒 **SSL:** `Free Auto-SSL`\n> \n> 👑 **WEBSPACE L** `[ AGENCY • UNLIMITED DOMAINS ]` ── <a:cash:1573382269735805008> **`₹689 /mo`**\n> ✦ **Domains:** `Unlimited Domains` ┃ <:disk:1573382500795818114> **Storage:** `100 GB NVMe`\n> ✦ **Email:** `50 Accounts` ┃ <:bandwith55:1573382523201912842> **Bandwidth:** `Unlimited` ┃ 🔒 **SSL:** `Free Auto-SSL`"
+        },
+        {
+          "type": 14,
+          "id": 5,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 6,
+          "content": "### <a:settings:1573382421611806763> Industry-Leading cPanel Suite Included:\n> 🎛️ **Full cPanel Control:** Manage your entire web presence with the world's #1 intuitive hosting control panel.\n> 🚀 **1-Click Softaculous & WordPress:** Install WordPress, Joomla, Drupal, phpBB, Laravel, and 400+ apps in a single click.\n> 🔒 **Automated Free SSL:** Let's Encrypt SSL certificates automatically generated and renewed for all domains.\n> 📧 **Professional Webmail:** Create custom email accounts (`contact@yourdomain.com`) with webmail access and spam defense.\n> 🗄️ **phpMyAdmin & MySQL Databases:** Full MySQL/MariaDB database management with remote access support.\n> ⚡ **LiteSpeed Caching & PHP Selector:** Switch seamlessly between PHP 7.4 through PHP 8.3 with built-in opcode caching.\n> 🛡️ **Always-On Anti-DDoS Mitigation:** Real-time protection against malicious bot attacks and volumetric HTTP floods.\n> 🕒 **99.9% Uptime Guarantee:** High-availability cluster infrastructure with automated daily backups."
+        },
+        {
+          "type": 14,
+          "id": 7,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 8,
+          "components": [
+            {
+              "type": 2,
+              "id": 9,
+              "style": 5,
+              "label": "Order Web Hosting / Open Ticket",
+              "emoji": {
+                "name": "🌐"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281601775870043"
+            },
+            {
+              "type": 2,
+              "id": 10,
+              "style": 5,
+              "label": "Official Website",
+              "emoji": {
+                "name": "🌐"
+              },
+              "url": "https://dreamnodes.cloud"
+            },
+            {
+              "type": 2,
+              "id": 11,
+              "style": 5,
+              "label": "How To Buy",
+              "emoji": {
+                "name": "📖"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281597464121425"
+            }
+          ]
+        },
+        {
+          "type": 10,
+          "id": 12,
+          "content": "-# 🌐 Dream Nodes • High-Performance cPanel Cloud Web Hosting Solutions"
+        }
+      ],
+      "spoiler": false
+    }
+  ],
+  "id": "1573766242203078758",
+  "channel_id": "1573281561493766164",
+  "author": {
+    "id": "1573271779915337811",
+    "username": "DreamNodes",
+    "avatar": "f3df58ac5c311e8dbf8c335b2771eef9",
+    "discriminator": "3300",
+    "public_flags": 0,
+    "flags": 0,
+    "bot": true,
+    "banner": null,
+    "accent_color": null,
+    "global_name": null,
+    "avatar_decoration_data": null,
+    "collectibles": null,
+    "display_name_styles": null,
+    "banner_color": null,
+    "clan": null,
+    "primary_guild": null
+  },
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "reactions": [
+    {
+      "emoji": {
+        "id": null,
+        "name": "🌐"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    },
+    {
+      "emoji": {
+        "id": null,
+        "name": "⚡"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    }
+  ]
+}

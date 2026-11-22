@@ -1,0 +1,163 @@
+{
+  "type": 0,
+  "content": "",
+  "mentions": [],
+  "mention_roles": [],
+  "attachments": [],
+  "embeds": [],
+  "timestamp": "2026-11-21T17:00:40.401000+00:00",
+  "edited_timestamp": "2026-11-22T16:14:50.617000+00:00",
+  "flags": 32768,
+  "components": [
+    {
+      "type": 17,
+      "id": 1,
+      "accent_color": null,
+      "components": [
+        {
+          "type": 10,
+          "id": 2,
+          "content": "# <a:RedCrown:1573382179298353186> 𝐃𝐑𝐄𝐀𝐌 𝐍𝐎𝐃𝐄𝐒 ┃ Server Boost Perks! 🚀\n## <a:booster:1573382253332144169> ✨ Supercharge Your Gaming With Nitro Boost Rewards!\n\n> <a:sparkles_sparkles:1573382447603785928> **Support Our Server & Claim Free High-Spec Cloud Nodes!** Boost Dream Nodes to help elevate our server level and immediately unlock powerful, dedicated gaming servers with zero subscription fees!"
+        },
+        {
+          "type": 14,
+          "id": 3,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 4,
+          "content": "### <a:booster:1573382253332144169> 💎 Boost Reward Tiers:\n\n> <a:booster:1573382253332144169> **TIER 1** ── **`1 Server Boost`** 🚀\n> <:RAM:1573382492973568062> **RAM:** `4 GB` ┃ <:cpu:1573382485310709781> **CPU:** `150%` ┃ <:disk:1573382500795818114> **Disk:** `10 GB NVMe`\n> \n> <a:booster:1573382253332144169> **TIER 2** ── **`2 Server Boosts`** 👑\n> <:RAM:1573382492973568062> **RAM:** `8 GB` ┃ <:cpu:1573382485310709781> **CPU:** `300%` ┃ <:disk:1573382500795818114> **Disk:** `20 GB NVMe`"
+        },
+        {
+          "type": 14,
+          "id": 5,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 6,
+          "content": "### <a:supporter:1573382462837489828> 🌟 Exclusive VIP Booster Privileges:\n> ✦ **Special Booster Role:** Exclusive role and distinct pink color highlight in member lists.\n> ✦ **Priority Support Queue:** Fast-track responses from support staff for tickets.\n> ✦ **Early Access:** First to test new server locations, nodes, and experimental features.\n> ✦ **Enhanced Chat Permissions:** Post links and custom external stickers freely."
+        },
+        {
+          "type": 14,
+          "id": 7,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 8,
+          "content": "### <a:info:1573382351214354483> Terms & Conditions:\n> <a:Tick5:1573382205395177532> **Boost Validity:** Plans remain active 24/7 while your Nitro boost remains active on the server.\n> <a:Tick5:1573382205395177532> **Service Notice:** Free reward tiers carry best-effort hosting (no guarantee of uptime or data).\n> <a:Rocket:1573382186546102347> **Data Safety:** Take daily backups of your server worlds and configs for safety.\n> \n> <a:sparkles_sparkles:1573382447603785928> **By claiming rewards, you accept our TOS.** <a:sparkles_sparkles:1573382447603785928>"
+        },
+        {
+          "type": 14,
+          "id": 9,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 10,
+          "components": [
+            {
+              "type": 2,
+              "id": 11,
+              "style": 5,
+              "label": "Claim Boost Perk / Open Ticket",
+              "emoji": {
+                "name": "💎"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281601775870043"
+            },
+            {
+              "type": 2,
+              "id": 12,
+              "style": 5,
+              "label": "Official Website",
+              "emoji": {
+                "name": "🌐"
+              },
+              "url": "https://dreamnodes.cloud"
+            },
+            {
+              "type": 2,
+              "id": 13,
+              "style": 5,
+              "label": "How To Buy / FAQ",
+              "emoji": {
+                "name": "📖"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281597464121425"
+            }
+          ]
+        },
+        {
+          "type": 10,
+          "id": 14,
+          "content": "-# 🚀 Dream Nodes Community Perks • Thank You For Supporting Our Server!"
+        }
+      ],
+      "spoiler": false
+    }
+  ],
+  "id": "1573744973294084168",
+  "channel_id": "1573281583388168297",
+  "author": {
+    "id": "1573271779915337811",
+    "username": "DreamNodes",
+    "avatar": "f3df58ac5c311e8dbf8c335b2771eef9",
+    "discriminator": "3300",
+    "public_flags": 0,
+    "flags": 0,
+    "bot": true,
+    "banner": null,
+    "accent_color": null,
+    "global_name": null,
+    "avatar_decoration_data": null,
+    "collectibles": null,
+    "display_name_styles": null,
+    "banner_color": null,
+    "clan": null,
+    "primary_guild": null
+  },
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "reactions": [
+    {
+      "emoji": {
+        "id": null,
+        "name": "💎"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    },
+    {
+      "emoji": {
+        "id": null,
+        "name": "✨"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    }
+  ]
+}

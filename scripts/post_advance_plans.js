@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { E, B } = require('../src/emojis');
 
 const envPath = path.join(__dirname, '..', '.env');
 const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].trim();
@@ -10,65 +11,64 @@ const websiteUrl = 'https://dreamnodes.cloud';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
 
 const sectionHeader =
-`# <a:minecraft:1573382379215659081> Dream Nodes | Advance Minecraft Hosting
-## <a:Attacks:1573382140006244363> 🛡️ Enterprise Game-Shield Protected Nodes
+`# ${E.minecraft} Dream Nodes | Advance Minecraft Hosting
+## ${E.attacks} ${E.shield} Enterprise Game-Shield Protected Nodes
 
-> <a:siren:1573382431065509981> **MILITARY-GRADE DEFENSE INCLUDED ON ALL ADVANCE PLANS**
-> <a:Lightning:1573382171257737317> Every node is fortified with automated **Layer 4 & Layer 7 Game Mitigation** built specifically for Minecraft protocols. Our edge filters intercept UDP/TCP floods, SYN storms, null-ping exploits, and bot raids in real time with **sub-second reaction**—keeping your server locked at 20 TPS with zero downtime.
+> ${E.siren} **MILITARY-GRADE DEFENSE INCLUDED ON ALL ADVANCE PLANS**
+> ${E.lightning} Fortified with automated **Layer 4 & Layer 7 Game Mitigation** built specifically for Minecraft protocols. Our edge filters intercept UDP/TCP floods, SYN storms, null-ping exploits, and bot raids in real time with **sub-second reaction**—keeping servers locked at 20 TPS with zero downtime.
 
-### <a:hostinger:1573382335355691089> Key Defense Capabilities:
-> ✦ **1.2+ Tbps Traffic Pipeline:** Effortlessly absorbs massive volumetric attacks.
-> ✦ **Minecraft Protocol Scrubbing:** Cleans packet spoofing & ping exploits on the fly.
-> ✦ **Zero Disconnects:** Instant automated mitigation with zero player lag spikes.`;
+### ${E.hostinger} Key Defense Capabilities:
+> ${E.arrowBlue} **1.2+ Tbps Traffic Pipeline:** Absorbs massive volumetric attacks.
+> ${E.arrowBlue} **Minecraft Protocol Scrubbing:** Cleans packet spoofing & ping exploits on the fly.
+> ${E.arrowBlue} **Zero Disconnects:** Instant mitigation with zero player lag spikes.`;
 
 const sectionStarter =
-`### <a:b_fire:1573381944702533732> Starter Tier Plans
+`### ${E.fireBlue} Starter Tier Plans
 
-> 🪨 **Coal • Ember** \`[ 2 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`2 GB DDR4\` ┃ <:cpu:1573382485310709781> \`1 Core\` ┃ <:disk:1573382500795818114> \`15 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹200 /mo\`
+> ${E.coal} **Coal • Ember** \`[ 2 GB ]\` ➔ ${E.cash} \`₹200 /mo\`
+> ${E.arrowBlue} \`2 GB DDR4\` ┃ \`1 Core\` ┃ \`15 GB NVMe\`
 > 
-> 🥉 **Copper • Spark** \`[ 4 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`4 GB DDR4\` ┃ <:cpu:1573382485310709781> \`1 Core\` ┃ <:disk:1573382500795818114> \`25 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹400 /mo\`
+> ${E.copper} **Copper • Spark** \`[ 4 GB ]\` ➔ ${E.cash} \`₹400 /mo\`
+> ${E.arrowBlue} \`4 GB DDR4\` ┃ \`1 Core\` ┃ \`25 GB NVMe\`
 > 
-> ⛓️ **Iron • Flare** \`[ 6 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`6 GB DDR4\` ┃ <:cpu:1573382485310709781> \`2 Cores\` ┃ <:disk:1573382500795818114> \`35 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹600 /mo\``;
+> ${E.iron} **Iron • Flare** \`[ 6 GB ]\` ➔ ${E.cash} \`₹600 /mo\`
+> ${E.arrowBlue} \`6 GB DDR4\` ┃ \`2 Cores\` ┃ \`35 GB NVMe\``;
 
 const sectionCommunity =
-`### <a:Lightning:1573382171257737317> Community & Expansion Plans
+`### ${E.lightning} Community & Expansion Plans
 
-> 🪙 **Gold • Blaze** \`[ 8 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`8 GB DDR4\` ┃ <:cpu:1573382485310709781> \`2 Cores\` ┃ <:disk:1573382500795818114> \`50 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹750 /mo\`
+> ${E.gold} **Gold • Blaze** \`[ 8 GB ]\` ➔ ${E.cash} \`₹750 /mo\`
+> ${E.arrowBlue} \`8 GB DDR4\` ┃ \`2 Cores\` ┃ \`50 GB NVMe\`
 > 
-> ❇️ **Emerald • Aurora** \`[ 12 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`12 GB DDR4\` ┃ <:cpu:1573382485310709781> \`3 Cores\` ┃ <:disk:1573382500795818114> \`75 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹1,150 /mo\`
+> ${E.emerald} **Emerald • Aurora** \`[ 12 GB ]\` ➔ ${E.cash} \`₹1,150 /mo\`
+> ${E.arrowBlue} \`12 GB DDR4\` ┃ \`3 Cores\` ┃ \`75 GB NVMe\`
 > 
-> 💎 **Diamond • Nova** \`[ 16 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`16 GB DDR4\` ┃ <:cpu:1573382485310709781> \`4 Cores\` ┃ <:disk:1573382500795818114> \`100 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹1,500 /mo\``;
+> ${E.diamond} **Diamond • Nova** \`[ 16 GB ]\` ➔ ${E.cash} \`₹1,500 /mo\`
+> ${E.arrowBlue} \`16 GB DDR4\` ┃ \`4 Cores\` ┃ \`100 GB NVMe\``;
 
 const sectionHeavy =
-`### <a:RedCrown:1573382179298353186> Heavy Modded & Network Plans
+`### ${E.crownRed} Heavy Modded & Network Plans
 
-> 🖤 **Netherite • Eclipse** \`[ 24 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`24 GB DDR4\` ┃ <:cpu:1573382485310709781> \`6 Cores\` ┃ <:disk:1573382500795818114> \`120 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹2,250 /mo\`
+> ${E.sword} **Netherite • Eclipse** \`[ 24 GB ]\` ➔ ${E.cash} \`₹2,250 /mo\`
+> ${E.arrowBlue} \`24 GB DDR4\` ┃ \`6 Cores\` ┃ \`120 GB NVMe\`
 > 
-> 🗼 **Beacon • Zenith** \`[ 32 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`32 GB DDR4\` ┃ <:cpu:1573382485310709781> \`8 Cores\` ┃ <:disk:1573382500795818114> \`150 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹3,000 /mo\`
+> ${E.starRotating} **Beacon • Zenith** \`[ 32 GB ]\` ➔ ${E.cash} \`₹3,000 /mo\`
+> ${E.arrowBlue} \`32 GB DDR4\` ┃ \`8 Cores\` ┃ \`150 GB NVMe\`
 > 
-> 👁️ **Ender • Galaxy** \`[ 48 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`48 GB DDR4\` ┃ <:cpu:1573382485310709781> \`12 Cores\` ┃ <:disk:1573382500795818114> \`220 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹4,500 /mo\`
+> ${E.enderman} **Ender • Galaxy** \`[ 48 GB ]\` ➔ ${E.cash} \`₹4,500 /mo\`
+> ${E.arrowBlue} \`48 GB DDR4\` ┃ \`12 Cores\` ┃ \`220 GB NVMe\`
 > 
-> 🐲 **Dragon • Cosmos** \`[ 64 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`64 GB DDR4\` ┃ <:cpu:1573382485310709781> \`16 Cores\` ┃ <:disk:1573382500795818114> \`300 GB NVMe\` ┃ <a:cash:1573382269735805008> \`₹6,000 /mo\``;
+> ${E.vip} **Dragon • Cosmos** \`[ 64 GB ]\` ➔ ${E.cash} \`₹6,000 /mo\`
+> ${E.arrowBlue} \`64 GB DDR4\` ┃ \`16 Cores\` ┃ \`300 GB NVMe\``;
 
 const sectionFooter =
-`### <a:sparkles_sparkles:1573382447603785928> All Advance Plans Include:
-> <:bandwith55:1573382523201912842> **1 Gbps High-Speed Network Uplink** ┃ <:backup:1573382515341664270> **Automated Off-site Daily Snapshots**
-> <a:Tick5:1573382205395177532> **Custom Pterodactyl Panel** (SFTP, Full Root File Access, Split Ports)
-> <a:hostinger:1573382335355691089> **Instant Provisioning Upon Ticket Confirmation**
+`### ${E.sparkles} All Advance Plans Include:
+> ${E.bandwidth} **1 Gbps Network Uplink** ┃ ${E.backup} **Automated Off-site Daily Snapshots**
+> ${E.tick5} **Custom Pterodactyl Panel** (SFTP, Full Root File Access, Split Ports)
+> ${E.hostinger} **Instant Provisioning Upon Ticket Confirmation**
 
-### <a:settings:1573382421611806763> Add-ons & Dedicated IP:
-> 🌐 **Dedicated IPv4 + Default Port (25565):** <a:cash:1573382269735805008> \`₹350 /month\`
-> *(Join directly using your domain/IP with no random port numbers needed!)*`;
+### ${E.settings} Add-ons & Dedicated IP:
+> ${E.world} **Dedicated IPv4 + Default Port (25565):** ${E.cash} \`₹350 /mo\` (Direct join without port!)`;
 
 const v2Payload = {
   flags: 32768, // IS_COMPONENTS_V2
@@ -129,27 +129,27 @@ const v2Payload = {
               style: 5,
               label: 'Open Ticket to Order',
               url: ticketChannelUrl,
-              emoji: { name: '🎫' }
+              emoji: B.ticket
             },
             {
               type: 2,
               style: 5,
               label: 'Official Website',
               url: websiteUrl,
-              emoji: { name: '🌐' }
+              emoji: B.world
             },
             {
               type: 2,
               style: 5,
               label: 'How To Buy',
               url: howToBuyUrl,
-              emoji: { name: '📖' }
+              emoji: B.info
             }
           ]
         },
         {
           type: 10,
-          content: '-# 🛡️ Dream Nodes • Enterprise Protected Advance Minecraft Hosting Solutions'
+          content: `-# ${E.security} Dream Nodes • Enterprise Protected Advance Minecraft Hosting Solutions`
         }
       ]
     }
@@ -158,6 +158,9 @@ const v2Payload = {
 
 async function updateAdvancePlans() {
   console.log('Updating Advance Plans V2 Container...');
+  const totalChars = [sectionHeader, sectionStarter, sectionCommunity, sectionHeavy, sectionFooter].reduce((acc, s) => acc + s.length, 0);
+  console.log(`Payload character count: ${totalChars} / 4000`);
+
   const res = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages/${messageId}`, {
     method: 'PATCH',
     headers: {
@@ -175,4 +178,8 @@ async function updateAdvancePlans() {
   }
 }
 
-updateAdvancePlans();
+if (require.main === module) {
+  updateAdvancePlans();
+}
+
+module.exports = { updateAdvancePlans, v2Payload };

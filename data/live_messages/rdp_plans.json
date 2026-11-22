@@ -1,0 +1,174 @@
+{
+  "type": 0,
+  "content": "",
+  "mentions": [],
+  "mention_roles": [],
+  "attachments": [],
+  "embeds": [],
+  "timestamp": "2026-11-21T18:26:58.268000+00:00",
+  "edited_timestamp": "2026-11-22T16:14:46.103000+00:00",
+  "flags": 32768,
+  "components": [
+    {
+      "type": 17,
+      "id": 1,
+      "accent_color": null,
+      "components": [
+        {
+          "type": 10,
+          "id": 2,
+          "content": "# <:vps:1573382507863220246> 𝐃𝐑𝐄𝐀𝐌 𝐍𝐎𝐃𝐄𝐒 ┃ Premium Windows RDP Hosting\n## <a:location:1573382361574277130> 🇮🇳 India Datacenter (Noida) • Intel Xeon • Full Administrator Access\n\n> <a:Attacks:1573382140006244363> **Dedicated Cloud Windows Desktops:** Powered by high-clock Intel Xeon 8269-CY processors, high-speed DDR4 ECC RAM, and pure NVMe SSDs. Instant RDP access with full administrator privileges, pre-installed Windows Server, and unmetered 1 Gbps bandwidth."
+        },
+        {
+          "type": 14,
+          "id": 3,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 4,
+          "content": "### <a:b_fire:1573381944702533732> Starter Windows RDP (Light Tasks & Browsing)\n\n> 🖥️ **RDP XS** `[ ENTRY ]` ── <a:cash:1573382269735805008> **`₹549 /mo`**\n> <:cpu:1573382485310709781> `3 Intel vCores` ┃ <:RAM:1573382492973568062> `8 GB ECC RAM` ┃ <:disk:1573382500795818114> `80 GB NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`\n> \n> 🖥️ **RDP S** `[ STARTER ]` ── <a:cash:1573382269735805008> **`₹749 /mo`**\n> <:cpu:1573382485310709781> `4 Intel vCores` ┃ <:RAM:1573382492973568062> `12 GB ECC RAM` ┃ <:disk:1573382500795818114> `100 GB NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`"
+        },
+        {
+          "type": 14,
+          "id": 5,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 6,
+          "content": "### <a:Lightning:1573382171257737317> Professional Windows RDP (Multi-Tasking & Bots)\n\n> ⚡ **RDP M** `[ STANDARD ]` ── <a:cash:1573382269735805008> **`₹1,099 /mo`**\n> <:cpu:1573382485310709781> `6 Intel vCores` ┃ <:RAM:1573382492973568062> `16 GB ECC RAM` ┃ <:disk:1573382500795818114> `150 GB NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`\n> \n> ⚡ **RDP L** `[ PLUS ]` ── <a:cash:1573382269735805008> **`₹1,499 /mo`**\n> <:cpu:1573382485310709781> `8 Intel vCores` ┃ <:RAM:1573382492973568062> `24 GB ECC RAM` ┃ <:disk:1573382500795818114> `200 GB NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`\n> \n> ⚡ **RDP XL** `[ PRO ]` ── <a:cash:1573382269735805008> **`₹1,899 /mo`**\n> <:cpu:1573382485310709781> `10 Intel vCores` ┃ <:RAM:1573382492973568062> `32 GB ECC RAM` ┃ <:disk:1573382500795818114> `300 GB NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`"
+        },
+        {
+          "type": 14,
+          "id": 7,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 8,
+          "content": "### <a:RedCrown:1573382179298353186> Heavyweight Enterprise RDP (Heavy Workloads & Emulators)\n\n> 👑 **RDP XXL** `[ POWER ]` ── <a:cash:1573382269735805008> **`₹2,299 /mo`**\n> <:cpu:1573382485310709781> `12 Intel vCores` ┃ <:RAM:1573382492973568062> `48 GB ECC RAM` ┃ <:disk:1573382500795818114> `350 GB NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`\n> \n> 👑 **RDP 2XL** `[ ELITE ]` ── <a:cash:1573382269735805008> **`₹2,799 /mo`**\n> <:cpu:1573382485310709781> `16 Intel vCores` ┃ <:RAM:1573382492973568062> `64 GB ECC RAM` ┃ <:disk:1573382500795818114> `400 GB NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`"
+        },
+        {
+          "type": 14,
+          "id": 9,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 10,
+          "content": "### <a:sparkles_sparkles:1573382447603785928> Core Windows RDP Capabilities & Inclusions:\n> 🔑 **100% Full Admin Access:** Complete administrative control. Install any desktop app, bot, emulator, or tools.\n> 🖥️ **Windows Remote Desktop:** Connect smoothly via Windows MSTSC, macOS, iOS, or Android devices.\n> 🇮🇳 **Hosted in Noida, India:** Ultra-low ping and direct domestic routing across India and South Asia.\n> 🛡️ **Advanced Anti-DDoS Mitigation:** Real-time multi-Tbps traffic scrubbing protecting your connection 24/7.\n> <:bandwith55:1573382523201912842> **Truly Unmetered 1 Gbps Port:** Run uploads and downloads with zero data caps or speed throttling.\n> 💽 **Pure Gen4 NVMe Storage:** Fast drive read/write speeds for instantaneous desktop responsiveness.\n> 🚀 **Instant Setup:** Fast automated deployment dispatched immediately upon ticket verification."
+        },
+        {
+          "type": 14,
+          "id": 11,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 12,
+          "components": [
+            {
+              "type": 2,
+              "id": 13,
+              "style": 5,
+              "label": "Order RDP Server / Open Ticket",
+              "emoji": {
+                "name": "🖥️"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281601775870043"
+            },
+            {
+              "type": 2,
+              "id": 14,
+              "style": 5,
+              "label": "Official Website",
+              "emoji": {
+                "name": "🌐"
+              },
+              "url": "https://dreamnodes.cloud"
+            },
+            {
+              "type": 2,
+              "id": 15,
+              "style": 5,
+              "label": "How To Buy",
+              "emoji": {
+                "name": "📖"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281597464121425"
+            }
+          ]
+        },
+        {
+          "type": 10,
+          "id": 16,
+          "content": "-# 🖥️ Dream Nodes • Enterprise High-Speed Windows RDP Cloud Desktops"
+        }
+      ],
+      "spoiler": false
+    }
+  ],
+  "id": "1573766690842476596",
+  "channel_id": "1573281556968112248",
+  "author": {
+    "id": "1573271779915337811",
+    "username": "DreamNodes",
+    "avatar": "f3df58ac5c311e8dbf8c335b2771eef9",
+    "discriminator": "3300",
+    "public_flags": 0,
+    "flags": 0,
+    "bot": true,
+    "banner": null,
+    "accent_color": null,
+    "global_name": null,
+    "avatar_decoration_data": null,
+    "collectibles": null,
+    "display_name_styles": null,
+    "banner_color": null,
+    "clan": null,
+    "primary_guild": null
+  },
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "reactions": [
+    {
+      "emoji": {
+        "id": null,
+        "name": "🖥️"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    },
+    {
+      "emoji": {
+        "id": null,
+        "name": "⚡"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    }
+  ]
+}

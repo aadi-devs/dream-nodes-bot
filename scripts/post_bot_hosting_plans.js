@@ -1,55 +1,57 @@
 const fs = require('fs');
 const path = require('path');
+const { E, B } = require('../src/emojis');
 
 const envPath = path.join(__dirname, '..', '.env');
 const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].trim();
 const channelId = '1573281551746207778'; // # ⚜・ʙᴏᴛ-ʜᴏꜱᴛɪɴɢ
+const messageId = '1573747139039985847';
 const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
 const websiteUrl = 'https://dreamnodes.cloud';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
 
 const sectionHeader =
-`# <a:bots:1573382261318099094> 𝐃𝐑𝐄𝐀𝐌 𝐍𝐎𝐃𝐄𝐒 ┃ Discord Bot Hosting
-## <a:Lightning:1573382171257737317> ⚡ 24/7 Always-Online Cloud Bot Hosting • Node.js, Python, Java & Bun
+`# ${E.bots} DREAM NODES ┃ Discord Bot Hosting
+## ${E.lightning} 24/7 Always-Online Cloud Bot Hosting • Node.js, Python, Java & Bun
 
-> <a:sparkles_sparkles:1573382447603785928> **High-Reliability Discord Bot Hosting:** Run your Discord bots, automation scripts, webhook handlers, and API microservices on enterprise NVMe nodes with guaranteed 99.9% uptime, auto-restart, and continuous DDoS defense.`;
+> ${E.sparkles} **High-Reliability Discord Bot Hosting:** Run your Discord bots, automation scripts, webhook handlers, and API microservices on enterprise NVMe nodes with guaranteed 99.9% uptime, auto-restart, and continuous DDoS defense.`;
 
 const sectionSmall =
-`### <a:b_fire:1573381944702533732> Starter Bot Hosting (Small Fleets)
+`### ${E.fireBlue} Starter Bot Hosting (Small Fleets)
 
-> 🤖 **BASIC** ── <a:cash:1573382269735805008> **\`₹44 /mo\`**
-> <:cpu:1573382485310709781> \`0.5 Core\` ┃ <:RAM:1573382492973568062> \`500 MB DDR4\` ┃ <:disk:1573382500795818114> \`1 GB NVMe\` ┃ 🗄️ \`2 Databases\`
+> ${E.arrowOrange} **BASIC** ── ${E.cash} **\`₹44 /mo\`**
+> ${E.cpu} \`0.5 Core\` ┃ ${E.ram} \`500 MB DDR4\` ┃ ${E.disk} \`1 GB NVMe\` ┃ ${E.chest} \`2 Databases\`
 > 
-> 🤖 **STARTER** ── <a:cash:1573382269735805008> **\`₹74 /mo\`**
-> <:cpu:1573382485310709781> \`1.0 Core\` ┃ <:RAM:1573382492973568062> \`1 GB DDR4\` ┃ <:disk:1573382500795818114> \`2 GB NVMe\` ┃ 🗄️ \`2 Databases\``;
+> ${E.arrowOrange} **STARTER** ── ${E.cash} **\`₹74 /mo\`**
+> ${E.cpu} \`1.0 Core\` ┃ ${E.ram} \`1 GB DDR4\` ┃ ${E.disk} \`2 GB NVMe\` ┃ ${E.chest} \`2 Databases\``;
 
 const sectionMedium =
-`### <a:Lightning:1573382171257737317> Advanced Bot Hosting (Medium Fleets)
+`### ${E.lightning} Advanced Bot Hosting (Medium Fleets)
 
-> ⚡ **CODER** ── <a:cash:1573382269735805008> **\`₹124 /mo\`**
-> <:cpu:1573382485310709781> \`1.5 Cores\` ┃ <:RAM:1573382492973568062> \`2 GB DDR4\` ┃ <:disk:1573382500795818114> \`5 GB NVMe\` ┃ 🗄️ \`4 Databases\`
+> ${E.lightning} **CODER** ── ${E.cash} **\`₹124 /mo\`**
+> ${E.cpu} \`1.5 Cores\` ┃ ${E.ram} \`2 GB DDR4\` ┃ ${E.disk} \`5 GB NVMe\` ┃ ${E.chest} \`4 Databases\`
 > 
-> ⚡ **BUILDER** ── <a:cash:1573382269735805008> **\`₹154 /mo\`**
-> <:cpu:1573382485310709781> \`2.0 Cores\` ┃ <:RAM:1573382492973568062> \`3 GB DDR4\` ┃ <:disk:1573382500795818114> \`15 GB NVMe\` ┃ 🗄️ \`6 Databases\``;
+> ${E.lightning} **BUILDER** ── ${E.cash} **\`₹154 /mo\`**
+> ${E.cpu} \`2.0 Cores\` ┃ ${E.ram} \`3 GB DDR4\` ┃ ${E.disk} \`15 GB NVMe\` ┃ ${E.chest} \`6 Databases\``;
 
 const sectionBig =
-`### <a:RedCrown:1573382179298353186> Enterprise Heavyweight (Multi-Bot Fleets)
+`### ${E.crownRed} Enterprise Heavyweight (Multi-Bot Fleets)
 
-> 👑 **DEVELOPER** ── <a:cash:1573382269735805008> **\`₹189 /mo\`**
-> <:cpu:1573382485310709781> \`3.0 Cores\` ┃ <:RAM:1573382492973568062> \`5 GB DDR4\` ┃ <:disk:1573382500795818114> \`25 GB NVMe\` ┃ 🗄️ \`10 Databases\`
+> ${E.crownRed} **DEVELOPER** ── ${E.cash} **\`₹189 /mo\`**
+> ${E.cpu} \`3.0 Cores\` ┃ ${E.ram} \`5 GB DDR4\` ┃ ${E.disk} \`25 GB NVMe\` ┃ ${E.chest} \`10 Databases\`
 > 
-> 👑 **ARCHITECT** ── <a:cash:1573382269735805008> **\`₹249 /mo\`**
-> <:cpu:1573382485310709781> \`6.0 Cores\` ┃ <:RAM:1573382492973568062> \`10 GB DDR4\` ┃ <:disk:1573382500795818114> \`50 GB NVMe\` ┃ 🗄️ \`15 Databases\``;
+> ${E.crownRed} **ARCHITECT** ── ${E.cash} **\`₹249 /mo\`**
+> ${E.cpu} \`6.0 Cores\` ┃ ${E.ram} \`10 GB DDR4\` ┃ ${E.disk} \`50 GB NVMe\` ┃ ${E.chest} \`15 Databases\``;
 
 const sectionFeatures =
-`### <a:settings:1573382421611806763> Included With Every Bot Plan:
-> 🚀 **Instant Setup:** Environment is live within seconds of ticket confirmation.
-> 💻 **Multi-Runtime Support:** Native Node.js (v18/v20/v22), Python (3.10-3.12), Bun, Java & Go.
-> 🕒 **24/7 Guaranteed Uptime:** Always-on container infrastructure with 99.9% SLA.
-> 🗄️ **Dedicated MySQL Databases:** Free managed database storage included with every plan.
-> 🛡️ **Enterprise DDoS Mitigation:** Continuous real-time traffic scrubbing for high reliability.
-> 🔒 **Free SSL Certificates:** Automatic TLS/SSL support for your bot webhooks and dashboards.
-> 📊 **Intuitive Panel Control:** Pterodactyl-powered control panel with file manager, logs & backups.`;
+`### ${E.settings} Included With Every Bot Plan:
+> ${E.rocket} **Instant Setup:** Environment is live within seconds of ticket confirmation.
+> ${E.gear} **Multi-Runtime Support:** Native Node.js (v18/v20/v22), Python (3.10-3.12), Bun, Java & Go.
+> ${E.timer} **24/7 Guaranteed Uptime:** Always-on container infrastructure with 99.9% SLA.
+> ${E.chest} **Dedicated MySQL Databases:** Free managed database storage included with every plan.
+> ${E.shield} **Enterprise DDoS Mitigation:** Continuous real-time traffic scrubbing for high reliability.
+> ${E.security} **Free SSL Certificates:** Automatic TLS/SSL support for your bot webhooks and dashboards.
+> ${E.controller} **Intuitive Panel Control:** Pterodactyl-powered control panel with file manager, logs & backups.`;
 
 const v2Payload = {
   flags: 32768, // IS_COMPONENTS_V2
@@ -110,60 +112,53 @@ const v2Payload = {
               style: 5,
               label: 'Order Bot Hosting / Open Ticket',
               url: ticketChannelUrl,
-              emoji: { name: '🤖' }
+              emoji: B.ticket
             },
             {
               type: 2,
               style: 5,
               label: 'Official Website',
               url: websiteUrl,
-              emoji: { name: '🌐' }
+              emoji: B.world
             },
             {
               type: 2,
               style: 5,
               label: 'How To Buy',
               url: howToBuyUrl,
-              emoji: { name: '📖' }
+              emoji: B.info
             }
           ]
         },
         {
           type: 10,
-          content: '-# 🤖 Dream Nodes • Enterprise High-Speed Discord Bot & Microservice Hosting'
+          content: `-# ${E.verifiedBlue} Dream Nodes • Enterprise High-Speed Discord Bot & Microservice Hosting`
         }
       ]
     }
   ]
 };
 
-async function postBotHostingPlans() {
-  console.log('Posting Bot Hosting Plans V2 Container to channel', channelId);
-  const res = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
-    method: 'POST',
+async function updateBotHostingPlans() {
+  console.log('Patching Bot Hosting Plans embed in channel', channelId);
+  const patchRes = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages/${messageId}`, {
+    method: 'PATCH',
     headers: {
       Authorization: `Bot ${token}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(v2Payload)
   });
-
-  const data = await res.json();
-  if (data.id) {
-    console.log('✓ Successfully posted Bot Hosting Plans embed! Message ID:', data.id);
-    
-    // Add reactions
-    await fetch(`https://discord.com/api/v10/channels/${channelId}/messages/${data.id}/reactions/%F0%9F%A4%96/@me`, { // 🤖
-      method: 'PUT',
-      headers: { Authorization: `Bot ${token}` }
-    });
-    await fetch(`https://discord.com/api/v10/channels/${channelId}/messages/${data.id}/reactions/%E2%9A%A1/@me`, { // ⚡
-      method: 'PUT',
-      headers: { Authorization: `Bot ${token}` }
-    });
+  const patchData = await patchRes.json();
+  if (patchData.id) {
+    console.log('✓ Successfully updated Bot Hosting Plans embed! Message ID:', patchData.id);
   } else {
-    console.error('✗ Failed to post:', JSON.stringify(data, null, 2));
+    console.error('✗ Failed to patch Bot Hosting Plans:', JSON.stringify(patchData, null, 2));
   }
 }
 
-postBotHostingPlans();
+if (require.main === module) {
+  updateBotHostingPlans();
+}
+
+module.exports = { updateBotHostingPlans, v2Payload };

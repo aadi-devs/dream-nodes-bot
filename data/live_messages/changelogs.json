@@ -1,0 +1,168 @@
+{
+  "type": 0,
+  "content": "",
+  "mentions": [],
+  "mention_roles": [
+    "1573412778620747886"
+  ],
+  "attachments": [],
+  "embeds": [],
+  "timestamp": "2026-11-22T16:06:03.240000+00:00",
+  "edited_timestamp": "2026-11-22T16:21:23.797000+00:00",
+  "flags": 32768,
+  "components": [
+    {
+      "type": 17,
+      "id": 1,
+      "accent_color": null,
+      "components": [
+        {
+          "type": 10,
+          "id": 2,
+          "content": "# <a:updates:1573382469938446390> **DREAM NODES ┃ SYSTEM CHANGELOG** <a:sparkles_sparkles:1573382447603785928>\n\n╭・<a:announce:1573382228795457687> **Control Panel & System Infrastructure Update**\n╰┈➤ <a:Lightning:1573382171257737317> **Version 1.2.0 • Feature & Proxy Release**\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n### <a:settings:1573382421611806763> **What's New in this Release:**\n\n> `~` <a:hostinger:1573382335355691089> **Panel Theme Updated (Nebula)**\n> The server management dashboard has been upgraded to the high-performance **Nebula Theme**, offering an ultra-clean modern UI, improved mobile responsiveness, and dark-mode optimization.\n> \n> `~` <a:membership:1573382371699458201> **Client Account Registration Added**\n> Direct user self-registration is now fully operational on the panel! New clients can immediately create accounts and manage servers with zero onboarding delay.\n> \n> `~` <a:Rocket:1573382186546102347> **Velocity Proxy Egg & Java 25 Support Added**\n> Official **Velocity Proxy** egg has been introduced into our Minecraft node catalog, pre-configured and updated with support for modern Java runtimes (including Java 25 & 21 LTS) for optimal network routing.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n<a:Tick5:1573382205395177532> Next-Gen NVMe Arrays • Instant Node Synchronization • Automated DDoS Mitigation\n<a:Tick5:1573382205395177532> Active 24/7 Client Care • 99.9% Infrastructure Uptime SLA\n\n<a:chat:1573382277164040214> **Have questions or need assistance?** Open a ticket in <#1573281601775870043> ||<@&1573412778620747886>||\nhttps://discord.com/channels/1573272872737181696/1573281601775870043"
+        },
+        {
+          "type": 14,
+          "id": 3,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 4,
+          "components": [
+            {
+              "type": 2,
+              "id": 5,
+              "style": 5,
+              "label": "Client Panel",
+              "emoji": {
+                "id": "1573382507863220246",
+                "name": "vps"
+              },
+              "url": "https://panel.dreamnodes.cloud"
+            },
+            {
+              "type": 2,
+              "id": 6,
+              "style": 5,
+              "label": "Open a Ticket",
+              "emoji": {
+                "id": "1573382277164040214",
+                "name": "chat",
+                "animated": true
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281601775870043"
+            },
+            {
+              "type": 2,
+              "id": 7,
+              "style": 5,
+              "label": "How To Buy",
+              "emoji": {
+                "id": "1573382351214354483",
+                "name": "info",
+                "animated": true
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281597464121425"
+            },
+            {
+              "type": 2,
+              "id": 8,
+              "style": 5,
+              "label": "Official Website",
+              "emoji": {
+                "id": "1573382112436949044",
+                "name": "2251worldrainbow",
+                "animated": true
+              },
+              "url": "https://dreamnodes.cloud"
+            }
+          ]
+        },
+        {
+          "type": 10,
+          "id": 9,
+          "content": "-# <a:Rotating_Star:1573382194020491317> Dream Nodes • High-Performance Cloud Hosting & 24/7 Client Care Desk"
+        }
+      ],
+      "spoiler": false
+    }
+  ],
+  "id": "1574093615750189131",
+  "channel_id": "1573281468145336441",
+  "author": {
+    "id": "1573271779915337811",
+    "username": "DreamNodes",
+    "avatar": "f3df58ac5c311e8dbf8c335b2771eef9",
+    "discriminator": "3300",
+    "public_flags": 0,
+    "flags": 0,
+    "bot": true,
+    "banner": null,
+    "accent_color": null,
+    "global_name": null,
+    "avatar_decoration_data": null,
+    "collectibles": null,
+    "display_name_styles": null,
+    "banner_color": null,
+    "clan": null,
+    "primary_guild": null
+  },
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "reactions": [
+    {
+      "emoji": {
+        "id": "1573382171257737317",
+        "name": "Lightning",
+        "animated": true
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    },
+    {
+      "emoji": {
+        "id": "1573382186546102347",
+        "name": "Rocket",
+        "animated": true
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    },
+    {
+      "emoji": {
+        "id": "1573382205395177532",
+        "name": "Tick5",
+        "animated": true
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    }
+  ]
+}

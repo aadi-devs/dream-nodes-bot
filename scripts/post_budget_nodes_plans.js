@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { E, B } = require('../src/emojis');
 
 const envPath = path.join(__dirname, '..', '.env');
 const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].trim();
@@ -11,62 +12,62 @@ const websiteUrl = 'https://dreamnodes.cloud';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
 
 const sectionHeader =
-`# <a:b_fire:1573381944702533732> Dream Nodes | Budget Minecraft Plans
-## <a:hostinger:1573382335355691089> Maximum Resources • Pocket-Friendly Pricing
+`# ${E.fireBlue} Dream Nodes | Budget Minecraft Plans
+## ${E.hostinger} Maximum Resources • Pocket-Friendly Pricing
 
-> <a:sparkles_sparkles:1573382447603785928> High-memory, multi-thread budget game servers tailored for creators, test networks, and communities seeking massive RAM and NVMe storage at the lowest cost.
+> ${E.sparkles} High-memory, multi-thread budget game servers tailored for creators, test networks, and communities seeking massive RAM and NVMe storage at the lowest cost.
 
-### <a:fsk_warning:1573382318364692703> ⚠️ Important Budget Node Notice:
-> ✦ **Basic DDoS Protection:** Only **10 Gbps small mitigation** (may sometimes result in downtime during traffic attacks).
-> ✦ **Weekly Dynamic IP:** Server IPs rotate periodically; clients must change / update IP in domain weekly.
-> ✦ **Weekly Maintenance Window:** Includes a scheduled **weekly 30-minute downtime** for node maintenance.`;
+### ${E.alert} Important Budget Node Notice:
+> ${E.arrowBlue} **Basic DDoS Mitigation:** 10 Gbps protection (traffic attacks may cause brief interruption).
+> ${E.arrowBlue} **Weekly Dynamic IP:** Server IPs rotate periodically; update IP in your domain weekly.
+> ${E.arrowBlue} **Weekly Maintenance:** Scheduled 30-minute weekly window for node upkeep.`;
 
 const sectionPro =
-`### <a:Lightning:1573382171257737317> Pro Tier Plans
+`### ${E.lightning} Pro Tier Plans
 
-> ⚡ **Pro Start** \`[ 8 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`8 GB\` ┃ <:cpu:1573382485310709781> \`400%\` ┃ <:disk:1573382500795818114> \`150 GB NVMe\` ┃ <:bandwith55:1573382523201912842> \`1 Gbps\` ┃ <a:cash:1573382269735805008> \`₹350 /mo\`
+> ${E.arrowBlue} **Pro Start [ 8 GB ]** ➔ ${E.cash} \`₹350 /mo\`
+> \`8 GB RAM\` ┃ \`400% CPU\` ┃ \`150 GB NVMe\` ┃ \`1 Gbps\`
 > 
-> ⚡ **Pro Advance** \`[ 12 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`12 GB\` ┃ <:cpu:1573382485310709781> \`500%\` ┃ <:disk:1573382500795818114> \`200 GB NVMe\` ┃ <:bandwith55:1573382523201912842> \`1 Gbps\` ┃ <a:cash:1573382269735805008> \`₹525 /mo\`
+> ${E.arrowBlue} **Pro Advance [ 12 GB ]** ➔ ${E.cash} \`₹525 /mo\`
+> \`12 GB RAM\` ┃ \`500% CPU\` ┃ \`200 GB NVMe\` ┃ \`1 Gbps\`
 > 
-> ⚡ **Pro Plus** \`[ 16 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`16 GB\` ┃ <:cpu:1573382485310709781> \`600%\` ┃ <:disk:1573382500795818114> \`250 GB NVMe\` ┃ <:bandwith55:1573382523201912842> \`1 Gbps\` ┃ <a:cash:1573382269735805008> \`₹700 /mo\``;
+> ${E.arrowBlue} **Pro Plus [ 16 GB ]** ➔ ${E.cash} \`₹700 /mo\`
+> \`16 GB RAM\` ┃ \`600% CPU\` ┃ \`250 GB NVMe\` ┃ \`1 Gbps\``;
 
 const sectionElite =
-`### <a:sparkles_sparkles:1573382447603785928> Elite Tier Plans
+`### ${E.diamond} Elite Tier Plans
 
-> 💎 **Elite** \`[ 24 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`24 GB\` ┃ <:cpu:1573382485310709781> \`700%\` ┃ <:disk:1573382500795818114> \`350 GB NVMe\` ┃ <:bandwith55:1573382523201912842> \`1 Gbps\` ┃ <a:cash:1573382269735805008> \`₹1,050 /mo\`
+> ${E.arrowBlue} **Elite [ 24 GB ]** ➔ ${E.cash} \`₹1,050 /mo\`
+> \`24 GB RAM\` ┃ \`700% CPU\` ┃ \`350 GB NVMe\` ┃ \`1 Gbps\`
 > 
-> 💎 **Elite Plus** \`[ 32 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`32 GB\` ┃ <:cpu:1573382485310709781> \`800%\` ┃ <:disk:1573382500795818114> \`500 GB NVMe\` ┃ <:bandwith55:1573382523201912842> \`1 Gbps\` ┃ <a:cash:1573382269735805008> \`₹1,400 /mo\``;
+> ${E.arrowBlue} **Elite Plus [ 32 GB ]** ➔ ${E.cash} \`₹1,400 /mo\`
+> \`32 GB RAM\` ┃ \`800% CPU\` ┃ \`500 GB NVMe\` ┃ \`1 Gbps\``;
 
 const sectionEnterprise =
-`### <a:RedCrown:1573382179298353186> Enterprise Tier Plans
+`### ${E.crownRed} Enterprise Tier Plans
 
-> 👑 **Enterprise** \`[ 48 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`48 GB\` ┃ <:cpu:1573382485310709781> \`1200%\` ┃ <:disk:1573382500795818114> \`750 GB NVMe\` ┃ <:bandwith55:1573382523201912842> \`1 Gbps\` ┃ <a:cash:1573382269735805008> \`₹2,100 /mo\`
+> ${E.arrowBlue} **Enterprise [ 48 GB ]** ➔ ${E.cash} \`₹2,100 /mo\`
+> \`48 GB RAM\` ┃ \`1200% CPU\` ┃ \`750 GB NVMe\` ┃ \`1 Gbps\`
 > 
-> 👑 **Enterprise Plus** \`[ 64 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`64 GB\` ┃ <:cpu:1573382485310709781> \`1600%\` ┃ <:disk:1573382500795818114> \`1 TB NVMe\` ┃ <:bandwith55:1573382523201912842> \`1 Gbps\` ┃ <a:cash:1573382269735805008> \`₹2,800 /mo\``;
+> ${E.arrowBlue} **Enterprise Plus [ 64 GB ]** ➔ ${E.cash} \`₹2,800 /mo\`
+> \`64 GB RAM\` ┃ \`1600% CPU\` ┃ \`1 TB NVMe\` ┃ \`1 Gbps\``;
 
 const sectionTitan =
-`### <a:Rocket:1573382186546102347> Titan Colossus Plans
+`### ${E.rocket} Titan Colossus Plans
 
-> 🪐 **Titan** \`[ 128 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`128 GB\` ┃ <:cpu:1573382485310709781> \`3200%\` ┃ <:disk:1573382500795818114> \`2 TB NVMe\` ┃ <:bandwith55:1573382523201912842> \`1 Gbps\` ┃ <a:cash:1573382269735805008> \`₹5,600 /mo\`
+> ${E.arrowBlue} **Titan [ 128 GB ]** ➔ ${E.cash} \`₹5,600 /mo\`
+> \`128 GB RAM\` ┃ \`3200% CPU\` ┃ \`2 TB NVMe\` ┃ \`1 Gbps\`
 > 
-> 🪐 **Titan Max** \`[ 256 GB ]\`
-> ✦ <:RAM:1573382492973568062> \`256 GB\` ┃ <:cpu:1573382485310709781> \`6400%\` ┃ <:disk:1573382500795818114> \`4 TB NVMe\` ┃ <:bandwith55:1573382523201912842> \`1 Gbps\` ┃ <a:cash:1573382269735805008> \`₹11,200 /mo\``;
+> ${E.arrowBlue} **Titan Max [ 256 GB ]** ➔ ${E.cash} \`₹11,200 /mo\`
+> \`256 GB RAM\` ┃ \`6400% CPU\` ┃ \`4 TB NVMe\` ┃ \`1 Gbps\``;
 
 const sectionFooter =
-`### <a:settings:1573382421611806763> Node Features Included:
-> <a:Tick5:1573382205395177532> **Pterodactyl Panel Access** (Full Root File Access, SFTP, Split Ports)
-> 🗄️ **Unlimited MySQL Databases** ┃ <:backup:1573382515341664270> **Automated Backups**
-> <a:hostinger:1573382335355691089> **Instant Provisioning Upon Ticket Confirmation**
+`### ${E.settings} Included Features:
+> ${E.tick5} **Pterodactyl Panel Access** (Full Root File Access, SFTP, Split Ports)
+> ${E.chest} **Unlimited MySQL Databases** ┃ ${E.backup} **Automated Backups**
+> ${E.hostinger} **Instant Provisioning Upon Ticket Confirmation**
 
-> 🛡️ **Want the best DDoS protection & 0 downtime? Check <#${advancePlansChannelId}>!**`;
+> ${E.shield} **Need enterprise DDoS defense & zero downtime? Check <#${advancePlansChannelId}>!**`;
 
 const v2Payload = {
   flags: 32768, // IS_COMPONENTS_V2
@@ -136,27 +137,27 @@ const v2Payload = {
               style: 5,
               label: 'Open Ticket to Order',
               url: ticketChannelUrl,
-              emoji: { name: '🎫' }
+              emoji: B.ticket
             },
             {
               type: 2,
               style: 5,
               label: 'Official Website',
               url: websiteUrl,
-              emoji: { name: '🌐' }
+              emoji: B.world
             },
             {
               type: 2,
               style: 5,
               label: 'How To Buy',
               url: howToBuyUrl,
-              emoji: { name: '📖' }
+              emoji: B.info
             }
           ]
         },
         {
           type: 10,
-          content: '-# 💙 Dream Nodes • High-Resource Budget Minecraft Hosting'
+          content: `-# ${E.verifiedBlue} Dream Nodes • High-Resource Budget Minecraft Hosting`
         }
       ]
     }
@@ -182,4 +183,8 @@ async function updateBudgetPlans() {
   }
 }
 
-updateBudgetPlans();
+if (require.main === module) {
+  updateBudgetPlans();
+}
+
+module.exports = { updateBudgetPlans, v2Payload };

@@ -1,0 +1,158 @@
+{
+  "type": 0,
+  "content": "",
+  "mentions": [],
+  "mention_roles": [],
+  "attachments": [],
+  "embeds": [],
+  "timestamp": "2026-11-21T16:51:33+00:00",
+  "edited_timestamp": "2026-11-22T16:14:35.707000+00:00",
+  "flags": 32768,
+  "components": [
+    {
+      "type": 17,
+      "id": 1,
+      "accent_color": null,
+      "components": [
+        {
+          "type": 10,
+          "id": 2,
+          "content": "# <:vps:1573382507863220246> 𝐃𝐑𝐄𝐀𝐌 𝐍𝐎𝐃𝐄𝐒 ┃ AMD EPYC™ VPS\n## <a:location:1573382361574277130> 🇮🇳 India Datacenter • Next-Gen Multi-Thread Compute • Pure Gen4 NVMe\n\n> <a:Attacks:1573382140006244363> **Tier-IV Enterprise Indian Datacenter Nodes:** Engineered for maximum throughput, heavy multi-threading, bot swarms, game networks, and high-concurrency microservices."
+        },
+        {
+          "type": 14,
+          "id": 3,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 4,
+          "content": "### <a:b_fire:1573381944702533732> Starter & Development Nodes\n\n> 🔸 **PLAN-B** ── <a:cash:1573382269735805008> **`₹549 /mo`**\n> <:cpu:1573382485310709781> `1 AMD EPYC™ vCore` ┃ <:RAM:1573382492973568062> `6 GB RAM`\n> <:disk:1573382500795818114> `40 GB Gen4 NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`\n> \n> 🔸 **PLAN-C** ── <a:cash:1573382269735805008> **`₹699 /mo`**\n> <:cpu:1573382485310709781> `2 AMD EPYC™ vCores` ┃ <:RAM:1573382492973568062> `8 GB RAM`\n> <:disk:1573382500795818114> `60 GB Gen4 NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`\n> \n> 🔸 **PLAN-D** ── <a:cash:1573382269735805008> **`₹949 /mo`**\n> <:cpu:1573382485310709781> `3 AMD EPYC™ vCores` ┃ <:RAM:1573382492973568062> `12 GB RAM`\n> <:disk:1573382500795818114> `80 GB Gen4 NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`"
+        },
+        {
+          "type": 14,
+          "id": 5,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 6,
+          "content": "### <a:Lightning:1573382171257737317> Production & High-Load Nodes\n\n> ⚡ **PLAN-E** ── <a:cash:1573382269735805008> **`₹1,299 /mo`**\n> <:cpu:1573382485310709781> `4 AMD EPYC™ vCores` ┃ <:RAM:1573382492973568062> `16 GB RAM`\n> <:disk:1573382500795818114> `100 GB Gen4 NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`\n> \n> ⚡ **PLAN-F** ── <a:cash:1573382269735805008> **`₹1,599 /mo`**\n> <:cpu:1573382485310709781> `6 AMD EPYC™ vCores` ┃ <:RAM:1573382492973568062> `24 GB RAM`\n> <:disk:1573382500795818114> `120 GB Gen4 NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`\n> \n> ⚡ **PLAN-G** ── <a:cash:1573382269735805008> **`₹1,899 /mo`**\n> <:cpu:1573382485310709781> `8 AMD EPYC™ vCores` ┃ <:RAM:1573382492973568062> `32 GB RAM`\n> <:disk:1573382500795818114> `150 GB Gen4 NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`"
+        },
+        {
+          "type": 14,
+          "id": 7,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 8,
+          "content": "### <a:RedCrown:1573382179298353186> Heavyweight Enterprise Dedicated Nodes\n\n> 👑 **PLAN-H** ── <a:cash:1573382269735805008> **`₹2,499 /mo`**\n> <:cpu:1573382485310709781> `10 AMD EPYC™ vCores` ┃ <:RAM:1573382492973568062> `48 GB RAM`\n> <:disk:1573382500795818114> `200 GB Gen4 NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`\n> \n> 👑 **PLAN-I** ── <a:cash:1573382269735805008> **`₹2,999 /mo`**\n> <:cpu:1573382485310709781> `12 AMD EPYC™ vCores` ┃ <:RAM:1573382492973568062> `64 GB RAM`\n> <:disk:1573382500795818114> `250 GB Gen4 NVMe` ┃ <:bandwith55:1573382523201912842> `1 Gbps Unmetered`"
+        },
+        {
+          "type": 14,
+          "id": 9,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 10,
+          "content": "### <a:sparkles_sparkles:1573382447603785928> Enterprise VPS Specifications & Inclusions:\n> 🛡️ **Multi-Tbps Anti-DDoS Mitigation:** Automated L4 & L7 real-time traffic scrubbing keeping servers online 24/7.\n> 🔑 **100% Full Root & Sudo Control:** Full SSH / RDP root privileges with no limitations or lock-ins.\n> <:bandwith55:1573382523201912842> **Truly Unmetered Bandwidth:** Unlimited 1 Gbps port with zero bandwidth limits or throttling.\n> 🌐 **Dedicated Clean IPv4:** Every virtual machine includes a dedicated static IPv4 address.\n> 🇮🇳 **Ultra-Low Latency India Routing:** Hosted in premier Indian datacenters for lowest possible latency.\n> 💿 **OS Choices:** Ubuntu 22.04/24.04 LTS, Debian 12, AlmaLinux, CentOS, Windows Server 2022.\n> 🚀 **Instant Setup:** Automated provisioning dispatched immediately upon ticket verification."
+        },
+        {
+          "type": 14,
+          "id": 11,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 12,
+          "components": [
+            {
+              "type": 2,
+              "id": 13,
+              "style": 5,
+              "label": "Order VPS / Open Ticket",
+              "emoji": {
+                "name": "🎫"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281601775870043"
+            },
+            {
+              "type": 2,
+              "id": 14,
+              "style": 5,
+              "label": "Official Website",
+              "emoji": {
+                "name": "🌐"
+              },
+              "url": "https://dreamnodes.cloud"
+            },
+            {
+              "type": 2,
+              "id": 15,
+              "style": 5,
+              "label": "How To Buy",
+              "emoji": {
+                "name": "📖"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281597464121425"
+            }
+          ]
+        },
+        {
+          "type": 10,
+          "id": 16,
+          "content": "-# ⚡ Dream Nodes • Enterprise High-Performance AMD EPYC™ Cloud VPS"
+        }
+      ],
+      "spoiler": false
+    }
+  ],
+  "id": "1573742677328007210",
+  "channel_id": "1573281514165248091",
+  "author": {
+    "id": "1573271779915337811",
+    "username": "DreamNodes",
+    "avatar": "f3df58ac5c311e8dbf8c335b2771eef9",
+    "discriminator": "3300",
+    "public_flags": 0,
+    "flags": 0,
+    "bot": true,
+    "banner": null,
+    "accent_color": null,
+    "global_name": null,
+    "avatar_decoration_data": null,
+    "collectibles": null,
+    "display_name_styles": null,
+    "banner_color": null,
+    "clan": null,
+    "primary_guild": null
+  },
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "reactions": [
+    {
+      "emoji": {
+        "id": null,
+        "name": "❤️"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    }
+  ]
+}

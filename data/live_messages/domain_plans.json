@@ -1,0 +1,174 @@
+{
+  "type": 0,
+  "content": "",
+  "mentions": [],
+  "mention_roles": [],
+  "attachments": [],
+  "embeds": [],
+  "timestamp": "2026-11-21T17:05:47.996000+00:00",
+  "edited_timestamp": "2026-11-22T16:14:42.025000+00:00",
+  "flags": 32768,
+  "components": [
+    {
+      "type": 17,
+      "id": 1,
+      "accent_color": null,
+      "components": [
+        {
+          "type": 10,
+          "id": 2,
+          "content": "# <a:2251worldrainbow:1573382112436949044> 𝐃𝐑𝐄𝐀𝐌 𝐍𝐎𝐃𝐄𝐒 ┃ Domain & DNS Services\n## 🌐 High-Speed DNS Routing • Custom Domains • Instant Subdomains\n\n> <a:sparkles_sparkles:1573382447603785928> **Build Your Online Brand & Presence With Dream Nodes!**\n> Choose from budget-friendly subdomains, custom .fun extensions, or global premium TLDs (.com, .in, .net) with full Cloudflare DNS management."
+        },
+        {
+          "type": 14,
+          "id": 3,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 4,
+          "content": "### 🏷️ 01. Dream Nodes Subdomains\n> <a:cash:1573382269735805008> **Price:** `₹20 / Month`\n> \n> <a:arrowf:1573382243827585114> Get a professional **.dreamnodes.cloud** address for your Minecraft server, game network, or control panel without purchasing a full domain.\n> \n> 📂 **Live Examples:**\n> ✦ `yourname.dreamnodes.cloud`\n> ✦ `play.dreamnodes.cloud`\n> ✦ `myserver.dreamnodes.cloud`"
+        },
+        {
+          "type": 14,
+          "id": 5,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 6,
+          "content": "### ✨ 02. Custom .FUN Top-Level Domains\n> <a:cash:1573382269735805008> **Price:** `₹299 / Year`\n> \n> <a:arrowf:1573382243827585114> Register your own standalone **.fun** domain for your brand, gaming community, website, or server with full ownership.\n> \n> 📂 **Examples:**\n> ✦ `yourbrand.fun`\n> ✦ `myserver.fun`\n> ✦ `gaminghub.fun`"
+        },
+        {
+          "type": 14,
+          "id": 7,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 8,
+          "content": "### <a:settings:1573382421611806763> 03. Custom Global TLD Extensions\n> Looking for a specific regional or international domain extension?\n> \n> <a:arrowf:1573382243827585114> **Popular TLDs:** `.com` ┃ `.in` ┃ `.net` ┃ `.org` ┃ `.dev` ┃ `.store` ┃ `.xyz` & more!\n> \n> 🎫 **How To Order:** Open a ticket with your desired domain name. Our staff will immediately check registry availability and quote the lowest rate!"
+        },
+        {
+          "type": 14,
+          "id": 9,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 10,
+          "content": "### 🛡️ What's Included With Every Domain:\n> <a:Tick5:1573382205395177532> **Cloudflare Anycast DNS:** Lightning-fast global resolution with integrated DDoS protection.\n> <a:Tick5:1573382205395177532> **Full DNS Control:** Easily configure A, AAAA, CNAME, MX, TXT, and SRV (Minecraft) records.\n> <a:Tick5:1573382205395177532> **Free SSL / TLS:** Automatic HTTPS encryption certificates configured for all hosts.\n> <a:Tick5:1573382205395177532> **Instant Server Linking:** 1-click binding to your Dream Nodes VPS or game server."
+        },
+        {
+          "type": 14,
+          "id": 11,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 12,
+          "components": [
+            {
+              "type": 2,
+              "id": 13,
+              "style": 5,
+              "label": "Register Domain / Open Ticket",
+              "emoji": {
+                "name": "🎫"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281601775870043"
+            },
+            {
+              "type": 2,
+              "id": 14,
+              "style": 5,
+              "label": "Official Website",
+              "emoji": {
+                "name": "🌐"
+              },
+              "url": "https://dreamnodes.cloud"
+            },
+            {
+              "type": 2,
+              "id": 15,
+              "style": 5,
+              "label": "How To Buy",
+              "emoji": {
+                "name": "📖"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281597464121425"
+            }
+          ]
+        },
+        {
+          "type": 10,
+          "id": 16,
+          "content": "-# 🌐 Dream Nodes • Professional Domain Registrar & High-Speed DNS Services"
+        }
+      ],
+      "spoiler": false
+    }
+  ],
+  "id": "1573746263441022988",
+  "channel_id": "1573281547564359710",
+  "author": {
+    "id": "1573271779915337811",
+    "username": "DreamNodes",
+    "avatar": "f3df58ac5c311e8dbf8c335b2771eef9",
+    "discriminator": "3300",
+    "public_flags": 0,
+    "flags": 0,
+    "bot": true,
+    "banner": null,
+    "accent_color": null,
+    "global_name": null,
+    "avatar_decoration_data": null,
+    "collectibles": null,
+    "display_name_styles": null,
+    "banner_color": null,
+    "clan": null,
+    "primary_guild": null
+  },
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "reactions": [
+    {
+      "emoji": {
+        "id": null,
+        "name": "🌐"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    },
+    {
+      "emoji": {
+        "id": null,
+        "name": "✨"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    }
+  ]
+}

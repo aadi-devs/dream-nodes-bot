@@ -1,0 +1,149 @@
+{
+  "type": 0,
+  "content": "",
+  "mentions": [],
+  "mention_roles": [],
+  "attachments": [],
+  "embeds": [],
+  "timestamp": "2026-11-20T18:49:56.881000+00:00",
+  "edited_timestamp": "2026-11-20T18:57:03.475000+00:00",
+  "flags": 32768,
+  "components": [
+    {
+      "type": 17,
+      "id": 1,
+      "accent_color": null,
+      "components": [
+        {
+          "type": 10,
+          "id": 2,
+          "content": "# <a:b_fire:1573381944702533732> Dream Nodes | Official Terms & Policies\n\n> <a:hostinger:1573382335355691089> **Welcome to the official terms and policies hub of Dream Nodes!**\n> \n> <a:sparkles_sparkles:1573382447603785928> A premium cloud and game hosting provider built for ultra-fast performance, rock-solid stability, and 24/7 uptime. Whether you are running a massive Minecraft network or deploying high-speed cloud VPS nodes, our infrastructure is built to scale.\n\n## <a:fsk_warning:1573382318364692703> Explore Our Policies\n> <a:Arrow_White:1573382131026108678> Select a category from the dropdown menu below to access its detailed terms, fair-use policies, and discover more about Dream Nodes.\n\nChoose a policy below to get started. <a:hostinger:1573382335355691089>"
+        },
+        {
+          "type": 14,
+          "id": 3,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 4,
+          "components": [
+            {
+              "type": 3,
+              "id": 5,
+              "custom_id": "tos_select_menu",
+              "placeholder": "Make a selection",
+              "min_values": 1,
+              "max_values": 1,
+              "options": [
+                {
+                  "label": "Refund Policy",
+                  "value": "tos_refund",
+                  "description": "Select To View Our Official Refund Policy & Terms",
+                  "emoji": {
+                    "id": "1573382269735805008",
+                    "name": "cash",
+                    "animated": true
+                  }
+                },
+                {
+                  "label": "VPS & RDP Policies",
+                  "value": "tos_vps",
+                  "description": "Select To View VPS Fair Use, Resource Limits & Rules",
+                  "emoji": {
+                    "id": "1573382507863220246",
+                    "name": "vps"
+                  }
+                },
+                {
+                  "label": "Minecraft Hosting Policies",
+                  "value": "tos_mc",
+                  "description": "Select To View MC Server Rules, Uptime SLA & DDoS Protection",
+                  "emoji": {
+                    "id": "1573382379215659081",
+                    "name": "minecraft",
+                    "animated": true
+                  }
+                },
+                {
+                  "label": "General Terms of Service",
+                  "value": "tos_general",
+                  "description": "Select To View General Service Terms, Billing & Termination",
+                  "emoji": {
+                    "id": "1573382371699458201",
+                    "name": "membership",
+                    "animated": true
+                  }
+                },
+                {
+                  "label": "Community & Support Rules",
+                  "value": "tos_discord",
+                  "description": "Select To View Community Guidelines & Ticket Support Etiquette",
+                  "emoji": {
+                    "id": "1573382300283179030",
+                    "name": "discord_discord",
+                    "animated": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": 14,
+          "id": 6,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 7,
+          "content": "## <a:Lightning:1573382171257737317> Official Terms & Security\n> <a:Cross:1573382156296917032> Always ensure your account and services adhere to our fair-use standards. Prohibited activities including DDoS, mining, port scanning, and abuse will result in immediate termination.\n\n---\n\n> <a:hostinger:1573382335355691089> **Stay connected. Stay informed. Grow together.**\n> \n> 💙 Thank you for being part of **Dream Nodes**!"
+        }
+      ],
+      "spoiler": false
+    }
+  ],
+  "id": "1573410085298774218",
+  "channel_id": "1573337303538208778",
+  "author": {
+    "id": "1573271779915337811",
+    "username": "DreamNodes",
+    "avatar": "f3df58ac5c311e8dbf8c335b2771eef9",
+    "discriminator": "3300",
+    "public_flags": 0,
+    "flags": 0,
+    "bot": true,
+    "banner": null,
+    "accent_color": null,
+    "global_name": null,
+    "avatar_decoration_data": null,
+    "collectibles": null,
+    "display_name_styles": null,
+    "banner_color": null,
+    "clan": null,
+    "primary_guild": null
+  },
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "reactions": [
+    {
+      "emoji": {
+        "id": null,
+        "name": "❤️"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    }
+  ]
+}

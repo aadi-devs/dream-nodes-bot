@@ -1,57 +1,59 @@
 const fs = require('fs');
 const path = require('path');
+const { E, B } = require('../src/emojis');
 
 const envPath = path.join(__dirname, '..', '.env');
 const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].trim();
 
 // Target channel: # ♘・ᴏꜰꜰᴇʀꜱ (under ✦----- MC PLANS -----✦)
 const offersChannelId = '1573281500290359338';
+const messageId = '1574087340283138239';
 const clientRoleId = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
 const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
 const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
 const websiteUrl = 'https://dreamnodes.cloud';
 
 const markdownContent = 
-`# <:Offer:1574086348825174079> **INTEL INDIA MINECRAFT SERVER OFFER** <a:sparkles_sparkles:1573382447603785928>
+`# ${E.offer} **INTEL INDIA MINECRAFT SERVER OFFER** ${E.sparkles}
 
-╭・🇮🇳 **Dream Nodes India Minecraft Offer**
-╰┈➤ <a:Lightning:1573382171257737317> Minecraft Server Offer
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-<a:RedCrown:1573382179298353186> **INTEL IND PLAN - 1**
-> <:ateex_processor:1574082606159364116> **Processor:** Intel Xeon E5-2690 v2
-> <:RAM:1573382492973568062> **Memory:** 16GB
-> <:cpu:1573382485310709781> **CPU Power:** 400%
-> <:disk:1573382500795818114> **Storage:** 50GB NVMe SSD
-> <a:location:1573382361574277130> **Location:** India 🇮🇳
-
-<:money:1574082659775160447> **Offer Price: ₹160/ month** (Same at Renewal)
+> ${E.location} **Dream Nodes India Minecraft Offer** ${E.india}
+> ${E.arrowBlue} ${E.lightning} **Special High-Performance Game Node Promotion**
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-<a:RedCrown:1573382179298353186> **INTEL IND PLAN - 2**
-> <:ateex_processor:1574082606159364116> **Processor:** Intel Xeon E5-2690 v2
-> <:RAM:1573382492973568062> **Memory:** 32GB
-> <:cpu:1573382485310709781> **CPU Power:** 800%
-> <:disk:1573382500795818114> **Storage:** 100GB NVMe SSD
-> <a:location:1573382361574277130> **Location:** India 🇮🇳
+${E.crownRed} **INTEL IND PLAN - 1**
+> ${E.processor} **Processor:** Intel Xeon E5-2690 v2
+> ${E.ram} **Memory:** 16GB RAM
+> ${E.cpu} **CPU Power:** 400%
+> ${E.disk} **Storage:** 50GB NVMe SSD
+> ${E.location} **Location:** India ${E.india}
 
-<:money:1574082659775160447> **Offer Price: ₹300/ month** (Same at Renewal)
+${E.cash} **Offer Price: ₹160 / month** *(Same Price at Renewal)*
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-<a:Tick5:1573382205395177532> High Performance NVMe SSD Storage
-<a:Tick5:1573382205395177532> Advanced DDoS Protection
-<a:Tick5:1573382205395177532> Full Panel Access
-<a:Tick5:1573382205395177532> 24/7 Support
+${E.crownRed} **INTEL IND PLAN - 2**
+> ${E.processor} **Processor:** Intel Xeon E5-2690 v2
+> ${E.ram} **Memory:** 32GB RAM
+> ${E.cpu} **CPU Power:** 800%
+> ${E.disk} **Storage:** 100GB NVMe SSD
+> ${E.location} **Location:** India ${E.india}
 
-**<a:Tick5:1573382205395177532> Free Domain included from Limited Domains on Website**
+${E.cash} **Offer Price: ₹300 / month** *(Same Price at Renewal)*
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${E.tick5} **High Performance NVMe SSD Storage**
+${E.tick5} **Advanced DDoS Protection Included**
+${E.tick5} **Full Pterodactyl Control Panel Access**
+${E.tick5} **24/7 Dedicated Support**
+
+**${E.starRotating} Free Domain included from Limited Domains on Website!**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<a:b_fire:1573381944702533732> Perfect for Survival, SMPs, Smaller Networks
+${E.fireBlue} **Perfect for Survival, SMPs & Creator Networks!**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📩 **Open a Ticket to Purchase** ||<@&${clientRoleId}>||
+${E.ticket} **Open a Ticket to Purchase** ||<@&${clientRoleId}>||
 ${ticketChannelUrl}`;
 
 const v2Payload = {
@@ -70,80 +72,60 @@ const v2Payload = {
           spacing: 1
         },
         {
-          type: 1, // Action Row with Buttons
+          type: 1, // Action Row
           components: [
             {
               type: 2,
               style: 5,
-              label: 'Open a Ticket',
+              label: 'Claim Offer / Open Ticket',
               url: ticketChannelUrl,
-              emoji: { name: '🎫' }
-            },
-            {
-              type: 2,
-              style: 5,
-              label: 'How To Buy',
-              url: howToBuyUrl,
-              emoji: { name: '📖' }
+              emoji: B.ticket
             },
             {
               type: 2,
               style: 5,
               label: 'Official Website',
               url: websiteUrl,
-              emoji: { name: '🌐' }
+              emoji: B.world
+            },
+            {
+              type: 2,
+              style: 5,
+              label: 'How To Buy',
+              url: howToBuyUrl,
+              emoji: B.info
             }
           ]
         },
         {
           type: 10,
-          content: '-# 💙 Dream Nodes • High-Performance Cloud Minecraft Server Infrastructure'
+          content: `-# ${E.verifiedBlue} Dream Nodes • Intel India Minecraft Server Limited Offer`
         }
       ]
     }
   ]
 };
 
-async function updateOffers() {
-  console.log('Updating Intel India Minecraft Server Offer in # ♘・ᴏꜰꜰᴇʀꜱ:', offersChannelId);
-
-  // Check existing message in channel
-  const getRes = await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages?limit=5`, {
-    headers: { Authorization: `Bot ${token}` }
-  });
-  const msgs = await getRes.json();
-  if (Array.isArray(msgs) && msgs.length > 0) {
-    const msgId = msgs[0].id;
-    console.log('Editing existing offer message in place:', msgId);
-    const patchRes = await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages/${msgId}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bot ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(v2Payload)
-    });
-    const patchData = await patchRes.json();
-    if (patchData.id) {
-      console.log('✓ Successfully updated price to ₹160 and ₹300! Message ID:', patchData.id);
-      return;
-    }
-  }
-
-  // If no message found, post fresh
-  const res = await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages`, {
-    method: 'POST',
+async function updateMcIndiaOffer() {
+  console.log('Patching Minecraft India Offer embed in channel', offersChannelId);
+  const patchRes = await fetch(`https://discord.com/api/v10/channels/${offersChannelId}/messages/${messageId}`, {
+    method: 'PATCH',
     headers: {
       Authorization: `Bot ${token}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(v2Payload)
   });
-
-  const data = await res.json();
-  if (data.id) {
-    console.log('✓ Successfully posted updated offer to Offers! Message ID:', data.id);
+  const patchData = await patchRes.json();
+  if (patchData.id) {
+    console.log('✓ Successfully updated Minecraft India Offer embed! Message ID:', patchData.id);
+  } else {
+    console.error('✗ Failed to patch Minecraft India Offer:', JSON.stringify(patchData, null, 2));
   }
 }
 
-updateOffers();
+if (require.main === module) {
+  updateMcIndiaOffer();
+}
+
+module.exports = { updateMcIndiaOffer, v2Payload };

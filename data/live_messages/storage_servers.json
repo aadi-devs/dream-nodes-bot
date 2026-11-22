@@ -1,0 +1,152 @@
+{
+  "type": 0,
+  "content": "",
+  "mentions": [],
+  "mention_roles": [],
+  "attachments": [],
+  "embeds": [],
+  "timestamp": "2026-11-21T18:23:36.398000+00:00",
+  "edited_timestamp": "2026-11-22T16:14:49.140000+00:00",
+  "flags": 32768,
+  "components": [
+    {
+      "type": 17,
+      "id": 1,
+      "accent_color": null,
+      "components": [
+        {
+          "type": 10,
+          "id": 2,
+          "content": "# <:disk:1573382500795818114> 𝐃𝐑𝐄𝐀𝐌 𝐍𝐎𝐃𝐄𝐒 ┃ High-Capacity Storage Servers\n## <:backup:1573382515341664270> 📦 Terabyte Cloud Storage • NVMe-Cached • Dedicated IPv4 & Full Root\n\n> <a:Attacks:1573382140006244363> **Enterprise Mass Storage Infrastructure:** Built for offsite backups, media streaming (Plex / Jellyfin), Nextcloud / OwnCloud cloud drives, game archives, and cold data storage on enterprise-grade hardware."
+        },
+        {
+          "type": 14,
+          "id": 3,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 4,
+          "content": "### <a:b_fire:1573381944702533732> Dedicated High-Capacity Storage Plans:\n\n> 💾 **STORAGE S** ── <a:cash:1573382269735805008> **`₹1,899 /mo`**\n> <:disk:1573382500795818114> `1 TB Enterprise Storage` ┃ <:RAM:1573382492973568062> `4 GB DDR4`\n> <:cpu:1573382485310709781> `2 Dedicated vCores` ┃ 🌐 `Dedicated IPv4 Included`\n> \n> ⭐ **STORAGE M** `[ MOST POPULAR ]` ── <a:cash:1573382269735805008> **`₹3,199 /mo`**\n> <:disk:1573382500795818114> `2 TB Enterprise Storage` ┃ <:RAM:1573382492973568062> `4 GB DDR4`\n> <:cpu:1573382485310709781> `2 Dedicated vCores` ┃ 🌐 `Dedicated IPv4 Included`\n> \n> 👑 **STORAGE XL** `[ MAXIMUM STORAGE ]` ── <a:cash:1573382269735805008> **`₹5,399 /mo`**\n> <:disk:1573382500795818114> `5 TB Enterprise Storage` ┃ <:RAM:1573382492973568062> `4 GB DDR4`\n> <:cpu:1573382485310709781> `2 Dedicated vCores` ┃ 🌐 `Dedicated IPv4 Included`"
+        },
+        {
+          "type": 14,
+          "id": 5,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 6,
+          "content": "### <a:sparkles_sparkles:1573382447603785928> Built for Serious Storage & Data Safety:\n> 🔑 **Full Root / SSH Access:** Complete administrative control. Install Nextcloud, OwnCloud, Samba, FTP, Plex, or Jellyfin.\n> 🌐 **Dedicated Clean IPv4:** Every storage server includes a dedicated static IPv4 address.\n> 🛡️ **Always-On Anti-DDoS:** Enterprise multi-Tbps volumetric mitigation protecting your server around the clock.\n> ⚡ **High-Speed Network Port:** Fast unmetered transfers in and out of your storage server.\n> 💽 **Enterprise Storage Drives:** High-reliability drives paired with NVMe caching for smooth I/O.\n> 💿 **Linux OS Support:** Deploy Ubuntu 22.04/24.04 LTS, Debian 12, CentOS 7/9, or AlmaLinux.\n> 🚀 **Instant Setup:** Fast automated provisioning with 99.9% uptime SLA."
+        },
+        {
+          "type": 14,
+          "id": 7,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 8,
+          "components": [
+            {
+              "type": 2,
+              "id": 9,
+              "style": 5,
+              "label": "Order Storage Server / Open Ticket",
+              "emoji": {
+                "name": "💾"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281601775870043"
+            },
+            {
+              "type": 2,
+              "id": 10,
+              "style": 5,
+              "label": "Official Website",
+              "emoji": {
+                "name": "🌐"
+              },
+              "url": "https://dreamnodes.cloud"
+            },
+            {
+              "type": 2,
+              "id": 11,
+              "style": 5,
+              "label": "How To Buy",
+              "emoji": {
+                "name": "📖"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281597464121425"
+            }
+          ]
+        },
+        {
+          "type": 10,
+          "id": 12,
+          "content": "-# 💾 Dream Nodes • Enterprise High-Capacity Cloud Storage Solutions"
+        }
+      ],
+      "spoiler": false
+    }
+  ],
+  "id": "1573765844138197184",
+  "channel_id": "1573281565763567676",
+  "author": {
+    "id": "1573271779915337811",
+    "username": "DreamNodes",
+    "avatar": "f3df58ac5c311e8dbf8c335b2771eef9",
+    "discriminator": "3300",
+    "public_flags": 0,
+    "flags": 0,
+    "bot": true,
+    "banner": null,
+    "accent_color": null,
+    "global_name": null,
+    "avatar_decoration_data": null,
+    "collectibles": null,
+    "display_name_styles": null,
+    "banner_color": null,
+    "clan": null,
+    "primary_guild": null
+  },
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "reactions": [
+    {
+      "emoji": {
+        "id": null,
+        "name": "💾"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    },
+    {
+      "emoji": {
+        "id": null,
+        "name": "📦"
+      },
+      "count": 1,
+      "count_details": {
+        "burst": 0,
+        "normal": 1
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    }
+  ]
+}

@@ -7,6 +7,7 @@ const {
   AttachmentBuilder 
 } = require('discord.js');
 const { generateHtmlTranscript, formatDuration } = require('./transcript');
+const { E, B } = require('./emojis');
 
 const dataDir = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
@@ -38,11 +39,11 @@ const CATEGORIES = {
     key: 'buy',
     name: 'Buy / Purchase Hosting',
     categoryId: '1573281628438921246', // ✦----- BUY TICKETS -----✦
-    emoji: '<a:cash:1573382269735805008>',
-    emojiObj: { id: '1573382269735805008', name: 'cash', animated: true },
+    emoji: E.cash,
+    emojiObj: B.cash,
     desc: 'Order Minecraft nodes, VPS, RDP, Web or Bot hosting',
     staffPingRoleId: '1573412759532732567', // ⋆｡°✩ ʂυρρσɾƚ ✩°｡⋆
-    modalTitle: '🛒 Order Hosting Services',
+    modalTitle: 'Order Hosting Services',
     modalInputs: [
       {
         customId: 'buy_plan',
@@ -82,11 +83,11 @@ const CATEGORIES = {
     key: 'queries',
     name: 'General Queries & Inquiries',
     categoryId: '1573773163605659768', // ✦----- QUERY TICKETS -----✦
-    emoji: '<a:chat:1573382277164040214>',
-    emojiObj: { id: '1573382277164040214', name: 'chat', animated: true },
+    emoji: E.chat,
+    emojiObj: B.chat,
     desc: 'Ask about server specs, custom builds, locations or billing',
     staffPingRoleId: '1573412759532732567', // ⋆｡°✩ ʂυρρσɾƚ ✩°｡⋆
-    modalTitle: '❓ General Inquiry & Pre-Sales',
+    modalTitle: 'General Inquiry & Pre-Sales',
     modalInputs: [
       {
         customId: 'query_topic',
@@ -118,12 +119,12 @@ const CATEGORIES = {
     key: 'report',
     name: 'Staff Misconduct Report',
     categoryId: '1573773165539233852', // ✦----- STAFF REPORTS -----✦
-    emoji: '<a:siren:1573382431065509981>',
-    emojiObj: { id: '1573382431065509981', name: 'siren', animated: true },
+    emoji: E.siren,
+    emojiObj: B.siren,
     desc: 'Confidential report sent directly to executive management',
     highStaffOnly: true,
     staffPingRoleId: '1573412749986365500', // ⋆｡°✩ αԃɱιɳ ✩°｡⋆
-    modalTitle: '🚨 Confidential Staff Report',
+    modalTitle: 'Confidential Staff Report',
     modalInputs: [
       {
         customId: 'report_staff',
@@ -155,11 +156,11 @@ const CATEGORIES = {
     key: 'problems',
     name: 'Technical Problems & Issues',
     categoryId: '1573773168177582142', // ✦----- PROBLEM TICKETS -----✦
-    emoji: '<a:settings:1573382421611806763>',
-    emojiObj: { id: '1573382421611806763', name: 'settings', animated: true },
+    emoji: E.settings,
+    emojiObj: B.settings,
     desc: 'Report server offline, node downtime, bugs or control panel help',
     staffPingRoleId: '1573412759532732567', // ⋆｡°✩ ʂυρρσɾƚ ✩°｡⋆
-    modalTitle: '🛠️ Technical Problems & Support',
+    modalTitle: 'Technical Problems & Support',
     modalInputs: [
       {
         customId: 'problem_service',
@@ -232,18 +233,18 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
 
     if (eventType === 'OPEN') {
       const intakeSummary = (data.intakeAnswers || [])
-        .map(a => `> <a:arrowf:1573382243827585114> **${a.label}:** \`${a.value}\``)
+        .map(a => `> ${E.arrowBlue} **${a.label}:** \`${a.value}\``)
         .join('\n');
 
       const embed = new EmbedBuilder()
         .setTitle(`Ticket Opened: #${data.ticketNum}`)
         .setColor([67, 181, 129]) // Discord Green
         .setDescription(
-          `<a:pin:1573382406206132427> **Category:** \`${data.categoryName}\`\n` +
-          `<a:membership:1573382371699458201> **Opened By:** <@${data.userId}> (\`${data.userTag}\` ┃ \`${data.userId}\`)\n` +
-          `<a:location:1573382361574277130> **Channel:** <#${data.channelId}>\n` +
-          `<a:Timer:1573382213985243146> **Opened At:** <t:${Math.floor(Date.now() / 1000)}:F> (<t:${Math.floor(Date.now() / 1000)}:R>)\n\n` +
-          `### <a:updates:1573382469938446390> Submitted Intake Details:\n` +
+          `${E.pin} **Category:** \`${data.categoryName}\`\n` +
+          `${E.membership} **Opened By:** <@${data.userId}> (\`${data.userTag}\` ┃ \`${data.userId}\`)\n` +
+          `${E.location} **Channel:** <#${data.channelId}>\n` +
+          `${E.timer} **Opened At:** <t:${Math.floor(Date.now() / 1000)}:F> (<t:${Math.floor(Date.now() / 1000)}:R>)\n\n` +
+          `### ${E.updates} Submitted Intake Details:\n` +
           (intakeSummary || '> *None provided*')
         )
         .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
@@ -255,11 +256,11 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
         .setTitle(`Ticket Claimed: #${data.ticketNum}`)
         .setColor([250, 166, 26]) // Discord Amber
         .setDescription(
-          `<a:pin:1573382406206132427> **Category:** \`${data.categoryName}\`\n` +
-          `<a:staff:1573382455384219929> **Claimed By:** <@${data.claimedBy}> (\`${data.claimedTag}\`)\n` +
-          `<a:membership:1573382371699458201> **Ticket Creator:** <@${data.userId}> (\`${data.userTag}\`)\n` +
-          `<a:location:1573382361574277130> **Channel:** <#${data.channelId}>\n` +
-          `<a:Timer:1573382213985243146> **Claimed At:** <t:${Math.floor(Date.now() / 1000)}:R>`
+          `${E.pin} **Category:** \`${data.categoryName}\`\n` +
+          `${E.staff} **Claimed By:** <@${data.claimedBy}> (\`${data.claimedTag}\`)\n` +
+          `${E.membership} **Ticket Creator:** <@${data.userId}> (\`${data.userTag}\`)\n` +
+          `${E.location} **Channel:** <#${data.channelId}>\n` +
+          `${E.timer} **Claimed At:** <t:${Math.floor(Date.now() / 1000)}:R>`
         )
         .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
         .setTimestamp();
@@ -270,13 +271,13 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
         .setTitle(`Ticket Closed: #${data.ticketNum}`)
         .setColor([240, 71, 71]) // Discord Red
         .setDescription(
-          `<a:pin:1573382406206132427> **Category:** \`${data.categoryName}\`\n` +
-          `<a:membership:1573382371699458201> **Opened By:** <@${data.userId}> (\`${data.userTag}\`)\n` +
-          `<a:staff:1573382455384219929> **Claimed By:** ${data.claimedBy ? `<@${data.claimedBy}> (\`${data.claimedTag}\`)` : '`Unclaimed`'}\n` +
-          `<a:Cross:1573382156296917032> **Closed By:** <@${data.closedBy}> (\`${data.closedTag}\`)\n` +
-          `<a:Timer:1573382213985243146> **Total Duration:** \`${data.duration}\`\n` +
-          `<a:chat:1573382277164040214> **Total Messages:** \`${data.messageCount}\`\n\n` +
-          `<a:updates:1573382469938446390> **Transcript:** The full conversation history has been archived and uploaded below as an HTML transcript.`
+          `${E.pin} **Category:** \`${data.categoryName}\`\n` +
+          `${E.membership} **Opened By:** <@${data.userId}> (\`${data.userTag}\`)\n` +
+          `${E.staff} **Claimed By:** ${data.claimedBy ? `<@${data.claimedBy}> (\`${data.claimedTag}\`)` : '`Unclaimed`'}\n` +
+          `${E.cross} **Closed By:** <@${data.closedBy}> (\`${data.closedTag}\`)\n` +
+          `${E.timer} **Total Duration:** \`${data.duration}\`\n` +
+          `${E.chat} **Total Messages:** \`${data.messageCount}\`\n\n` +
+          `${E.updates} **Transcript:** The full conversation history has been archived and uploaded below as an HTML transcript.`
         )
         .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
         .setTimestamp();
@@ -295,24 +296,24 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
 // Build the Main Ticket Panel Components V2 Payload
 function buildTicketPanelPayload() {
   const panelHeader =
-`# <a:updates:1573382469938446390> **DREAM NODES ┃ Support & Ticket Desk**
-## <a:sparkles_sparkles:1573382447603785928> 24/7 Client Helpdesk • Instant Orders • Technical Support • Inquiries
+`# ${E.updates} **DREAM NODES ┃ Support & Ticket Desk**
+## ${E.sparkles} 24/7 Client Helpdesk • Instant Orders • Technical Support • Inquiries
 
-> <a:Rotating_Star:1573382194020491317> **Welcome to the official Dream Nodes Support Center!**
+> ${E.starRotating} **Welcome to the official Dream Nodes Support Center!**
 > Looking to purchase a hosting package, ask a pre-sales question, report a technical problem, or speak confidentially with management?
 > 
 > Choose the relevant department from the **interactive menu below** to create your dedicated private ticket channel.
 
-### <a:RedCrown:1573382179298353186> Support Departments:
-> <a:cash:1573382269735805008> **Buy / Purchase Hosting:** Order Minecraft, Intel / AMD VPS, RDP, Web Hosting, or Bot Nodes.
-> <a:chat:1573382277164040214> **General Queries:** Ask questions regarding server specs, custom quotes, locations, or billing.
-> <a:siren:1573382431065509981> **Staff Report:** Confidentially report staff misconduct directly to executive leadership.
-> <a:settings:1573382421611806763> **Problems & Issues:** Report downtime, control panel errors, server crashes, or network bugs.
+### ${E.crownRed} Support Departments:
+> ${E.cash} **Buy / Purchase Hosting:** Order Minecraft, Intel / AMD VPS, RDP, Web Hosting, or Bot Nodes.
+> ${E.chat} **General Queries:** Ask questions regarding server specs, custom quotes, locations, or billing.
+> ${E.siren} **Staff Report:** Confidentially report staff misconduct directly to executive leadership.
+> ${E.settings} **Problems & Issues:** Report downtime, control panel errors, server crashes, or network bugs.
 
-### <a:info:1573382351214354483> Support Guidelines:
-> <a:arrowf:1573382243827585114> **One Ticket Per Topic:** Please avoid creating multiple tickets for the same inquiry.
-> <a:arrowf:1573382243827585114> **Fill Required Questions:** State your plan, node location, or issue details in the popup form.
-> <a:arrowf:1573382243827585114> **Patient Response:** Our staff team is alerted automatically. Unnecessary pings are not required.`;
+### ${E.info} Support Guidelines:
+> ${E.arrowBlue} **One Ticket Per Topic:** Please avoid creating multiple tickets for the same inquiry.
+> ${E.arrowBlue} **Fill Required Questions:** State your plan, node location, or issue details in the popup form.
+> ${E.arrowBlue} **Patient Response:** Our staff team is alerted automatically. Unnecessary pings are not required.`;
 
   return {
     flags: 32768, // IS_COMPONENTS_V2
@@ -358,27 +359,27 @@ function buildTicketPanelPayload() {
                 style: 5,
                 label: 'Official Website',
                 url: 'https://dreamnodes.cloud',
-                emoji: { id: '1573382112436949044', name: '2251worldrainbow', animated: true }
+                emoji: B.world
               },
               {
                 type: 2,
                 style: 5,
                 label: 'How To Buy',
                 url: 'https://discord.com/channels/1573272872737181696/1573281597464121425',
-                emoji: { id: '1573382351214354483', name: 'info', animated: true }
+                emoji: B.info
               },
               {
                 type: 2,
                 style: 5,
                 label: 'Terms & Policies',
                 url: 'https://discord.com/channels/1573272872737181696/1573337303538208778',
-                emoji: { id: '1573382406206132427', name: 'pin', animated: true }
+                emoji: B.rulesBook
               }
             ]
           },
           {
             type: 10,
-            content: '-# <a:Rotating_Star:1573382194020491317> Dream Nodes • High-Performance Cloud Hosting & 24/7 Client Care Desk'
+            content: `-# ${E.starRotating} Dream Nodes • High-Performance Cloud Hosting & 24/7 Client Care Desk`
           }
         ]
       }
@@ -395,7 +396,7 @@ async function handleTicketDepartmentSelect(interaction) {
   const catConfig = CATEGORIES[selectedValue];
   if (!catConfig) {
     return interaction.reply({
-      content: '⚠️ Unknown department selected. Please try again.',
+      content: 'Unknown department selected. Please try again.',
       ephemeral: true
     });
   }
@@ -410,7 +411,7 @@ async function handleTicketDepartmentSelect(interaction) {
     const channelExists = interaction.guild.channels.cache.get(existingTicket.channelId);
     if (channelExists) {
       return interaction.reply({
-        content: `⚠️ You already have an open ticket in this department: <#${existingTicket.channelId}>. Please use that channel or close it before creating a new one.`,
+        content: `You already have an open ticket in this department: <#${existingTicket.channelId}>. Please use that channel or close it before creating a new one.`,
         ephemeral: true
       });
     }
@@ -451,7 +452,7 @@ async function handleTicketModalSubmit(interaction) {
   const catConfig = CATEGORIES[catKey];
   if (!catConfig) {
     return interaction.editReply({
-      content: '⚠️ Unknown department form submitted. Please try again.'
+      content: 'Unknown department form submitted. Please try again.'
     });
   }
 
@@ -465,7 +466,7 @@ async function handleTicketModalSubmit(interaction) {
     const channelExists = interaction.guild.channels.cache.get(existingTicket.channelId);
     if (channelExists) {
       return interaction.editReply({
-        content: `⚠️ You already have an open ticket in this department: <#${existingTicket.channelId}>. Please use that channel or close it before creating a new one.`
+        content: `You already have an open ticket in this department: <#${existingTicket.channelId}>. Please use that channel or close it before creating a new one.`
       });
     }
   }
@@ -561,21 +562,21 @@ async function handleTicketModalSubmit(interaction) {
     // 1. Ping the staff role in the new ticket channel so staff are alerted immediately!
     const staffPingRole = catConfig.staffPingRoleId;
     await ticketChannel.send({
-      content: `<a:announce:1573382228795457687> <@&${staffPingRole}> • New **${catConfig.name}** ticket opened by <@${interaction.user.id}>!`
+      content: `${E.announce} <@&${staffPingRole}> • New **${catConfig.name}** ticket opened by <@${interaction.user.id}>!`
     });
 
     // 2. Format the user's intake questions & answers cleanly
-    const intakeFormatted = intakeAnswers.map(ans => `> <a:arrowf:1573382243827585114> **${ans.label}:** \`${ans.value}\``).join('\n');
+    const intakeFormatted = intakeAnswers.map(ans => `> ${E.arrowBlue} **${ans.label}:** \`${ans.value}\``).join('\n');
 
     // 3. Build the aesthetic welcoming Components V2 message inside the new ticket channel
     const welcomeHeader =
-`# <a:updates:1573382469938446390> **DREAM NODES ┃ Ticket #${ticketNum}**
-### <a:sparkles_sparkles:1573382447603785928> Welcome <@${interaction.user.id}>! Support Desk Initialized
+`# ${E.updates} **DREAM NODES ┃ Ticket #${ticketNum}**
+### ${E.sparkles} Welcome <@${interaction.user.id}>! Support Desk Initialized
 
-> <a:Rotating_Star:1573382194020491317> **Thank you for contacting Dream Nodes Support!**
+> ${E.starRotating} **Thank you for contacting Dream Nodes Support!**
 > Our staff team has been alerted and will assist you shortly.
 > 
-> <a:Timer:1573382213985243146> **Please wait patiently:** Our staff will claim this ticket soon. Avoid spamming pings so we can assist everyone swiftly. Feel free to send screenshots, error codes, or further details below.`;
+> ${E.timer} **Please wait patiently:** Our staff will claim this ticket soon. Avoid spamming pings so we can assist everyone swiftly. Feel free to send screenshots, error codes, or further details below.`;
 
     const ticketMessagePayload = {
       flags: 32768, // IS_COMPONENTS_V2
@@ -595,7 +596,7 @@ async function handleTicketModalSubmit(interaction) {
             {
               type: 10,
               content:
-                `### <a:updates:1573382469938446390> Intake Information Provided:\n` +
+                `### ${E.updates} Intake Information Provided:\n` +
                 intakeFormatted
             },
             {
@@ -606,8 +607,8 @@ async function handleTicketModalSubmit(interaction) {
             {
               type: 10,
               content:
-                `> <a:pin:1573382406206132427> **Category:** \`${catConfig.name}\` ┃ <a:membership:1573382371699458201> **Opened By:** <@${interaction.user.id}>\n` +
-                `> <a:staff:1573382455384219929> **Status:** \`Unclaimed\` *(Staff will claim shortly)*`
+                `> ${E.pin} **Category:** \`${catConfig.name}\` ┃ ${E.membership} **Opened By:** <@${interaction.user.id}>\n` +
+                `> ${E.staff} **Status:** \`Unclaimed\` *(Staff will claim shortly)*`
             },
             {
               type: 14,
@@ -622,20 +623,20 @@ async function handleTicketModalSubmit(interaction) {
                   style: 3, // Success / Green
                   label: 'Claim Ticket',
                   custom_id: `ticket_claim_${ticketChannel.id}`,
-                  emoji: { id: '1573382371699458201', name: 'membership', animated: true }
+                  emoji: B.membership
                 },
                 {
                   type: 2,
                   style: 4, // Danger / Red
                   label: 'Close Ticket',
                   custom_id: `ticket_close_${ticketChannel.id}`,
-                  emoji: { id: '1573382156296917032', name: 'Cross', animated: true }
+                  emoji: B.cross
                 }
               ]
             },
             {
               type: 10,
-              content: '-# <a:Rotating_Star:1573382194020491317> Dream Nodes • 24/7 Dedicated Client Support Helpdesk'
+              content: `-# ${E.starRotating} Dream Nodes • 24/7 Dedicated Client Support Helpdesk`
             }
           ]
         }
@@ -665,13 +666,13 @@ async function handleTicketModalSubmit(interaction) {
 
     // 5. Notify user with direct channel link
     await interaction.editReply({
-      content: `✅ Your **${catConfig.name}** ticket has been created! Click here to jump to your ticket: <#${ticketChannel.id}>`
+      content: `${E.tick5} Your **${catConfig.name}** ticket has been created! Click here to jump to your ticket: <#${ticketChannel.id}>`
     });
 
   } catch (err) {
     console.error('[TICKET MODAL SUBMIT ERROR]', err);
     await interaction.editReply({
-      content: '⚠️ Failed to create support ticket. Please contact an administrator.'
+      content: 'Failed to create support ticket. Please contact an administrator.'
     });
   }
 }
@@ -684,7 +685,7 @@ async function handleTicketClaim(interaction) {
 
   if (!ticket) {
     return interaction.reply({
-      content: '⚠️ This channel is not recognized as an active ticket.',
+      content: 'This channel is not recognized as an active ticket.',
       ephemeral: true
     });
   }
@@ -695,21 +696,21 @@ async function handleTicketClaim(interaction) {
 
   if (ticket.categoryKey === 'report' && !isHighStaff) {
     return interaction.reply({
-      content: '❌ Staff Reports can only be claimed by Executive Staff (Admin / Manager / CEO / Founder).',
+      content: 'Staff Reports can only be claimed by Executive Staff (Admin / Manager / CEO / Founder).',
       ephemeral: true
     });
   }
 
   if (!isGeneralStaff) {
     return interaction.reply({
-      content: '❌ Only verified Dream Nodes staff members can claim support tickets.',
+      content: 'Only verified Dream Nodes staff members can claim support tickets.',
       ephemeral: true
     });
   }
 
   if (ticket.claimedBy) {
     return interaction.reply({
-      content: `⚠️ This ticket has already been claimed by <@${ticket.claimedBy}>.`,
+      content: `This ticket has already been claimed by <@${ticket.claimedBy}>.`,
       ephemeral: true
     });
   }
@@ -726,7 +727,7 @@ async function handleTicketClaim(interaction) {
 
     // Post claim announcement in ticket channel
     await ticketChannel.send({
-      content: `✋ **<@${interaction.user.id}> has claimed this ticket!** They are now reviewing your inquiry and will assist you immediately.`
+      content: `${E.staff} **<@${interaction.user.id}> has claimed this ticket!** They are now reviewing your inquiry and will assist you immediately.`
     });
 
     // Log claim event in ticket logs channel
@@ -741,13 +742,13 @@ async function handleTicketClaim(interaction) {
     });
 
     await interaction.reply({
-      content: `✅ You have successfully claimed ticket **#${ticket.ticketNum}**! Channel updated to \`${newChannelName}\`.`,
+      content: `${E.tick5} You have successfully claimed ticket **#${ticket.ticketNum}**! Channel updated to \`${newChannelName}\`.`,
       ephemeral: true
     });
   } catch (err) {
     console.error('[TICKET CLAIM ERROR]', err);
     await interaction.reply({
-      content: '⚠️ Failed to rename channel, but claim has been recorded.',
+      content: 'Failed to rename channel, but claim has been recorded.',
       ephemeral: true
     });
   }
@@ -760,14 +761,14 @@ async function handleTicketClosePrompt(interaction) {
 
   if (!ticket) {
     return interaction.reply({
-      content: '⚠️ This channel is not recognized as an active ticket.',
+      content: 'This channel is not recognized as an active ticket.',
       ephemeral: true
     });
   }
 
   // Ask for confirmation before deleting
   const confirmPayload = {
-    content: '<a:fsk_warning:1573382318364692703> **Are you sure you want to close and archive this ticket channel?**\nA full transcript will be saved to the ticket logs channel.',
+    content: `${E.alert} **Are you sure you want to close and archive this ticket channel?**\nA full transcript will be saved to the ticket logs channel.`,
     components: [
       {
         type: 1,
@@ -777,14 +778,14 @@ async function handleTicketClosePrompt(interaction) {
             style: 4, // Danger / Red
             label: 'Confirm Close',
             custom_id: `ticket_close_confirm_${interaction.channelId}`,
-            emoji: { id: '1573382156296917032', name: 'Cross', animated: true }
+            emoji: B.cross
           },
           {
             type: 2,
             style: 2, // Secondary / Grey
             label: 'Cancel',
             custom_id: `ticket_close_cancel_${interaction.channelId}`,
-            emoji: { id: '1573382205395177532', name: 'Tick5', animated: true }
+            emoji: B.tick5
           }
         ]
       }
@@ -809,7 +810,7 @@ async function handleTicketCloseConfirm(interaction) {
   };
 
   await interaction.reply({
-    content: `🔒 **Ticket closed by <@${interaction.user.id}>.** Saving transcript and deleting channel in **5 seconds**...`
+    content: `${E.security} **Ticket closed by <@${interaction.user.id}>.** Saving transcript and deleting channel in **5 seconds**...`
   });
 
   try {
@@ -851,7 +852,7 @@ async function handleTicketCloseConfirm(interaction) {
           name: `transcript-ticket-${ticket.ticketNum}.html`
         });
         await creatorUser.send({
-          content: `📬 **Your Dream Nodes support ticket #${ticket.ticketNum} (${ticket.categoryName}) has been closed.**\nYour complete conversation transcript is attached below for your records:`,
+          content: `${E.ticket} **Your Dream Nodes support ticket #${ticket.ticketNum} (${ticket.categoryName}) has been closed.**\nYour complete conversation transcript is attached below for your records:`,
           files: [dmAttachment]
         }).catch(() => null);
       }

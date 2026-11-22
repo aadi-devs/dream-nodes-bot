@@ -1,0 +1,182 @@
+{
+  "type": 0,
+  "content": "",
+  "mentions": [],
+  "mention_roles": [],
+  "attachments": [],
+  "embeds": [],
+  "timestamp": "2026-11-21T18:55:45.978000+00:00",
+  "edited_timestamp": "2026-11-22T16:17:42.948000+00:00",
+  "flags": 32768,
+  "components": [
+    {
+      "type": 17,
+      "id": 1,
+      "accent_color": null,
+      "components": [
+        {
+          "type": 10,
+          "id": 2,
+          "content": "# <a:updates:1573382469938446390> **DREAM NODES ┃ Support & Ticket Desk**\n## <a:sparkles_sparkles:1573382447603785928> 24/7 Client Helpdesk • Instant Orders • Technical Support • Inquiries\n\n> <a:Rotating_Star:1573382194020491317> **Welcome to the official Dream Nodes Support Center!**\n> Looking to purchase a hosting package, ask a pre-sales question, report a technical problem, or speak confidentially with management?\n> \n> Choose the relevant department from the **interactive menu below** to create your dedicated private ticket channel.\n\n### <a:RedCrown:1573382179298353186> Support Departments:\n> <a:cash:1573382269735805008> **Buy / Purchase Hosting:** Order Minecraft, Intel / AMD VPS, RDP, Web Hosting, or Bot Nodes.\n> <a:chat:1573382277164040214> **General Queries:** Ask questions regarding server specs, custom quotes, locations, or billing.\n> <a:siren:1573382431065509981> **Staff Report:** Confidentially report staff misconduct directly to executive leadership.\n> <a:settings:1573382421611806763> **Problems & Issues:** Report downtime, control panel errors, server crashes, or network bugs.\n\n### <a:info:1573382351214354483> Support Guidelines:\n> <a:arrowf:1573382243827585114> **One Ticket Per Topic:** Please avoid creating multiple tickets for the same inquiry.\n> <a:arrowf:1573382243827585114> **Fill Required Questions:** State your plan, node location, or issue details in the popup form.\n> <a:arrowf:1573382243827585114> **Patient Response:** Our staff team is alerted automatically. Unnecessary pings are not required."
+        },
+        {
+          "type": 14,
+          "id": 3,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 4,
+          "components": [
+            {
+              "type": 3,
+              "id": 5,
+              "custom_id": "ticket_create_menu",
+              "placeholder": "Select a department to open a ticket...",
+              "min_values": 1,
+              "max_values": 1,
+              "options": [
+                {
+                  "label": "Buy / Purchase Hosting",
+                  "value": "ticket_buy",
+                  "description": "Order Minecraft nodes, VPS, RDP, Web or Bot hosting",
+                  "emoji": {
+                    "id": "1573382269735805008",
+                    "name": "cash",
+                    "animated": true
+                  }
+                },
+                {
+                  "label": "General Queries & Inquiries",
+                  "value": "ticket_queries",
+                  "description": "Ask about server specs, custom builds, locations or billing",
+                  "emoji": {
+                    "id": "1573382277164040214",
+                    "name": "chat",
+                    "animated": true
+                  }
+                },
+                {
+                  "label": "Staff Misconduct Report",
+                  "value": "ticket_staff_report",
+                  "description": "Confidential report sent directly to executive management",
+                  "emoji": {
+                    "id": "1573382431065509981",
+                    "name": "siren",
+                    "animated": true
+                  }
+                },
+                {
+                  "label": "Technical Problems & Issues",
+                  "value": "ticket_problems",
+                  "description": "Report server offline, node downtime, bugs or control panel help",
+                  "emoji": {
+                    "id": "1573382421611806763",
+                    "name": "settings",
+                    "animated": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": 14,
+          "id": 6,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 7,
+          "components": [
+            {
+              "type": 2,
+              "id": 8,
+              "style": 5,
+              "label": "Official Website",
+              "emoji": {
+                "id": "1573382112436949044",
+                "name": "2251worldrainbow",
+                "animated": true
+              },
+              "url": "https://dreamnodes.cloud"
+            },
+            {
+              "type": 2,
+              "id": 9,
+              "style": 5,
+              "label": "How To Buy",
+              "emoji": {
+                "id": "1573382351214354483",
+                "name": "info",
+                "animated": true
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281597464121425"
+            },
+            {
+              "type": 2,
+              "id": 10,
+              "style": 5,
+              "label": "Terms & Policies",
+              "emoji": {
+                "id": "1573382406206132427",
+                "name": "pin",
+                "animated": true
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573337303538208778"
+            }
+          ]
+        },
+        {
+          "type": 10,
+          "id": 11,
+          "content": "-# <a:Rotating_Star:1573382194020491317> Dream Nodes • High-Performance Cloud Hosting & 24/7 Client Care Desk"
+        }
+      ],
+      "spoiler": false
+    }
+  ],
+  "id": "1573773937383440486",
+  "channel_id": "1573281601775870043",
+  "author": {
+    "id": "1573271779915337811",
+    "username": "DreamNodes",
+    "avatar": "f3df58ac5c311e8dbf8c335b2771eef9",
+    "discriminator": "3300",
+    "public_flags": 0,
+    "flags": 0,
+    "bot": true,
+    "banner": null,
+    "accent_color": null,
+    "global_name": null,
+    "avatar_decoration_data": null,
+    "collectibles": null,
+    "display_name_styles": null,
+    "banner_color": null,
+    "clan": null,
+    "primary_guild": null
+  },
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "reactions": [
+    {
+      "emoji": {
+        "id": null,
+        "name": "🎫"
+      },
+      "count": 2,
+      "count_details": {
+        "burst": 0,
+        "normal": 2
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    }
+  ]
+}

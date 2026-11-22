@@ -1,0 +1,158 @@
+{
+  "type": 0,
+  "content": "",
+  "mentions": [],
+  "mention_roles": [],
+  "attachments": [],
+  "embeds": [],
+  "timestamp": "2026-11-21T13:15:17.684000+00:00",
+  "edited_timestamp": "2026-11-22T16:14:30.794000+00:00",
+  "flags": 32768,
+  "components": [
+    {
+      "type": 17,
+      "id": 1,
+      "accent_color": null,
+      "components": [
+        {
+          "type": 10,
+          "id": 2,
+          "content": "# <a:minecraft:1573382379215659081> Dream Nodes | Advance Minecraft Hosting\n## <a:Attacks:1573382140006244363> 🛡️ Enterprise Game-Shield Protected Nodes\n\n> <a:siren:1573382431065509981> **MILITARY-GRADE DEFENSE INCLUDED ON ALL ADVANCE PLANS**\n> <a:Lightning:1573382171257737317> Every node is fortified with automated **Layer 4 & Layer 7 Game Mitigation** built specifically for Minecraft protocols. Our edge filters intercept UDP/TCP floods, SYN storms, null-ping exploits, and bot raids in real time with **sub-second reaction**—keeping your server locked at 20 TPS with zero downtime.\n\n### <a:hostinger:1573382335355691089> Key Defense Capabilities:\n> ✦ **1.2+ Tbps Traffic Pipeline:** Effortlessly absorbs massive volumetric attacks.\n> ✦ **Minecraft Protocol Scrubbing:** Cleans packet spoofing & ping exploits on the fly.\n> ✦ **Zero Disconnects:** Instant automated mitigation with zero player lag spikes."
+        },
+        {
+          "type": 14,
+          "id": 3,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 4,
+          "content": "### <a:b_fire:1573381944702533732> Starter Tier Plans\n\n> 🪨 **Coal • Ember** `[ 2 GB ]`\n> ✦ <:RAM:1573382492973568062> `2 GB DDR4` ┃ <:cpu:1573382485310709781> `1 Core` ┃ <:disk:1573382500795818114> `15 GB NVMe` ┃ <a:cash:1573382269735805008> `₹200 /mo`\n> \n> 🥉 **Copper • Spark** `[ 4 GB ]`\n> ✦ <:RAM:1573382492973568062> `4 GB DDR4` ┃ <:cpu:1573382485310709781> `1 Core` ┃ <:disk:1573382500795818114> `25 GB NVMe` ┃ <a:cash:1573382269735805008> `₹400 /mo`\n> \n> ⛓️ **Iron • Flare** `[ 6 GB ]`\n> ✦ <:RAM:1573382492973568062> `6 GB DDR4` ┃ <:cpu:1573382485310709781> `2 Cores` ┃ <:disk:1573382500795818114> `35 GB NVMe` ┃ <a:cash:1573382269735805008> `₹600 /mo`"
+        },
+        {
+          "type": 14,
+          "id": 5,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 6,
+          "content": "### <a:Lightning:1573382171257737317> Community & Expansion Plans\n\n> 🪙 **Gold • Blaze** `[ 8 GB ]`\n> ✦ <:RAM:1573382492973568062> `8 GB DDR4` ┃ <:cpu:1573382485310709781> `2 Cores` ┃ <:disk:1573382500795818114> `50 GB NVMe` ┃ <a:cash:1573382269735805008> `₹750 /mo`\n> \n> ❇️ **Emerald • Aurora** `[ 12 GB ]`\n> ✦ <:RAM:1573382492973568062> `12 GB DDR4` ┃ <:cpu:1573382485310709781> `3 Cores` ┃ <:disk:1573382500795818114> `75 GB NVMe` ┃ <a:cash:1573382269735805008> `₹1,150 /mo`\n> \n> 💎 **Diamond • Nova** `[ 16 GB ]`\n> ✦ <:RAM:1573382492973568062> `16 GB DDR4` ┃ <:cpu:1573382485310709781> `4 Cores` ┃ <:disk:1573382500795818114> `100 GB NVMe` ┃ <a:cash:1573382269735805008> `₹1,500 /mo`"
+        },
+        {
+          "type": 14,
+          "id": 7,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 8,
+          "content": "### <a:RedCrown:1573382179298353186> Heavy Modded & Network Plans\n\n> 🖤 **Netherite • Eclipse** `[ 24 GB ]`\n> ✦ <:RAM:1573382492973568062> `24 GB DDR4` ┃ <:cpu:1573382485310709781> `6 Cores` ┃ <:disk:1573382500795818114> `120 GB NVMe` ┃ <a:cash:1573382269735805008> `₹2,250 /mo`\n> \n> 🗼 **Beacon • Zenith** `[ 32 GB ]`\n> ✦ <:RAM:1573382492973568062> `32 GB DDR4` ┃ <:cpu:1573382485310709781> `8 Cores` ┃ <:disk:1573382500795818114> `150 GB NVMe` ┃ <a:cash:1573382269735805008> `₹3,000 /mo`\n> \n> 👁️ **Ender • Galaxy** `[ 48 GB ]`\n> ✦ <:RAM:1573382492973568062> `48 GB DDR4` ┃ <:cpu:1573382485310709781> `12 Cores` ┃ <:disk:1573382500795818114> `220 GB NVMe` ┃ <a:cash:1573382269735805008> `₹4,500 /mo`\n> \n> 🐲 **Dragon • Cosmos** `[ 64 GB ]`\n> ✦ <:RAM:1573382492973568062> `64 GB DDR4` ┃ <:cpu:1573382485310709781> `16 Cores` ┃ <:disk:1573382500795818114> `300 GB NVMe` ┃ <a:cash:1573382269735805008> `₹6,000 /mo`"
+        },
+        {
+          "type": 14,
+          "id": 9,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 10,
+          "id": 10,
+          "content": "### <a:sparkles_sparkles:1573382447603785928> All Advance Plans Include:\n> <:bandwith55:1573382523201912842> **1 Gbps High-Speed Network Uplink** ┃ <:backup:1573382515341664270> **Automated Off-site Daily Snapshots**\n> <a:Tick5:1573382205395177532> **Custom Pterodactyl Panel** (SFTP, Full Root File Access, Split Ports)\n> <a:hostinger:1573382335355691089> **Instant Provisioning Upon Ticket Confirmation**\n\n### <a:settings:1573382421611806763> Add-ons & Dedicated IP:\n> 🌐 **Dedicated IPv4 + Default Port (25565):** <a:cash:1573382269735805008> `₹350 /month`\n> *(Join directly using your domain/IP with no random port numbers needed!)*"
+        },
+        {
+          "type": 14,
+          "id": 11,
+          "spacing": 1,
+          "divider": true
+        },
+        {
+          "type": 1,
+          "id": 12,
+          "components": [
+            {
+              "type": 2,
+              "id": 13,
+              "style": 5,
+              "label": "Open Ticket to Order",
+              "emoji": {
+                "name": "🎫"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281601775870043"
+            },
+            {
+              "type": 2,
+              "id": 14,
+              "style": 5,
+              "label": "Official Website",
+              "emoji": {
+                "name": "🌐"
+              },
+              "url": "https://dreamnodes.cloud"
+            },
+            {
+              "type": 2,
+              "id": 15,
+              "style": 5,
+              "label": "How To Buy",
+              "emoji": {
+                "name": "📖"
+              },
+              "url": "https://discord.com/channels/1573272872737181696/1573281597464121425"
+            }
+          ]
+        },
+        {
+          "type": 10,
+          "id": 16,
+          "content": "-# 🛡️ Dream Nodes • Enterprise Protected Advance Minecraft Hosting Solutions"
+        }
+      ],
+      "spoiler": false
+    }
+  ],
+  "id": "1573688254908207249",
+  "channel_id": "1573281486822445128",
+  "author": {
+    "id": "1573271779915337811",
+    "username": "DreamNodes",
+    "avatar": "f3df58ac5c311e8dbf8c335b2771eef9",
+    "discriminator": "3300",
+    "public_flags": 0,
+    "flags": 0,
+    "bot": true,
+    "banner": null,
+    "accent_color": null,
+    "global_name": null,
+    "avatar_decoration_data": null,
+    "collectibles": null,
+    "display_name_styles": null,
+    "banner_color": null,
+    "clan": null,
+    "primary_guild": null
+  },
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "reactions": [
+    {
+      "emoji": {
+        "id": null,
+        "name": "❤️"
+      },
+      "count": 2,
+      "count_details": {
+        "burst": 0,
+        "normal": 2
+      },
+      "burst_colors": [],
+      "me_burst": false,
+      "burst_me": false,
+      "me": true,
+      "burst_count": 0
+    }
+  ]
+}

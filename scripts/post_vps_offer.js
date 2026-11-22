@@ -1,49 +1,55 @@
 const fs = require('fs');
 const path = require('path');
+const { E, B } = require('../src/emojis');
 
 const envPath = path.join(__dirname, '..', '.env');
 const token = fs.readFileSync(envPath, 'utf8').match(/DISCORD_TOKEN=(.*)/)[1].trim();
 
 // Target channel: # ♘・ᴀᴜᴄᴛɪᴏɴꜱ (under ✦----- VPS PLANS -----✦)
 const auctionsChannelId = '1573281528031481967';
-const announcementsChannelId = '1573337308529434756';
+const messageId = '1574087291578613771';
 const clientRoleId = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
+const ticketChannelUrl = 'https://discord.com/channels/1573272872737181696/1573281601775870043';
+const howToBuyUrl = 'https://discord.com/channels/1573272872737181696/1573281597464121425';
+const websiteUrl = 'https://dreamnodes.cloud';
 
 const markdownContent = 
-`# **INTEL PLATINUM VPS OFFER • DREAM NODES**
+`# ${E.announce} **INTEL PLATINUM VPS OFFER • DREAM NODES** ${E.sparkles}
 
-╭・<a:announce:1573382228795457687> **Dream Nodes • Intel Platinum 8269-CY**
-╰┈➤ <a:Lightning:1573382171257737317> **High Performance VPS** :flag_in:
-
-## <:RAM:1573382492973568062> **32GB VPS Plan**
-> <:ateex_processor:1574082606159364116> **Processor:** Intel Platinum 8269-CY
-> <:RAM:1573382492973568062> **Memory:** 32GB Dedicated RAM
-> <:cpu:1573382485310709781> **CPU:** 8 Dedicated Cores
-> <:disk:1573382500795818114> **Storage:** 150GB NVMe SSD
-> <a:location:1573382361574277130> **Location:** Mumbai, India :flag_in:
+> ${E.vps} **Dream Nodes • Intel Platinum 8269-CY**
+> ${E.arrowBlue} ${E.lightning} **High Performance Enterprise VPS** ${E.india}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<:money:1574082659775160447> **Offer Price:** ₹999/month
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## <:RAM:1573382492973568062> **64GB VPS Plan**
-> <:ateex_processor:1574082606159364116> **Processor:** Intel Platinum 8269-CY
-> <:RAM:1573382492973568062> **Memory:** 64GB Dedicated RAM
-> <:cpu:1573382485310709781> **CPU:** 12 Dedicated Cores
-> <:disk:1573382500795818114> **Storage:** 250GB NVMe SSD
-> <a:location:1573382361574277130> **Location:** Mumbai, India :flag_in:
+## ${E.ram} **32GB VPS Plan**
+> ${E.processor} **Processor:** Intel Platinum 8269-CY
+> ${E.ram} **Memory:** 32GB Dedicated RAM
+> ${E.cpu} **CPU:** 8 Dedicated Cores
+> ${E.disk} **Storage:** 150GB NVMe SSD
+> ${E.location} **Location:** Mumbai, India ${E.india}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-<:money:1574082659775160447> **Offer Price:** ₹1699/month
+${E.cash} **Offer Price: ₹999 / month**
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## **Included Features**
-<a:Tick5:1573382205395177532> DDoS Protection Included • Dedicated Enterprise IPv4
-<a:Tick5:1573382205395177532> Root Access • Control Panel
-<a:Tick5:1573382205395177532> Instant Deployment • 24/7 Support
+## ${E.ram} **64GB VPS Plan**
+> ${E.processor} **Processor:** Intel Platinum 8269-CY
+> ${E.ram} **Memory:** 64GB Dedicated RAM
+> ${E.cpu} **CPU:** 12 Dedicated Cores
+> ${E.disk} **Storage:** 250GB NVMe SSD
+> ${E.location} **Location:** Mumbai, India ${E.india}
 
-:envelope_with_arrow: **Open a Ticket to Purchase!** ||<@&${clientRoleId}>||
-https://discord.com/channels/1573272872737181696/1573281601775870043`;
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${E.cash} **Offer Price: ₹1,699 / month**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## ${E.settings} **Included Features:**
+${E.tick5} **DDoS Protection Included • Dedicated Enterprise IPv4**
+${E.tick5} **Root Access • Full Control Panel**
+${E.tick5} **Instant Deployment • 24/7 Dedicated Support**
+
+${E.ticket} **Open a Ticket to Purchase!** ||<@&${clientRoleId}>||
+${ticketChannelUrl}`;
 
 const v2Payload = {
   flags: 32768, // IS_COMPONENTS_V2
@@ -61,99 +67,60 @@ const v2Payload = {
           spacing: 1
         },
         {
-          type: 1, // Action Row with Buttons
+          type: 1, // Action Row
           components: [
             {
               type: 2,
               style: 5,
-              label: 'Open a Ticket',
-              url: 'https://discord.com/channels/1573272872737181696/1573281601775870043',
-              emoji: { name: '🎫' }
-            },
-            {
-              type: 2,
-              style: 5,
-              label: 'How To Buy',
-              url: 'https://discord.com/channels/1573272872737181696/1573281597464121425',
-              emoji: { name: '📖' }
+              label: 'Claim Auction / Open Ticket',
+              url: ticketChannelUrl,
+              emoji: B.ticket
             },
             {
               type: 2,
               style: 5,
               label: 'Official Website',
-              url: 'https://dreamnodes.cloud',
-              emoji: { name: '🌐' }
+              url: websiteUrl,
+              emoji: B.world
+            },
+            {
+              type: 2,
+              style: 5,
+              label: 'How To Buy',
+              url: howToBuyUrl,
+              emoji: B.info
             }
           ]
         },
         {
           type: 10,
-          content: '-# 💙 Dream Nodes • High-Performance Cloud VPS & Dedicated Compute'
+          content: `-# ${E.verifiedBlue} Dream Nodes • Intel Platinum 8269-CY VPS Auction Offer`
         }
       ]
     }
   ]
 };
 
-async function resendAuctions() {
-  // 1. Delete previous message in Auctions if it exists
-  const getRes = await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages?limit=5`, {
-    headers: { Authorization: `Bot ${token}` }
-  });
-  const msgs = await getRes.json();
-  if (Array.isArray(msgs)) {
-    for (const msg of msgs) {
-      console.log('Deleting previous auctions message:', msg.id);
-      await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages/${msg.id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bot ${token}` }
-      });
-    }
-  }
-
-  // 2. Post clean Dream Nodes message in Auctions
-  console.log('Posting updated Dream Nodes message to Auctions channel:', auctionsChannelId);
-  const res = await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages`, {
-    method: 'POST',
+async function updateVpsOffer() {
+  console.log('Patching VPS Auction Offer embed in channel', auctionsChannelId);
+  const patchRes = await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages/${messageId}`, {
+    method: 'PATCH',
     headers: {
       Authorization: `Bot ${token}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(v2Payload)
   });
-
-  const data = await res.json();
-  if (data.id) {
-    console.log('✓ Successfully posted clean Dream Nodes message to Auctions! Message ID:', data.id);
-
-    // Add reactions
-    await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages/${data.id}/reactions/%E2%9A%A1/@me`, { // ⚡
-      method: 'PUT',
-      headers: { Authorization: `Bot ${token}` }
-    });
-    await fetch(`https://discord.com/api/v10/channels/${auctionsChannelId}/messages/${data.id}/reactions/%F0%9F%8E%AB/@me`, { // 🎫
-      method: 'PUT',
-      headers: { Authorization: `Bot ${token}` }
-    });
-  }
-
-  // 3. Also update announcements message if present
-  const annRes = await fetch(`https://discord.com/api/v10/channels/${announcementsChannelId}/messages?limit=5`, {
-    headers: { Authorization: `Bot ${token}` }
-  });
-  const annMsgs = await annRes.json();
-  if (Array.isArray(annMsgs) && annMsgs.length > 0) {
-    console.log('Updating Announcements message in place:', annMsgs[0].id);
-    await fetch(`https://discord.com/api/v10/channels/${announcementsChannelId}/messages/${annMsgs[0].id}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bot ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(v2Payload)
-    });
-    console.log('✓ Successfully updated Announcements message branding to Dream Nodes');
+  const patchData = await patchRes.json();
+  if (patchData.id) {
+    console.log('✓ Successfully updated VPS Auction Offer embed! Message ID:', patchData.id);
+  } else {
+    console.error('✗ Failed to patch VPS Auction Offer:', JSON.stringify(patchData, null, 2));
   }
 }
 
-resendAuctions();
+if (require.main === module) {
+  updateVpsOffer();
+}
+
+module.exports = { updateVpsOffer, v2Payload };
