@@ -98,7 +98,7 @@ async function updateHoneypotButton() {
     if (components[0]?.components) {
       const actionRow = components[0].components.find(c => c.type === 1);
       if (actionRow && actionRow.components?.[0]) {
-        actionRow.components[0].label = `ᴋɪᴄᴋꜱ: ${kicksCount}`;
+        actionRow.components[0].label = `Traps Triggered: ${kicksCount}`;
         actionRow.components[0].disabled = false;
 
         await fetch(`https://discord.com/api/v10/channels/${honeypotChannelId}/messages/${honeypotMessageId}`, {
@@ -162,16 +162,16 @@ async function sendHoneypotAlertDM(userId) {
                 {
                   type: 10,
                   content:
-                    `### ${E.stopSign} ${E.siren} ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ ꜱᴇᴄᴜʀɪᴛʏ ᴀʟᴇʀᴛ !\n` +
-                    `${E.alert} **ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ ᴡᴀꜱ ꜱᴏꜰᴛʙᴀɴɴᴇᴅ / ᴋɪᴄᴋᴇᴅ**\n` +
-                    `> ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ ꜱᴇɴᴛ ᴀ ᴍᴇꜱꜱᴀɢᴇ ɪɴ ᴏᴜʀ **# 𖹭ᐟ・ᴅᴏɴᴛ-ᴍꜱɢ-ʜᴇʀᴇ** ʜᴏɴᴇʏᴘᴏᴛ ᴄʜᴀɴɴᴇʟ .\n` +
-                    `> ᴛʜɪꜱ ᴄʜᴀɴɴᴇʟ ɪꜱ ᴅᴇꜱɪɢɴᴇᴅ ᴇxᴄʟᴜꜱɪᴠᴇʟʏ ᴛᴏ ᴛʀᴀᴘ ᴀᴜᴛᴏᴍᴀᴛᴇᴅ ꜱᴘᴀᴍ ʙᴏᴛꜱ & ᴛᴏᴋᴇɴ ɢʀᴀʙʙᴇʀꜱ .\n\n` +
-                    `${E.security} **ʜᴏᴡ ᴛᴏ ʀᴇᴄᴏᴠᴇʀ ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ :**\n` +
-                    `> ${E.arrowBlue} \`1.\` **ᴄʜᴀɴɢᴇ ʏᴏᴜʀ ᴅɪꜱᴄᴏʀᴅ ᴘᴀꜱꜱᴡᴏʀᴅ** ɪᴍᴍᴇᴅɪᴀᴛᴇʟʏ (ᴛʜɪꜱ ʀᴇꜱᴇᴛꜱ ʏᴏᴜʀ ᴛᴏᴋᴇɴ) .\n` +
-                    `> ${E.arrowBlue} \`2.\` **ᴇɴᴀʙʟᴇ ᴛᴡᴏ-ꜰᴀᴄᴛᴏʀ ᴀᴜᴛʜᴇɴᴛɪᴄᴀᴛɪᴏɴ (2ꜰᴀ)** ꜰᴏʀ ᴍᴀxɪᴍᴜᴍ ꜱᴇᴄᴜʀɪᴛʏ .\n` +
-                    `> ${E.arrowBlue} \`3.\` **ᴄʜᴇᴄᴋ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ᴀᴘᴘꜱ** (ꜱᴇᴛᴛɪɴɢꜱ → ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ᴀᴘᴘꜱ) ᴀɴᴅ ʀᴇᴠᴏᴋᴇ ꜱᴜꜱᴘɪᴄɪᴏᴜꜱ ᴏɴᴇꜱ .\n\n` +
-                    `${E.sparkles} **ᴊᴏɪɴ ᴜꜱ ʙᴀᴄᴋ ᴏɴᴄᴇ ʏᴏᴜ ᴀʀᴇ ꜱᴇᴄᴜʀᴇ :**\n` +
-                    `> ᴏɴᴄᴇ ʏᴏᴜ ʜᴀᴠᴇ ꜱᴇᴄᴜʀᴇᴅ ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ , ʏᴏᴜ ᴀʀᴇ ᴍᴏʀᴇ ᴛʜᴀɴ ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ʀᴇᴊᴏɪɴ ᴏᴜʀ ᴄᴏᴍᴍᴜɴɪᴛʏ !`
+                    `### ${E.stopSign} **Dream Nodes Security Sentinel Alert**\n` +
+                    `> ${E.alert} **Your account was kicked / softbanned.**\n` +
+                    `> A message was sent from your account in our **# 𖹭ᐟ・ᴅᴏɴᴛ-ᴍꜱɢ-ʜᴇʀᴇ** honeypot channel.\n` +
+                    `> This channel is an automated trap configured to catch compromised accounts, spambots, and token stealers.\n\n` +
+                    `### ${E.security} **How to Secure Your Account:**\n` +
+                    `> ${E.arrowBlue} **1. Change Your Discord Password** immediately (this immediately resets your bot token).\n` +
+                    `> ${E.arrowBlue} **2. Enable Two-Factor Authentication (2FA)** for hardware or authenticator security.\n` +
+                    `> ${E.arrowBlue} **3. Review Authorized Apps** (User Settings → Authorized Apps) and remove suspicious apps.\n\n` +
+                    `### ${E.sparkles} **Rejoin Once Secure:**\n` +
+                    `> Once you have secured your credentials, you are warmly welcome to rejoin our community!`
                 }
               ],
               ...(honeypotBuffer ? {
@@ -194,14 +194,14 @@ async function sendHoneypotAlertDM(userId) {
                 {
                   type: 2,
                   style: 5,
-                  label: '✦ ʀᴇᴊᴏɪɴ ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ ✦',
+                  label: 'Rejoin Dream Nodes',
                   url: permanentInviteUrl,
                   emoji: B.discord
                 },
                 {
                   type: 2,
                   style: 5,
-                  label: 'ꜱᴀꜰᴇᴛʏ ɢᴜɪᴅᴇ',
+                  label: 'Account Safety Guide',
                   url: 'https://support.discord.com/hc/en-us/articles/24160905096599-Keeping-Your-Discord-Account-Safe',
                   emoji: B.security
                 }
@@ -421,11 +421,11 @@ async function sendWelcomeV2(targetChannelId, member) {
                 type: 10,
                 content:
                   `${username}\n` +
-                  `### ${E.sparkles} ${E.starRotating} ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴅʀᴇᴀᴍ ɴᴏᴅᴇꜱ !\n` +
-                  `${E.chat} ꜱᴀʏ ʜɪ ɪɴ <#1573281610210611266> !\n` +
-                  `${E.rulesBook} ʀᴇᴀᴅ ᴛʜᴇ <#1573337303538208778> !\n` +
-                  `${E.updates} ꜱᴇʀᴠᴇʀ ᴜᴘᴅᴀᴛᴇꜱ ɪɴ <#1573337308529434756> !\n` +
-                  `${E.minecraft} ᴇxᴘʟᴏʀᴇ ʜᴏꜱᴛɪɴɢ ɪɴ <#1573281486822445128> !`
+                  `### ${E.sparkles} **Welcome to Dream Nodes!**\n` +
+                  `> ${E.chat} Say hello in <#1574120435828662512>.\n` +
+                  `> ${E.rulesBook} Read community rules in <#1573281463858630726>.\n` +
+                  `> ${E.updates} Check server updates in <#1573337308529434756>.\n` +
+                  `> ${E.minecraft} Explore hosting plans in <#1573281486822445128>.`
               }
             ],
             accessory: {

@@ -304,10 +304,10 @@ function buildHoneypotLogsV2(logs) {
       const time = `<t:${entry.timestamp}:R>`;
       const dmTag = entry.dmStatus === 'SENT' ? ` • ${E.tick5} DM: Delivered` : (entry.dmStatus ? ` • ${E.cross} DM: Closed` : '');
       if (entry.action === 'KICKED') {
-        return `**${idx + 1}.** ${E.hammer} **ᴋɪᴄᴋᴇᴅ:** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}${dmTag}\n` +
+        return `**${idx + 1}.** ${E.hammer} **Kicked:** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}${dmTag}\n` +
                `> ${E.chat} *"${entry.contentSnippet}"*`;
       } else {
-        return `**${idx + 1}.** ${E.alert} **ꜰᴀɪʟᴇᴅ (ʜɪɢʜᴇʀ ᴘᴇʀᴍꜱ):** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}${dmTag}\n` +
+        return `**${idx + 1}.** ${E.alert} **Exempt (Elevated Roles):** \`${entry.userTag}\` (<@${entry.userId}>) • ${time}${dmTag}\n` +
                `> ${E.shield} *${entry.failReason || 'Administrator / Role Hierarchy'}*\n` +
                `> ${E.chat} *"${entry.contentSnippet}"*`;
       }
