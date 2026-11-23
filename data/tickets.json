@@ -1,33 +1,40 @@
 {
   "counter": 4,
   "activeTickets": {
-    "1574169855802871818": {
-      "ticketNum": "0002",
+    "1574329644188958741": {
+      "ticketNum": "0004",
       "categoryKey": "buy",
       "categoryName": "Buy / Purchase Hosting",
-      "channelId": "1574169855802871818",
-      "userId": "1188142147522805780",
-      "userTag": "itsmevictus.",
-      "claimedBy": null,
-      "claimedTag": null,
-      "createdAt": 1795381740,
+      "channelId": "1574329644188958741",
+      "userId": "699539012649615400",
+      "userTag": "sampad_craft",
+      "claimedBy": "1188142147522805780",
+      "claimedTag": "itsmevictus.",
+      "createdAt": 1795419837,
       "intakeAnswers": [
         {
           "label": "Desired Service / Plan",
-          "value": "."
+          "value": "12 gb"
         },
         {
           "label": "Server Location",
-          "value": "."
+          "value": "India"
         },
         {
           "label": "Preferred Payment Method",
-          "value": "."
+          "value": "UPI"
         },
         {
           "label": "Additional Requirements / Custom Specs",
-          "value": "."
+          "value": "Not specified"
         }
+      ],
+      "dealDone": true,
+      "dealDoneBy": "1188142147522805780",
+      "dealDoneTag": "itsmevictus.",
+      "dealDoneAt": 1795419874,
+      "addedUsers": [
+        "1230038654718836767"
       ]
     }
   }
