@@ -377,7 +377,11 @@ const commands = [
         .setName('response')
         .setDescription('Your response message to the client')
         .setRequired(true)
-    )
+    ),
+
+  new SlashCommandBuilder()
+    .setName('syncroles')
+    .setDescription('Scan and assign the Member role to all members missing it (Staff only)')
 ].map(cmd => cmd.toJSON());
 
 // Register Slash Commands
@@ -474,6 +478,33 @@ async function sendWelcomeV2(targetChannelId, member) {
   return await res.json();
 }
 
+// Auto-Role Synchronization: ensures all human members have the Member role
+async function syncMemberRoles(guild) {
+  if (!guild) return 0;
+  try {
+    const members = await guild.members.fetch();
+    let assignedCount = 0;
+    for (const member of members.values()) {
+      if (!member.user.bot && !member.roles.cache.has(memberRoleId)) {
+        try {
+          await member.roles.add(memberRoleId, 'Auto-assigned missing Member role during sync');
+          assignedCount++;
+          console.log(`[AUTOROLE SYNC] Granted Member role to ${member.user.tag} (${member.id})`);
+        } catch (err) {
+          console.error(`[AUTOROLE SYNC ERROR] Could not grant role to ${member.user.tag}:`, err.message);
+        }
+      }
+    }
+    if (assignedCount > 0) {
+      console.log(`[AUTOROLE SYNC COMPLETE] Synced Member role to ${assignedCount} member(s).`);
+    }
+    return assignedCount;
+  } catch (err) {
+    console.error('[AUTOROLE SYNC ERROR] Failed to fetch guild members:', err);
+    return 0;
+  }
+}
+
 client.once('clientReady', async () => {
   console.log(`[BOT READY] Logged in as ${client.user.tag} (${client.user.id})`);
 
@@ -492,10 +523,24 @@ client.once('clientReady', async () => {
   console.log(`[PRESENCE SET] Activity set to "developing solutions"`);
   await registerCommands();
   await postOrUpdateReviewHubPrompt(client).catch(err => console.error('[REVIEW PROMPT INIT ERROR]', err));
+
+  // Run startup sync for any members who joined while bot was offline
+  const guild = client.guilds.cache.get(guildId);
+  if (guild) {
+    await syncMemberRoles(guild);
+  }
+
+  // Periodic role reconciliation every 10 minutes
+  setInterval(async () => {
+    const g = client.guilds.cache.get(guildId);
+    if (g) await syncMemberRoles(g);
+  }, 10 * 60 * 1000);
 });
 
 // Automatic Welcome Message and Instant Member Auto-Role on Member Join
 client.on('guildMemberAdd', async member => {
+  if (member.user.bot) return;
+
   // 1. Instantly auto-assign the Member role (Client role is strictly reserved for paid customers)
   try {
     if (!member.roles.cache.has(memberRoleId)) {
@@ -524,6 +569,21 @@ client.on('guildMemberAdd', async member => {
     }
   } catch (err) {
     console.error(`[WELCOME ERROR] Failed to send welcome message:`, err);
+  }
+});
+
+// Also grant Member role if member completes Discord's Membership Rule Screening
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
+  if (newMember.user.bot) return;
+  if (oldMember.pending && !newMember.pending) {
+    try {
+      if (!newMember.roles.cache.has(memberRoleId)) {
+        await newMember.roles.add(memberRoleId, 'Auto-assigned Member role upon screening verification');
+        console.log(`[AUTOROLE] Assigned Member role to ${newMember.user.tag} after completing screening`);
+      }
+    } catch (err) {
+      console.error(`[AUTOROLE ERROR] Failed to assign Member role to ${newMember.user.tag} on screening:`, err);
+    }
   }
 });
 
@@ -880,6 +940,25 @@ client.on('interactionCreate', async interaction => {
 
   else if (commandName === 'respond') {
     await handleReviewRespondSlashCommand(interaction);
+  }
+
+  else if (commandName === 'syncroles') {
+    if (!interaction.member.permissions.has('ManageRoles') && !interaction.member.permissions.has('Administrator')) {
+      return interaction.reply(buildV2Alert({
+        title: 'Access Denied',
+        message: 'Only staff members with Manage Roles permission can run this command.',
+        type: 'error',
+        ephemeral: true
+      }));
+    }
+    await interaction.deferReply({ ephemeral: true });
+    const count = await syncMemberRoles(interaction.guild);
+    await interaction.editReply(buildV2Alert({
+      title: 'Member Roles Synchronized',
+      message: `Role sync check complete. Verified all server members; granted the Member role to **${count}** member(s).`,
+      type: 'success',
+      ephemeral: true
+    }));
   }
 });
 
