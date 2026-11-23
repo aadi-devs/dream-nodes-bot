@@ -117,6 +117,7 @@ const TICKET_SUPPORT_ROLE_ID = '1574114981048225953'; // ⋆｡°✩ ƚιƈƙҽ�
 const FOUNDER_ROLE_ID = '1573412727383392427'; // ⋆｡°✩ ϝσυɳԃҽɾ ✩°｡⋆
 const PAID_CLIENT_ROLE_ID = '1573412778620747886'; // ⋆｡°✩ ƈʅιҽɳƚ ✩°｡⋆
 const REVIEWS_CHANNEL_ID = '1574120437938520187'; // # ✦・ʀᴇᴠɪᴇᴡꜱ
+const DEALED_CLIENTS_CATEGORY_ID = '1574378941097975929'; // ✦----- DEALED CLIENTS -----✦
 
 const CATEGORIES = {
   ticket_buy: {
@@ -382,7 +383,7 @@ async function logTicketEvent(client, eventType, data, attachment = null) {
           `${E.membership} **Client:** <@${data.userId}> (\`${data.userTag}\`)\n` +
           `${E.verifiedBlue} **Client Role Granted:** <@&${PAID_CLIENT_ROLE_ID}>\n` +
           `${E.chat} **Review DM Dispatched:** ${data.dmSent ? 'Yes' : 'No (DMs Closed)'}\n` +
-          `${E.location} **Channel:** <#${data.channelId}>\n` +
+          `${E.location} **Channel:** <#${data.channelId}> (Moved to \`${data.transferredTo || 'Dealed Clients'}\`)\n` +
           `${E.timer} **Completed At:** <t:${Math.floor(Date.now() / 1000)}:R>`
         )
         .setFooter({ text: `Dream Nodes Tickets • Ticket #${data.ticketNum}` })
@@ -1479,20 +1480,47 @@ async function handleTicketDealDone(interaction) {
     dmDelivered = false;
   }
 
-  // 3. Update ticket database entry
+  // 3. Transfer ticket channel to the "Dealed Clients" category
+  let dealedCat = interaction.guild.channels.cache.get(DEALED_CLIENTS_CATEGORY_ID) ||
+                  await interaction.guild.channels.fetch(DEALED_CLIENTS_CATEGORY_ID).catch(() => null);
+
+  if (!dealedCat) {
+    dealedCat = interaction.guild.channels.cache.find(
+      c => c.type === 4 && (c.name.toLowerCase().includes('dealed') || c.name.toLowerCase().includes('deal'))
+    );
+  }
+
+  let transferred = false;
+  if (dealedCat) {
+    try {
+      // lockPermissions: false keeps the ticket creator and staff custom channel permissions intact!
+      await ticketChannel.setParent(dealedCat.id, {
+        lockPermissions: false,
+        reason: `Deal completed by Founder ${interaction.user.tag}`
+      });
+      transferred = true;
+      ticket.parentCategoryId = dealedCat.id;
+      console.log(`[DEAL DONE] Transferred ticket ${ticketChannel.name} to category: ${dealedCat.name} (${dealedCat.id})`);
+    } catch (moveErr) {
+      console.error('[DEAL DONE MOVE ERROR] Failed to transfer ticket channel:', moveErr);
+    }
+  }
+
+  // 4. Update ticket database entry
   ticket.dealDone = true;
   ticket.dealDoneBy = interaction.user.id;
   ticket.dealDoneTag = interaction.user.tag;
   ticket.dealDoneAt = Math.floor(Date.now() / 1000);
   saveTicketData(data);
 
-  // 4. Send celebratory announcement in the ticket channel (V2 Container)
+  // 5. Send celebratory announcement in the ticket channel (V2 Container)
   const dealNotice = buildV2Container({
     title: `### ${E.cash} Order Finalized ┃ Deal Completed`,
     subtitle: `${E.sparkles} Founder <@${interaction.user.id}> has verified and completed this deal.`,
     description:
       `> ${E.membership} **Customer:** <@${ticket.userId}>\n` +
       `> ${E.verifiedBlue} **Client Role:** ${roleGranted ? `<@&${PAID_CLIENT_ROLE_ID}> (Assigned)` : '`Failed to assign role`'}\n` +
+      `> ${E.location} **Category:** ${transferred ? `Transferred to **${dealedCat.name}**` : '`Dealed Clients`'}\n` +
       `> ${E.staff} **Founder:** <@${interaction.user.id}>\n` +
       `> ${E.chat} **Customer DM:** ${dmDelivered ? `${E.tick5} Dispatched thank-you note & review reminder` : `${E.alert} DMs closed (could not deliver)`}\n\n` +
       `> ${E.sparkles} *Make sure to leave a review in <#${REVIEWS_CHANNEL_ID}>!*`,
@@ -1506,7 +1534,7 @@ async function handleTicketDealDone(interaction) {
     components: dealNotice.components
   });
 
-  // 5. Log event to ticket logs channel
+  // 6. Log event to ticket logs channel
   await logTicketEvent(interaction.client, 'DEAL_DONE', {
     ticketNum: ticket.ticketNum,
     categoryName: ticket.categoryName,
@@ -1515,13 +1543,14 @@ async function handleTicketDealDone(interaction) {
     userTag: ticket.userTag,
     founderId: interaction.user.id,
     founderTag: interaction.user.tag,
-    dmSent: dmDelivered
+    dmSent: dmDelivered,
+    transferredTo: dealedCat ? dealedCat.name : 'Dealed Clients'
   });
 
-  // 6. Respond to Founder
+  // 7. Respond to Founder
   await interaction.editReply(buildV2Alert({
     title: 'Deal Completed',
-    message: `Order marked as completed! Granted Client role to <@${ticket.userId}>.${dmDelivered ? ' Sent thank-you & review reminder DM.' : ' (Client has DMs closed).' }`,
+    message: `Order marked as completed! Granted Client role to <@${ticket.userId}> and moved ticket to **${dealedCat ? dealedCat.name : 'Dealed Clients'}** category.${dmDelivered ? ' Sent thank-you & review reminder DM.' : ' (Client has DMs closed).' }`,
     type: 'success',
     ephemeral: true
   }));
