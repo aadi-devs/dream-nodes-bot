@@ -51,6 +51,14 @@ const {
   handleReviewRespondSlashCommand
 } = require('./reviews');
 
+// Music System Module
+const {
+  musicCommands,
+  handleMusicCommand,
+  handleMusicAutocomplete,
+  handleMusicButton
+} = require('./music');
+
 // Components V2 Helpers
 const {
   buildV2Container,
@@ -313,7 +321,8 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildVoiceStates
   ]
 });
 
@@ -381,7 +390,9 @@ const commands = [
 
   new SlashCommandBuilder()
     .setName('syncroles')
-    .setDescription('Scan and assign the Member role to all members missing it (Staff only)')
+    .setDescription('Scan and assign the Member role to all members missing it (Staff only)'),
+
+  ...musicCommands
 ].map(cmd => cmd.toJSON());
 
 // Register Slash Commands
@@ -659,9 +670,19 @@ client.on('messageCreate', async message => {
 
 // Handle Interactions
 client.on('interactionCreate', async interaction => {
-  // Handle Honeypot Kicks Button Click
+  // Handle Autocomplete
+  if (interaction.isAutocomplete()) {
+    if (interaction.commandName === 'play') {
+      return handleMusicAutocomplete(interaction);
+    }
+    return;
+  }
+
+  // Handle Buttons
   if (interaction.isButton()) {
-    if (interaction.customId === 'honeypot_kicks_display') {
+    if (interaction.customId.startsWith('music_')) {
+      return handleMusicButton(interaction);
+    } else if (interaction.customId === 'honeypot_kicks_display') {
       const logs = getHoneypotLogs();
       const logsPayload = buildHoneypotLogsV2(logs);
       await interaction.reply(logsPayload);
@@ -898,6 +919,11 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
   const { commandName } = interaction;
+
+  const musicCmdNames = ['play', 'pause', 'resume', 'skip', 'skipto', 'queue', 'nowplaying', 'stop', 'volume', 'join', 'leave'];
+  if (musicCmdNames.includes(commandName)) {
+    return handleMusicCommand(interaction);
+  }
 
   if (commandName === 'ping') {
     const wsPing = client.ws.ping;
