@@ -33,6 +33,8 @@ class GuildQueue {
     this.currentResource = null;
     this.volume = 100; // 0 - 150%
     this.loopMode = 'off'; // 'off' | 'track' | 'queue'
+    this.autoplay = false; // Automatic song recommendation when queue finishes
+    this.playedHistory = new Set(); // Track played URLs to avoid duplicate autoplay songs
     this.controlPanelMessage = null;
     this.activeProcesses = [];
     this.isPlaying = false;
@@ -66,9 +68,13 @@ class GuildQueue {
     this.activeProcesses = [];
   }
 
-  handleSongFinish() {
+  async handleSongFinish() {
     this.isPlaying = false;
     this.isPaused = false;
+
+    if (this.currentSong && this.currentSong.url) {
+      this.playedHistory.add(this.currentSong.url);
+    }
 
     if (this.loopMode === 'track' && this.currentSong) {
       // Re-play the same song
@@ -84,15 +90,72 @@ class GuildQueue {
     if (this.songs.length > 0) {
       this.currentSong = this.songs.shift();
       this.playNext();
-    } else {
-      this.currentSong = null;
-      this.currentResource = null;
-      if (this.controlPanelMessage) {
-        this.controlPanelMessage.edit(buildQueueEndedPayload()).catch(() => {});
-      }
-      // Start 5-minute idle disconnect timer
-      this.resetDisconnectTimer();
+      return;
     }
+
+    // Autoplay fallback when queue is empty
+    if (this.autoplay && this.currentSong) {
+      const previousSong = this.currentSong;
+      if (this.textChannel) {
+        this.textChannel.send({
+          content: `-# 📻 **Autoplay:** Finding next recommended track for **${previousSong.title}**...`
+        }).catch(() => {});
+      }
+
+      const autoTrack = await this.fetchAutoplayTrack(previousSong);
+      if (autoTrack) {
+        this.currentSong = autoTrack;
+        this.playNext();
+        return;
+      }
+    }
+
+    this.currentSong = null;
+    this.currentResource = null;
+    if (this.controlPanelMessage) {
+      this.controlPanelMessage.edit(buildQueueEndedPayload()).catch(() => {});
+    }
+    // Start 5-minute idle disconnect timer
+    this.resetDisconnectTimer();
+  }
+
+  async fetchAutoplayTrack(previousSong) {
+    if (!previousSong) return null;
+    try {
+      const queries = [];
+      if (previousSong.author && previousSong.author !== 'Unknown Artist' && previousSong.author !== 'Direct URL') {
+        queries.push(`${previousSong.author} official audio`);
+        queries.push(`${previousSong.author} songs`);
+      }
+      queries.push(`${previousSong.title} mix`);
+      queries.push(`${previousSong.title} similar`);
+
+      for (const q of queries) {
+        const res = await yts({ query: q });
+        if (!res || !res.videos || res.videos.length === 0) continue;
+
+        for (const v of res.videos) {
+          if (this.playedHistory.has(v.url)) continue;
+          if (previousSong.url === v.url) continue;
+          if (v.seconds && (v.seconds < 45 || v.seconds > 600)) continue;
+
+          this.playedHistory.add(v.url);
+          return {
+            title: v.title,
+            url: v.url,
+            duration: v.timestamp || 'N/A',
+            seconds: v.seconds || 0,
+            author: v.author?.name || 'YouTube Music',
+            thumbnail: v.thumbnail || null,
+            requestedBy: 'DreamNodes Autoplay',
+            requestedById: 'autoplay'
+          };
+        }
+      }
+    } catch (err) {
+      console.error('[AUTOPLAY FETCH ERROR]:', err);
+    }
+    return null;
   }
 
   resetDisconnectTimer() {
@@ -113,6 +176,9 @@ class GuildQueue {
 
   async playNext() {
     if (!this.currentSong) return;
+    if (this.currentSong.url) {
+      this.playedHistory.add(this.currentSong.url);
+    }
     this.clearDisconnectTimer();
     this.cleanActiveProcesses();
 
@@ -287,6 +353,7 @@ function buildControlPanelPayload(queue) {
   const statusEmoji = queue.isPaused ? '⏸️' : '🟢';
   const statusText = queue.isPaused ? 'PAUSED' : 'PLAYING';
   const loopTag = queue.loopMode === 'track' ? '🔂 Track' : (queue.loopMode === 'queue' ? '🔁 Queue' : 'OFF');
+  const autoplayTag = queue.autoplay ? '🟢 ON' : '⚫ OFF';
 
   const content =
 `# ${E.lightning} **NOW PLAYING** ${E.sparkles}
@@ -297,7 +364,7 @@ function buildControlPanelPayload(queue) {
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-> 🔊 **Volume:** \`${queue.volume}%\` • 🔁 **Loop:** \`${loopTag}\`
+> 🔊 **Volume:** \`${queue.volume}%\` • 🔁 **Loop:** \`${loopTag}\` • 📻 **Autoplay:** \`${autoplayTag}\`
 > ${statusEmoji} **Status:** \`${statusText}\` • 📜 **Queue:** \`${queue.songs.length} song(s) remaining\`
 
 -# ${E.verifiedBlue} Dream Nodes Hi-Fi Audio Engine • 48kHz Stereo`;
@@ -381,6 +448,13 @@ function buildControlPanelPayload(queue) {
                 label: 'Shuffle',
                 emoji: { name: '🔀' },
                 custom_id: 'music_shuffle'
+              },
+              {
+                type: 2,
+                style: queue.autoplay ? 3 : 2,
+                label: queue.autoplay ? 'Autoplay: ON' : 'Autoplay: OFF',
+                emoji: { name: '📻' },
+                custom_id: 'music_autoplay'
               },
               {
                 type: 2,
@@ -492,7 +566,17 @@ const musicCommands = [
 
   new SlashCommandBuilder()
     .setName('leave')
-    .setDescription('Disconnect the bot from the voice channel')
+    .setDescription('Disconnect the bot from the voice channel'),
+
+  new SlashCommandBuilder()
+    .setName('autoplay')
+    .setDescription('Toggle automatic playback of recommended songs when the queue ends')
+    .addBooleanOption(option =>
+      option
+        .setName('enabled')
+        .setDescription('Enable or disable autoplay mode (true/false)')
+        .setRequired(false)
+    )
 ];
 
 /**
@@ -686,7 +770,7 @@ async function handleMusicCommand(interaction) {
 
   // Check existing queue for playback control commands
   const queue = queues.get(guildId);
-  if (!queue && ['pause', 'resume', 'skip', 'skipto', 'stop', 'queue', 'nowplaying', 'volume', 'leave'].includes(commandName)) {
+  if (!queue && ['pause', 'resume', 'skip', 'skipto', 'stop', 'queue', 'nowplaying', 'volume', 'leave', 'autoplay'].includes(commandName)) {
     return interaction.reply({
       content: '❌ There is no active music playback in this server!',
       ephemeral: true
@@ -761,6 +845,15 @@ async function handleMusicCommand(interaction) {
     await queue.sendOrUpdateControlPanel();
     return interaction.reply({
       content: `🔊 Volume set to **${level}%**!`
+    });
+  }
+
+  if (commandName === 'autoplay') {
+    const explicit = interaction.options.getBoolean('enabled');
+    queue.autoplay = explicit !== null ? explicit : !queue.autoplay;
+    await queue.sendOrUpdateControlPanel();
+    return interaction.reply({
+      content: `📻 Autoplay mode has been **${queue.autoplay ? 'ENABLED 🟢' : 'DISABLED ⚫'}**!${queue.autoplay ? '\nThe bot will automatically find and queue similar tracks when the queue finishes.' : ''}`
     });
   }
 
@@ -869,6 +962,12 @@ async function handleMusicButton(interaction) {
     return interaction.followUp({ content: '🔀 Shuffled the upcoming queue!', ephemeral: true });
   }
 
+  if (customId === 'music_autoplay') {
+    queue.autoplay = !queue.autoplay;
+    await interaction.update(buildControlPanelPayload(queue));
+    return;
+  }
+
   if (customId === 'music_disconnect') {
     queue.destroy();
     return interaction.update({
@@ -910,7 +1009,7 @@ async function showQueue(interaction, queue) {
 ${queueList}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-> 🔊 **Volume:** \`${queue.volume}%\` • 🔁 **Loop Mode:** \`${queue.loopMode.toUpperCase()}\``;
+> 🔊 **Volume:** \`${queue.volume}%\` • 🔁 **Loop Mode:** \`${queue.loopMode.toUpperCase()}\` • 📻 **Autoplay:** \`${queue.autoplay ? 'ON' : 'OFF'}\``;
 
   const payload = {
     flags: 32832, // Ephemeral Components V2

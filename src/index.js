@@ -27,6 +27,49 @@ const honeypotChannelId = '1573337296042729502';
 const honeypotMessageId = '1573402481214492685';
 const honeypotLogsFile = path.join(__dirname, '..', 'data', 'honeypot_logs.json');
 
+// Ticket categories where links are strictly allowed
+const TICKET_CATEGORIES = [
+  '1573281628438921246', // ✦----- BUY TICKETS -----✦
+  '1573773163605659768', // ✦----- QUERY TICKETS -----✦
+  '1573773165539233852', // ✦----- STAFF REPORTS -----✦
+  '1573773168177582142', // ✦----- PROBLEM TICKETS -----✦
+  '1574378941097975929'  // ✦----- DEALED CLIENTS -----✦
+];
+
+// Staff & bot roles exempt from link restrictions
+const STAFF_ROLES = [
+  '1573412727383392427', // Founder
+  '1573414208148738289', // Princess
+  '1573412731644805140', // CEO
+  '1573412734698004550', // COO
+  '1573412738074550514', // Manager
+  '1573412741031530506', // Developer
+  '1573412746689515770', // Sysadmin
+  '1573412749986365500', // Admin
+  '1573412753073381477', // Head Mod
+  '1573412756286214306', // Moderator
+  '1574114981048225953', // Ticket Support
+  '1573412759532732567', // Support
+  '1573412762586189844', // Trial Staff
+  '1573412785445019839'  // Bots
+];
+
+const LINK_PATTERN = /(https?:\/\/[^\s]+)|(www\.[^\s]+\.[a-zA-Z]{2,})|(discord(?:\.gg|(?:app)?\.com\/invite)\/[^\s]+)|([a-zA-Z0-9.-]+\.(?:com|net|org|io|xyz|cloud|ru|gg|fun|info|biz|me|online|store|shop|site)(?:\/[^\s]*)?)/i;
+
+function isTicketChannel(channel) {
+  if (!channel) return false;
+  if (channel.parentId && TICKET_CATEGORIES.includes(channel.parentId)) return true;
+  if (/^\d{4}-/.test(channel.name) || channel.name.includes('ticket') || channel.name.includes('-bought-')) return true;
+  return false;
+}
+
+function isExemptFromLinks(member) {
+  if (!member) return false;
+  if (member.permissions.has('Administrator') || member.permissions.has('ManageGuild') || member.permissions.has('ManageMessages')) return true;
+  if (member.roles && member.roles.cache.some(r => STAFF_ROLES.includes(r.id))) return true;
+  return false;
+}
+
 // Tickets System Module
 const {
   handleTicketDepartmentSelect,
@@ -665,6 +708,52 @@ client.on('messageCreate', async message => {
     });
 
     await updateHoneypotButton();
+    return;
+  }
+
+  // Anti-Link AutoMod: Block links in all non-ticket channels for non-staff
+  if (!message.author.bot && message.guild) {
+    // 1. In tickets, links are strictly allowed!
+    if (!isTicketChannel(message.channel)) {
+      // 2. Staff and Admins are exempt
+      if (!isExemptFromLinks(message.member)) {
+        const content = message.content || '';
+        if (LINK_PATTERN.test(content)) {
+          // Check if it's only official dreamnodes.cloud links
+          const tokens = content.split(/\s+/);
+          const hasForbidden = tokens.some(tok => LINK_PATTERN.test(tok) && !tok.toLowerCase().includes('dreamnodes.cloud'));
+
+          if (hasForbidden) {
+            console.log(`[ANTILINK] Blocked link from ${message.author.tag} in #${message.channel.name}`);
+            await message.delete().catch(() => null);
+
+            const warnMsg = await message.channel.send({
+              content: `⚠️ <@${message.author.id}>, **links are not allowed in public channels!**\nIf you need to share a link, screenshot, or invoice, please open a ticket in <#1573281601775870043>.`
+            }).catch(() => null);
+
+            if (warnMsg) {
+              setTimeout(() => warnMsg.delete().catch(() => null), 7000);
+            }
+
+            // Log to #⊘・ᴛɪᴄᴋᴇᴛ-ʟᴏɢꜱ
+            const logsChannel = message.guild.channels.cache.get('1573780018834710548');
+            if (logsChannel) {
+              const alertEmbed = new EmbedBuilder()
+                .setTitle('🛡️ AutoMod: External Link Removed')
+                .setColor(0xE74C3C)
+                .setDescription(`Blocked and deleted a message containing an unauthorized link.`)
+                .addFields(
+                  { name: 'User', value: `<@${message.author.id}> (\`${message.author.id}\`)`, inline: true },
+                  { name: 'Channel', value: `<#${message.channelId}>`, inline: true },
+                  { name: 'Snippet', value: `\`\`\`${content.slice(0, 400)}\`\`\`` }
+                )
+                .setTimestamp();
+              logsChannel.send({ embeds: [alertEmbed] }).catch(() => null);
+            }
+          }
+        }
+      }
+    }
   }
 });
 
@@ -920,7 +1009,7 @@ client.on('interactionCreate', async interaction => {
 
   const { commandName } = interaction;
 
-  const musicCmdNames = ['play', 'pause', 'resume', 'skip', 'skipto', 'queue', 'nowplaying', 'stop', 'volume', 'join', 'leave'];
+  const musicCmdNames = ['play', 'pause', 'resume', 'skip', 'skipto', 'queue', 'nowplaying', 'stop', 'volume', 'join', 'leave', 'autoplay'];
   if (musicCmdNames.includes(commandName)) {
     return handleMusicCommand(interaction);
   }
