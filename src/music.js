@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const { spawn } = require('child_process');
 const {
   joinVoiceChannel,
@@ -237,13 +239,31 @@ class GuildQueue {
   }
 }
 
+function getYtDlpBinary() {
+  const localBin = path.join(__dirname, '..', 'bin', 'yt-dlp');
+  const containerBin = '/home/container/bin/yt-dlp';
+
+  if (fs.existsSync(localBin)) {
+    try { fs.chmodSync(localBin, 0o755); } catch (e) {}
+    return localBin;
+  }
+  if (fs.existsSync(containerBin)) {
+    try { fs.chmodSync(containerBin, 0o755); } catch (e) {}
+    return containerBin;
+  }
+
+  return 'yt-dlp';
+}
+
 /**
  * Creates audio stream using yt-dlp piped to ffmpeg
  */
 function createAudioStream(url) {
+  const ytDlpCmd = getYtDlpBinary();
+
   // Spawn yt-dlp to output raw audio stream
-  const ytdlp = spawn('yt-dlp', [
-    '-f', 'bestaudio',
+  const ytdlp = spawn(ytDlpCmd, [
+    '-f', 'bestaudio/best',
     '-o', '-',
     '--no-playlist',
     '--quiet',
@@ -262,8 +282,8 @@ function createAudioStream(url) {
 
   ytdlp.stdout.pipe(ffmpeg.stdin);
 
-  ytdlp.on('error', err => console.error('[YT-DLP PROCESS ERROR]', err.message));
-  ffmpeg.on('error', err => console.error('[FFMPEG PROCESS ERROR]', err.message));
+  ytdlp.on('error', err => console.error(`[YT-DLP PROCESS ERROR (${ytDlpCmd})]:`, err.message));
+  ffmpeg.on('error', err => console.error('[FFMPEG PROCESS ERROR]:', err.message));
 
   const resource = createAudioResource(ffmpeg.stdout, {
     inputType: StreamType.Raw,
@@ -349,6 +369,9 @@ async function getAutocompleteSuggestions(query) {
  * Build the Components V2 Control Panel Message Payload
  */
 function buildControlPanelPayload(queue) {
+  if (!queue || !queue.currentSong) {
+    return buildQueueEndedPayload();
+  }
   const song = queue.currentSong;
   const statusEmoji = queue.isPaused ? '⏸️' : '🟢';
   const statusText = queue.isPaused ? 'PAUSED' : 'PLAYING';
@@ -358,14 +381,14 @@ function buildControlPanelPayload(queue) {
   const content =
 `# ${E.lightning} **NOW PLAYING** ${E.sparkles}
 
-> 🎵 **[${song.title}](${song.url})**
-> ${E.arrowBlue} **Artist / Channel:** \`${song.author}\`
-> ⏱️ **Duration:** \`${song.duration}\` • 🎧 **Requested By:** <@${song.requestedById}>
+> 🎵 **[${song.title || 'Unknown Title'}](${song.url || 'https://dreamnodes.cloud'})**
+> ${E.arrowBlue} **Artist / Channel:** \`${song.author || 'Unknown Artist'}\`
+> ⏱️ **Duration:** \`${song.duration || 'N/A'}\` • 🎧 **Requested By:** <@${song.requestedById || ''}>
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 > 🔊 **Volume:** \`${queue.volume}%\` • 🔁 **Loop:** \`${loopTag}\` • 📻 **Autoplay:** \`${autoplayTag}\`
-> ${statusEmoji} **Status:** \`${statusText}\` • 📜 **Queue:** \`${queue.songs.length} song(s) remaining\`
+> ${statusEmoji} **Status:** \`${statusText}\` • 📜 **Queue:** \`${queue.songs ? queue.songs.length : 0} song(s) remaining\`
 
 -# ${E.verifiedBlue} Dream Nodes Hi-Fi Audio Engine • 48kHz Stereo`;
 
@@ -885,6 +908,14 @@ async function handleMusicButton(interaction) {
   if (!voiceChannel || voiceChannel.id !== queue.voiceChannel?.id) {
     return interaction.reply({
       content: '⚠️ You must be in the same voice channel as the bot to use the controls!',
+      ephemeral: true
+    });
+  }
+
+  // Prevent crashes if song has finished or is null
+  if (!queue.currentSong && !['music_stop', 'music_disconnect', 'music_queue'].includes(customId)) {
+    return interaction.reply({
+      content: '⚠️ No track is currently playing.',
       ephemeral: true
     });
   }
