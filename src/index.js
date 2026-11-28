@@ -814,6 +814,62 @@ client.on('interactionCreate', async interaction => {
     return;
   }
 
+  // Handle Dream Shield DDoS Protection Plan Select Menu
+  if (interaction.isStringSelectMenu() && interaction.customId === 'ddos_plan_select') {
+    try {
+      const selected = interaction.values[0];
+      let content = '';
+
+      if (selected === 'ddos_minecraft') {
+        content =
+          `# ${E.shield} **MINECRAFT DDOS PROTECTION** ${E.minecraft}\n\n` +
+          `> ${E.lightning} **Price:** **\`₹250 / month\`**\n` +
+          `> ${E.world} **Backbone:** **Cloudflare Magic Transit (14 Tbps+ Mitigation)**\n\n` +
+          `### ${E.verifiedBlue} **Included Features:**\n` +
+          `> ${E.arrowBlue} **Layer 7 Game Filtering:** Neutralizes null-ping exploits, BungeeCord/Velocity bot floods, and handshake spam.\n` +
+          `> ${E.arrowBlue} **14 Tbps+ Anycast Scrubbing:** Drops volumetric L3/L4 floods in sub-milliseconds.\n` +
+          `> ${E.arrowBlue} **Zero Origin Exposure:** Your backend IP stays 100% hidden.\n\n` +
+          `${E.ticket} **Ready to order?** Open a ticket in <#1573281601775870043> to deploy!`;
+      } else if (selected === 'ddos_vps') {
+        content =
+          `# ${E.shield} **SINGLE VPS DDOS PROTECTION** ${E.vps}\n\n` +
+          `> ${E.cash} **With Dedicated IP:** **\`₹600 / month\`**\n` +
+          `> ${E.cash} **Without Dedicated IP:** **\`₹400 / month\`**\n` +
+          `> ${E.world} **Backbone:** **Cloudflare Magic Transit (14 Tbps+ Mitigation)**\n\n` +
+          `### ${E.verifiedBlue} **Included Features:**\n` +
+          `> ${E.arrowBlue} **14 Tbps+ Line-Rate Defense:** Blocks SYN, UDP, NTP/DNS amplification, and multi-vector attacks.\n` +
+          `> ${E.arrowBlue} **Clean Static Tunneling:** Protects all TCP/UDP ports, web apps, and databases.\n` +
+          `> ${E.arrowBlue} **Sub-20ms Routing:** Low-latency APAC & India edge scrubbing.\n\n` +
+          `${E.ticket} **Ready to order?** Open a ticket in <#1573281601775870043> to deploy!`;
+      } else if (selected === 'ddos_infra') {
+        content =
+          `# ${E.shield} **FULL NETWORK / INFRASTRUCTURE** ${E.server}\n\n` +
+          `> ${E.world} **Backbone:** **Cloudflare Magic Transit • 14 Tbps+ BGP Anycast**\n\n` +
+          `### ${E.verifiedBlue} **Custom Enterprise Protection:**\n` +
+          `> ${E.arrowBlue} **Full Subnet (/24) & ASN Protection:** Protect your entire network range with BGP Anycast & GRE multi-tunneling.\n` +
+          `> ${E.arrowBlue} **Custom Firewall & Scrubbing Rules:** Tailored mitigation profiles built for your exact infrastructure.\n\n` +
+          `${E.ticket} **Please open a ticket in <#1573281601775870043> to discuss your network requirements and custom pricing!**`;
+      }
+
+      await interaction.reply({
+        flags: 32832, // Ephemeral Components V2
+        components: [
+          {
+            type: 17,
+            accent_color: null,
+            components: [
+              { type: 10, content },
+              { type: 10, content: `-# ${E.verifiedBlue} Dream Nodes Network Security • Dream Shield™ × Cloudflare Magic Transit (14 Tbps+)` }
+            ]
+          }
+        ]
+      });
+    } catch (err) {
+      console.error('[DDOS SELECT ERROR]', err);
+    }
+    return;
+  }
+
   // Handle Modals
   if (interaction.isModalSubmit()) {
     if (interaction.customId.startsWith('modal_ticket_')) {
